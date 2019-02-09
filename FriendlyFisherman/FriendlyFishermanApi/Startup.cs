@@ -22,6 +22,9 @@ using FriendlyFisherman.SharedKernel;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Users.Domain.Entities;
+using Administration.DataAccess;
+using Publishing.DataAccess;
 
 namespace FriendlyFishermanApi
 {
@@ -82,14 +85,23 @@ namespace FriendlyFishermanApi
             });
             #endregion
             #region Contexts
-            services.AddDbContext<ApplicationDbContext>(options =>
+            #region Administration
+            services.AddDbContext<AdministrationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            #endregion
+            #region Publishing
+            services.AddDbContext<PublishingDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            #endregion
+            #region User
             services.AddDbContext<UsersDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<User>()
+                .AddEntityFrameworkStores<UsersDbContext>();
+            #endregion
             #endregion
             #region DI
             services.AddScoped<IUserRepository, UserRepository>();

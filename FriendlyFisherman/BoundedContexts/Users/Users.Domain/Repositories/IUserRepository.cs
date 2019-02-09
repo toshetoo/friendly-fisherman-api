@@ -8,7 +8,7 @@ namespace Users.Domain.Repositories
 {
     public interface IUserRepository
     {
-        void GetAllUsers();
+        IEnumerable<User> GetAllUsers();
         User GetByUsername(string username);
     }
 }

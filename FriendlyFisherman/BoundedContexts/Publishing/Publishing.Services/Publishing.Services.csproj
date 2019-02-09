@@ -7,6 +7,8 @@
   <ItemGroup>
     <Folder Include="Abstraction\" />
     <Folder Include="Implementation\" />
+    <Folder Include="Response\" />
+    <Folder Include="Request\" />
   </ItemGroup>
 
 </Project>

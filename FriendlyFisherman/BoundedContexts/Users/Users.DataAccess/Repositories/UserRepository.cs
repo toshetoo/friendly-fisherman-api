@@ -1,31 +1,27 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Users.Domain.Repositories;
 using Users.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+using Users.Domain.Repositories;
 
 namespace Users.DataAccess.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : RepositoryBase<User>, IUserRepository
     {
-        private UsersDbContext _context;
-
-        public UserRepository(UsersDbContext context)
+        public UserRepository(UsersDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public void GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
         {
-            _context.Users.FirstOrDefault();
+            var repo = CreateRepo();
+            return repo.GetAll();
         }
 
         public User GetByUsername(string username)
         {
-            var user = _context.Users.FirstOrDefault(x => x.UserName == username);
-            return new User { Username = user.UserName, Id = user.Id, Token = user.SecurityStamp, Password = user.PasswordHash };
+            var repo = CreateRepo();
+            var user = repo.Get(x => x.UserName == username);
+            return new User { UserName = user.UserName, Id = user.Id, SecurityStamp = user.SecurityStamp, PasswordHash = user.PasswordHash };
         }
     }
 }
