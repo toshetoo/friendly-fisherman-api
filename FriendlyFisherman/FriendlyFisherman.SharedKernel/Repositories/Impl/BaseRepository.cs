@@ -1,38 +1,30 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
 
-namespace Administration.DataAccess.Repositories
+namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 {
     public class BaseRepository<T> where T : class
     {
         DbSet<T> entities;
         private DbContext _context;
         bool disposed = false;
-        bool isInternalContext = false;
-
-        public BaseRepository(AdministrationDbContext context)
-        {
-            _context = context;
-            isInternalContext = true;
-        }
+        bool isContext = false;
 
         public BaseRepository(DbContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
 
-            this._context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context)); ;
             entities = context.Set<T>();
         }
 
         private DbSet<T> GetContext()
         {
-            this.entities = this.entities ?? this._context.Set<T>();
+            entities = entities ?? _context.Set<T>();
 
-            return this.entities;
+            return entities;
         }
         private K ExecuteAction<K>(Func<DbSet<T>, K> action)
         {
@@ -43,7 +35,7 @@ namespace Administration.DataAccess.Repositories
             }
             finally
             {
-                if (isInternalContext && _context != null)
+                if (isContext && _context != null)
                 {
                     _context.Dispose();
                     entities = null;
@@ -61,7 +53,7 @@ namespace Administration.DataAccess.Repositories
             }
             finally
             {
-                if (isInternalContext && _context != null)
+                if (isContext && _context != null)
                 {
                     _context.Dispose();
                     _context = null;
@@ -71,7 +63,7 @@ namespace Administration.DataAccess.Repositories
             }
         }
 
-        internal void Create(T entity)
+        public void Create(T entity)
         {
             ExecuteAction(e =>
             {
@@ -80,12 +72,12 @@ namespace Administration.DataAccess.Repositories
 
                 e.Add(entity);
 
-                if (isInternalContext)
+                if (isContext)
                     _context.SaveChanges();
             });
         }
 
-        internal T Get(Expression<Func<T, bool>> whereClause, params Expression<Func<T, object>>[] includes)
+        public T Get(Expression<Func<T, bool>> whereClause, params Expression<Func<T, object>>[] includes)
         {
             return ExecuteAction<T>(e =>
             {
@@ -102,16 +94,16 @@ namespace Administration.DataAccess.Repositories
             });
         }
 
-        internal IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll()
         {
             return ExecuteAction<IEnumerable<T>>(e => e.ToList());
         }
 
-        internal IEnumerable<T> GetAll<TProperty>(params Expression<Func<T, object>>[] includes)
+        public IEnumerable<T> GetAll<TProperty>(params Expression<Func<T, object>>[] includes)
         {
             return GetAll<TProperty>(false, null, includes);
         }
-        internal IEnumerable<T> GetAll<TProperty>(bool isDescending, Expression<Func<T, TProperty>> orderBy, params Expression<Func<T, object>>[] includes)
+        public IEnumerable<T> GetAll<TProperty>(bool isDescending, Expression<Func<T, TProperty>> orderBy, params Expression<Func<T, object>>[] includes)
         {
             if (orderBy == null)
                 return ExecuteAction<IEnumerable<T>>(e => e.ToList());
@@ -126,11 +118,11 @@ namespace Administration.DataAccess.Repositories
             });
         }
 
-        internal IEnumerable<T> GetWhere(Expression<Func<T, bool>> whereClause, params Expression<Func<T, object>>[] includes)
+        public IEnumerable<T> GetWhere(Expression<Func<T, bool>> whereClause, params Expression<Func<T, object>>[] includes)
         {
             return GetWhere<T>(whereClause, null, isDescending: false, includes: includes);
         }
-        internal IEnumerable<T> GetWhere<TProperty>(Expression<Func<T, bool>> whereClause,
+        public IEnumerable<T> GetWhere<TProperty>(Expression<Func<T, bool>> whereClause,
             Expression<Func<T, TProperty>> orderBy,
             bool isDescending = false,
             params Expression<Func<T, object>>[] includes)
@@ -151,7 +143,7 @@ namespace Administration.DataAccess.Repositories
             });
         }
 
-        internal void Update(T newEntity)
+        public void Update(T newEntity)
         {
             ExecuteInOneContext(e =>
             {
@@ -161,12 +153,12 @@ namespace Administration.DataAccess.Repositories
                 _context.Set<T>().Attach(newEntity);
                 _context.Entry(newEntity).State = EntityState.Modified;
 
-                if (isInternalContext)
+                if (isContext)
                     _context.SaveChanges();
             });
         }
 
-        internal void Delete(Func<T, bool> whereClause)
+        public void Delete(Func<T, bool> whereClause)
         {
             ExecuteAction(e =>
             {
@@ -176,12 +168,12 @@ namespace Administration.DataAccess.Repositories
                 var entity = e.FirstOrDefault(whereClause);
                 e.Remove(entity);
 
-                if (isInternalContext)
+                if (isContext)
                     _context.SaveChanges();
             });
         }
 
-        internal void Delete(T @object)
+        public void Delete(T @object)
         {
             ExecuteAction(e =>
             {
@@ -192,12 +184,12 @@ namespace Administration.DataAccess.Repositories
                 _context.Set<T>().Attach(@object);
                 _context.Set<T>().Remove(@object);
 
-                if (isInternalContext)
+                if (isContext)
                     _context.SaveChanges();
             });
         }
 
-        internal void DeleteRange(IEnumerable<T> objects)
+        public void DeleteRange(IEnumerable<T> objects)
         {
             ExecuteAction(e =>
             {
@@ -206,24 +198,24 @@ namespace Administration.DataAccess.Repositories
 
                 _context.Set<T>().RemoveRange(objects);
 
-                if (isInternalContext)
+                if (isContext)
                     _context.SaveChanges();
             });
         }
 
-        internal void ExecuteInOneContext(Action<DbContext> e)
+        public void ExecuteInOneContext(Action<DbContext> e)
         {
-            var temp = isInternalContext;
+            var temp = isContext;
             try
             {
-                isInternalContext = false;
+                isContext = false;
                 GetContext();
                 e(_context);
             }
             finally
             {
-                isInternalContext = temp;
-                if (isInternalContext && _context != null)
+                isContext = temp;
+                if (isContext && _context != null)
                 {
                     _context.Dispose();
                     entities = null;
