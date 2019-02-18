@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Publishing.DataAccess.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Publishing.DataAccess
+namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 {
     public abstract class RepositoryBase<T> where T : class
     {
