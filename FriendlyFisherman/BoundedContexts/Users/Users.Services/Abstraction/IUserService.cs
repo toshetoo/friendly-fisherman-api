@@ -1,10 +1,11 @@
 ﻿namespace Users.Services.Abstraction
 {
-    using Users.Domain.Entities;
+    using Users.Services.Request;
+    using Users.Services.Response;
 
     public interface IUserService
     {
-        void GetAllUsersAsync();
-        User GetAuth(string username);
+        GetAllUsersResponse GetAllUsersAsync(GetAllUsersRequest request);
+        UserAuthenticationResponse GetAuth(UserAuthenticationRequest request);
     }
 }

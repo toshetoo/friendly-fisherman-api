@@ -2,12 +2,15 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Users.Domain.Entities;
+using Users.Domain.EntityViewModels;
 using Users.Domain.Repositories;
 using Users.Services.Abstraction;
+using Users.Services.Request;
+using Users.Services.Response;
 
 namespace Users.Services.Implementation
 {
@@ -22,37 +25,61 @@ namespace Users.Services.Implementation
             _appSettings = appSettings.Value;
         }
 
-        public User GetAuth(string username)
+        public UserAuthenticationResponse GetAuth(UserAuthenticationRequest request)
         {
-            var user = _usersRepository.GetByUsername(username);
+            var response = new UserAuthenticationResponse();
 
-            if (ReferenceEquals(user, null))
-                return null;
-
-            // authentication successful so generate jwt token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                var user = _usersRepository.GetByUsername(request.Username);
+
+                if (ReferenceEquals(user, null))
+                    return null;
+
+                // authentication successful so generate jwt token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.SecurityStamp = tokenHandler.WriteToken(token);
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
 
-            // remove password before returning
-            user.PasswordHash = null;
+                var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return user;
+                response.AccessToken = tokenHandler.WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
         }
 
-        public void GetAllUsersAsync()
+        public GetAllUsersResponse GetAllUsersAsync(GetAllUsersRequest request)
         {
-            _usersRepository.GetAllUsers();
+            var response = new GetAllUsersResponse();
+
+            var users = _usersRepository.GetAllUsers();
+            var usersListViewModel = new List<UserListItemViewModel>();
+
+            foreach (var user in users)
+            {
+                usersListViewModel.Add(new UserListItemViewModel
+                {
+                    Id = user.Id,
+                    Username = user.UserName,
+                    Email = user.Email
+                });
+            }
+            response.Users = usersListViewModel;
+
+            return response;
         }
     }
 }

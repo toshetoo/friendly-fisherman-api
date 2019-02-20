@@ -19,7 +19,6 @@ namespace FriendlyFishermanApi.Controllers
 
         public IActionResult Index()
         {
-            _userService.GetAllUsersAsync();
             return View();
         }
 

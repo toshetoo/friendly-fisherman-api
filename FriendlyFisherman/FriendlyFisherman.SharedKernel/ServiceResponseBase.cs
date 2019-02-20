@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace FriendlyFisherman.SharedKernel
+﻿namespace FriendlyFisherman.SharedKernel
 {
+    using System;
+
     public class ServiceResponseBase
     {
         public ServiceResponseBase()

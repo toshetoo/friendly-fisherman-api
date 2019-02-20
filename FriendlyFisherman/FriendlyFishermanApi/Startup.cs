@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Administration.DataAccess;
+using FriendlyFisherman.SharedKernel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FriendlyFishermanApi.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Publishing.DataAccess;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
+using System.Text;
 using Users.DataAccess;
-using Users.Domain.Repositories;
 using Users.DataAccess.Repositories;
+using Users.Domain.Entities;
+using Users.Domain.Repositories;
 using Users.Services.Abstraction;
 using Users.Services.Implementation;
-using Swashbuckle.AspNetCore.Swagger;
-using FriendlyFisherman.SharedKernel;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Users.Domain.Entities;
-using Administration.DataAccess;
-using Publishing.DataAccess;
 
 namespace FriendlyFishermanApi
 {
@@ -60,11 +54,11 @@ namespace FriendlyFishermanApi
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x =>
+            .AddJwtBearer(options =>
             {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -80,7 +74,20 @@ namespace FriendlyFishermanApi
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "Friendly Fisherman API"
+                    Title = "Friendly Fisherman API",
+                });
+
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", new string[] { } }
                 });
             });
             #endregion
@@ -126,14 +133,14 @@ namespace FriendlyFishermanApi
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-    app.UseSwagger();
+            app.UseSwagger();
 
-    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-    // specifying the Swagger JSON endpoint.
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    });
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
