@@ -10,7 +10,7 @@ using Users.Services.Request;
 
 namespace FriendlyFishermanApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class UsersController : BaseApiController
     {
         private readonly ILogger _logger;
@@ -29,9 +29,9 @@ namespace FriendlyFishermanApi.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Authenticate")]
-        public IActionResult Authenticate(string username, string password)
+        public async Task<IActionResult> Authenticate(string username, string password)
         {
-            var result = _signInManager.PasswordSignInAsync(username, password, false, false).Result;
+            var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
 
             if (result != Microsoft.AspNetCore.Identity.SignInResult.Success)
             {
@@ -39,7 +39,7 @@ namespace FriendlyFishermanApi.Controllers
             }
 
             var request = new UserAuthenticationRequest(username);
-            var response = _userService.GetAuth(request);
+            var response = await _userService.GetUserAuthenticationAsync(request);
 
             if (ReferenceEquals(response.Exception, null))
             {
@@ -71,7 +71,7 @@ namespace FriendlyFishermanApi.Controllers
             }
 
             var request = new UserAuthenticationRequest(model.Username);
-            var response = _userService.GetAuth(request);
+            var response = _userService.GetUserAuthenticationAsync(request);
 
             if (ReferenceEquals(response.Exception, null))
             {
@@ -86,10 +86,46 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetAllUsers")]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
             var request = new GetAllUsersRequest();
-            var response = _userService.GetAllUsersAsync(request);
+            var response = await _userService.GetAllUsersAsync(request);
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+            else
+            {
+                _logger.LogError(response.Exception.Message);
+                return Ok(response.Exception);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetUserById")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            var request = new GetUserRequest(id);
+            var response = await _userService.GetUserByIdAsync(request);
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+            else
+            {
+                _logger.LogError(response.Exception.Message);
+                return Ok(response.Exception);
+            }
+        }
+
+        [HttpPost]
+        [Route("EditUser")]
+        public async Task<IActionResult> EditUser(UserViewModel model)
+        {
+            var request = new EditUserRequest(model);
+            var response = await _userService.EditUserAsync(request);
 
             if (ReferenceEquals(response.Exception, null))
             {

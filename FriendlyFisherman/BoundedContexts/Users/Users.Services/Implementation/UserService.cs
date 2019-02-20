@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using Users.Domain.EntityViewModels;
 using Users.Domain.Repositories;
 using Users.Services.Abstraction;
@@ -25,7 +26,12 @@ namespace Users.Services.Implementation
             _appSettings = appSettings.Value;
         }
 
-        public UserAuthenticationResponse GetAuth(UserAuthenticationRequest request)
+        public async Task<UserAuthenticationResponse> GetUserAuthenticationAsync(UserAuthenticationRequest request)
+        {
+            return await Task.Run(() => GetUserAuthentication(request));
+        }
+
+        private UserAuthenticationResponse GetUserAuthentication(UserAuthenticationRequest request)
         {
             var response = new UserAuthenticationResponse();
 
@@ -36,7 +42,6 @@ namespace Users.Services.Implementation
                 if (ReferenceEquals(user, null))
                     return null;
 
-                // authentication successful so generate jwt token
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -61,23 +66,99 @@ namespace Users.Services.Implementation
             return response;
         }
 
-        public GetAllUsersResponse GetAllUsersAsync(GetAllUsersRequest request)
+        public async Task<GetAllUsersResponse> GetAllUsersAsync(GetAllUsersRequest request)
+        {
+            return await Task.Run(() => GetAllUsers(request));
+        }
+
+        private GetAllUsersResponse GetAllUsers(GetAllUsersRequest request)
         {
             var response = new GetAllUsersResponse();
 
-            var users = _usersRepository.GetAllUsers();
-            var usersListViewModel = new List<UserListItemViewModel>();
-
-            foreach (var user in users)
+            try
             {
-                usersListViewModel.Add(new UserListItemViewModel
+                var users = _usersRepository.GetAllUsers();
+                var usersListViewModel = new List<UserListItemViewModel>();
+
+                foreach (var user in users)
+                {
+                    usersListViewModel.Add(new UserListItemViewModel
+                    {
+                        Id = user.Id,
+                        Username = user.UserName,
+                        Email = user.Email
+                    });
+                }
+                response.Users = usersListViewModel;
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
+        }
+
+        public async Task<GetUserResponse> GetUserByIdAsync(GetUserRequest request)
+        {
+            return await Task.Run(() => GetUserById(request));
+        }
+
+        private GetUserResponse GetUserById(GetUserRequest request)
+        {
+            var response = new GetUserResponse();
+
+            try
+            {
+                var user = _usersRepository.GetById(request.Id);
+                if (ReferenceEquals(user, null))
+                    throw new Exception($"There is no user with Id: {request.Id}");
+
+                var userViewModel = new UserViewModel
                 {
                     Id = user.Id,
+                    Email = user.Email,
                     Username = user.UserName,
-                    Email = user.Email
-                });
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+
+                response.User = userViewModel;
             }
-            response.Users = usersListViewModel;
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
+        }
+
+        public async Task<EditUserResponse> EditUserAsync(EditUserRequest request)
+        {
+            return await Task.Run(() => EditUser(request));
+        }
+
+        private EditUserResponse EditUser(EditUserRequest request)
+        {
+            var response = new EditUserResponse();
+
+            try
+            {
+                var user = _usersRepository.GetById(request.User.Id);
+                if (ReferenceEquals(user, null))
+                    throw new Exception($"There is no user with Id: {request.User.Id}");
+
+                user.Email = request.User.Email;
+                user.UserName = request.User.Username;
+                user.FirstName = request.User.FirstName;
+                user.LastName = request.User.LastName;
+
+                _usersRepository.Save(user);
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
 
             return response;
         }

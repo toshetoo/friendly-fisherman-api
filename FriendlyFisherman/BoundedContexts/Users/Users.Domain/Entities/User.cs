@@ -20,5 +20,7 @@ namespace Users.Domain.Entities
         public override DateTimeOffset? LockoutEnd { get; set; }
         public override bool LockoutEnabled { get; set; }
         public override int AccessFailedCount { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

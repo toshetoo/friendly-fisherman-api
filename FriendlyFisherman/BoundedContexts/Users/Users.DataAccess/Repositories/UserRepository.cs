@@ -15,13 +15,37 @@ namespace Users.DataAccess.Repositories
 
         public IEnumerable<User> GetAllUsers()
         {
-            return CreateRepo().GetAll();
+            var repo = CreateRepo();
+            return repo.GetAll();
         }
 
         public User GetByUsername(string username)
         {
-            var user = CreateRepo().Get(x => x.UserName == username);
+            var repo = CreateRepo();
+
+            var user = repo.Get(x => x.UserName == username);
             return new User { UserName = user.UserName, Id = user.Id, SecurityStamp = user.SecurityStamp, PasswordHash = user.PasswordHash };
+        }
+
+        public User GetById(string id)
+        {
+            var repo = CreateRepo();
+
+            var user = repo.Get(x => x.Id == id);
+            return user;
+        }
+
+        public void Save(User user)
+        {
+            var repo = CreateRepo();
+
+            if(user.Id == null)
+            {
+                repo.Create(user);
+            } else
+            {
+                repo.Update(user);
+            }
         }
     }
 }

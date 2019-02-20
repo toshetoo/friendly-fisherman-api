@@ -10,5 +10,7 @@ namespace Users.Domain.Repositories
     {
         IEnumerable<User> GetAllUsers();
         User GetByUsername(string username);
+        User GetById(string id);
+        void Save(User user);
     }
 }
