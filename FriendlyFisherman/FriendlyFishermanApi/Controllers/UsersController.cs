@@ -29,16 +29,16 @@ namespace FriendlyFishermanApi.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Authenticate")]
-        public async Task<IActionResult> Authenticate(string username, string password)
+        public async Task<IActionResult> Authenticate([FromBody] RegisterUserViewModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
 
             if (result != Microsoft.AspNetCore.Identity.SignInResult.Success)
             {
                 return Ok(new { error = "Unavaible username and password" });
             }
 
-            var request = new UserAuthenticationRequest(username);
+            var request = new UserAuthenticationRequest(model.Username);
             var response = await _userService.GetUserAuthenticationAsync(request);
 
             if (ReferenceEquals(response.Exception, null))

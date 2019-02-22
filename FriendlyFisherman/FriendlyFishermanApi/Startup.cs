@@ -115,6 +115,7 @@ namespace FriendlyFishermanApi
             services.AddScoped<IUserService, UserService>();
             #endregion
 
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -147,6 +148,14 @@ namespace FriendlyFishermanApi
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseCors(options =>
+                options
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+           );
 
             app.UseMvc(routes =>
             {
