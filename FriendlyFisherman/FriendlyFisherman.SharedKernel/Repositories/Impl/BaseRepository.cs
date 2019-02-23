@@ -11,7 +11,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
         DbSet<T> entities;
         private DbContext _context;
         bool disposed = false;
-        bool isContext = false;
+        bool isContext = true;
 
         public BaseRepository(DbContext context)
         {
