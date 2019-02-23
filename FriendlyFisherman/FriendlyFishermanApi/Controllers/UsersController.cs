@@ -29,7 +29,7 @@ namespace FriendlyFishermanApi.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] RegisterUserViewModel model)
+        public async Task<IActionResult> Authenticate([FromBody] LoginViewModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
 
@@ -61,6 +61,8 @@ namespace FriendlyFishermanApi.Controllers
             {
                 UserName = model.Username,
                 Email = model.Username,
+                FirstName = model.FirstName,
+                LastName = model.LastName
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
