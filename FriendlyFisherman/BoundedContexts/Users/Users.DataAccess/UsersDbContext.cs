@@ -7,6 +7,11 @@ namespace Users.DataAccess
 {
     public class UsersDbContext : IdentityDbContext<User, Role, string, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
     {
+        public UsersDbContext()
+        {
+
+        }
+
         public UsersDbContext(DbContextOptions<UsersDbContext> options)
             : base(options)
         {
