@@ -166,6 +166,9 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
                     throw new ArgumentNullException(nameof(whereClause));
 
                 var entity = e.FirstOrDefault(whereClause);
+                if (entity == null)
+                    return;
+
                 e.Remove(entity);
 
                 if (isContext)
@@ -180,7 +183,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
                 if (ReferenceEquals(@object, null))
                     throw new ArgumentNullException(nameof(@object));
 
-                //context.Entry(@object).State = EntityState.Deleted;
+                //TODO discuss if this should be manually attached
                 _context.Set<T>().Attach(@object);
                 _context.Set<T>().Remove(@object);
 

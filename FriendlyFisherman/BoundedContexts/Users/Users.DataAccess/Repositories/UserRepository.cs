@@ -24,6 +24,9 @@ namespace Users.DataAccess.Repositories
             var repo = CreateRepo();
 
             var user = repo.Get(x => x.UserName == username);
+            if (user == null)
+                return null;
+
             return new User { UserName = user.UserName, Id = user.Id, SecurityStamp = user.SecurityStamp, PasswordHash = user.PasswordHash };
         }
 
