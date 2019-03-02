@@ -16,10 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoundedContexts\Users\Users.DataAccess\Users.DataAccess.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ServiceTests\" />
+    <ProjectReference Include="..\BoundedContexts\Users\Users.Services\Users.Services.csproj" />
   </ItemGroup>
 
 </Project>
