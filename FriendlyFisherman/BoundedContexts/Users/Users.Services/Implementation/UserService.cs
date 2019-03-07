@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using Users.Domain.EntityViewModels;
@@ -42,18 +43,23 @@ namespace Users.Services.Implementation
                 if (ReferenceEquals(user, null))
                     return null;
 
-                var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+                ClaimsIdentity identity = new ClaimsIdentity(
+                  new GenericIdentity(user.UserName, "TokenAuth"),
+                  new[] { new Claim("ID", user.Id.ToString()), new Claim(ClaimTypes.Name, user.UserName) }
+                );
+
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                    }),
+                    IssuedAt = DateTime.UtcNow,
+                    NotBefore = DateTime.UtcNow,
                     Expires = DateTime.UtcNow.AddDays(7),
+                    Subject = identity,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
 
+                var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.CreateToken(tokenDescriptor);
 
                 response.AccessToken = tokenHandler.WriteToken(token);

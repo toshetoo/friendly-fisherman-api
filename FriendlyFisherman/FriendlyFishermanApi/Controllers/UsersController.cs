@@ -10,7 +10,7 @@ using Users.Services.Request;
 
 namespace FriendlyFishermanApi.Controllers
 {
-    //[Authorize]
+    [Authorize("Bearer")]
     public class UsersController : BaseApiController
     {
         private readonly ILogger _logger;
