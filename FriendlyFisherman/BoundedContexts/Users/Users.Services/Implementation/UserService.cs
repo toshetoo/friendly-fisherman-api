@@ -32,6 +32,11 @@ namespace Users.Services.Implementation
             return await Task.Run(() => GetUserAuthentication(request));
         }
 
+        /// <summary>
+        /// Creates a valid JWT token for an existing user
+        /// </summary>
+        /// <param name="request">The user that is trying to authenticate</param>
+        /// <returns>A valid JWT token if the user data is correct or NULL if no such user exists</returns>
         private UserAuthenticationResponse GetUserAuthentication(UserAuthenticationRequest request)
         {
             var response = new UserAuthenticationResponse();
@@ -77,6 +82,11 @@ namespace Users.Services.Implementation
             return await Task.Run(() => GetAllUsers(request));
         }
 
+        /// <summary>
+        /// Extracts all users from the DataBase
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         private GetAllUsersResponse GetAllUsers(GetAllUsersRequest request)
         {
             var response = new GetAllUsersResponse();
@@ -110,6 +120,11 @@ namespace Users.Services.Implementation
             return await Task.Run(() => GetUserById(request));
         }
 
+        /// <summary>
+        /// Extracts a single user from the Database.
+        /// </summary>
+        /// <param name="request">An object containing the id of the searched user</param>
+        /// <returns>A single user with the corresponding ID or an exception with an error message</returns>
         private GetUserResponse GetUserById(GetUserRequest request)
         {
             var response = new GetUserResponse();
@@ -144,6 +159,14 @@ namespace Users.Services.Implementation
             return await Task.Run(() => EditUser(request));
         }
 
+        /// <summary>
+        /// Modifies an existing user or creates a new one
+        /// </summary>
+        /// <param name="request">
+        /// The user information that should be handled. If an ID exist in
+        /// this object, the user will be modified otherwise a new user will be created
+        /// </param>
+        /// <returns>An exception if the user data is invalid</returns>
         private EditUserResponse EditUser(EditUserRequest request)
         {
             var response = new EditUserResponse();
