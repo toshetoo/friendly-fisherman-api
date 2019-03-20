@@ -22,6 +22,9 @@ namespace Users.Tests.Fixtures
             repositoryMock.Setup(repo => repo.GetById(It.IsAny<string>()))
                 .Returns((string id) => dbSet.FirstOrDefault(u => u.Id == id));
 
+            repositoryMock.Setup(repo => repo.GetByEmail(It.IsAny<string>()))
+                .Returns((string email) => dbSet.FirstOrDefault(u => u.Email == email));
+
             repositoryMock.Setup(repo => repo.GetByUsername(It.IsAny<string>()))
                 .Returns((string username) => dbSet.FirstOrDefault(u => u.UserName == username));
 

@@ -88,6 +88,29 @@ namespace Users.Tests.RepositoryTests
         }
 
         [Fact]
+        public void GetByEmail_ReturnsCorrectUser()
+        {
+            var data = new UsersTestData().GetUsersData();
+            var repo = GetRepo(data);
+
+            var result = repo.GetByEmail(data[0].Email);
+
+            Assert.NotNull(result);
+            Assert.Equal(data[0].Email, result.Email);
+        }
+
+        [Fact]
+        public void GetByEmail_WithWrongUser_ReturnsError()
+        {
+            var data = new UsersTestData().GetUsersData();
+            var repo = GetRepo(data);
+
+            var result = repo.GetByEmail(Guid.NewGuid().ToString());
+
+            Assert.Null(result);
+        }
+
+        [Fact]
         public void Save_WithNoId_AddsNewUser()
         {
             var data = new UsersTestData().GetUsersData();

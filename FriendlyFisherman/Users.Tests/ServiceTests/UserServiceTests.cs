@@ -94,6 +94,29 @@ namespace Users.Tests.ServiceTests
         }
 
         [Fact]
+        public async Task GetUserByEmail_ReturnsException_WithWrongEmail()
+        {
+            var request = new GetUserRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+            var result = await _service.GetUserByEmailAsync(request);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Exception);
+        }
+
+        [Fact]
+        public async Task GetUserByEmail_ReturnsUser_WithCorrectEmail()
+        {
+            var userRequest = new GetUserRequest(Constants.AdminId);
+            var user = await _service.GetUserByIdAsync(userRequest);
+            var emailRequest = new GetUserRequest(user.User.Id, user.User.Email);
+            var result = await _service.GetUserByIdAsync(emailRequest);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.User);
+            Assert.Equal(user.User.Email, result.User.Email);
+        }
+
+        [Fact]
         public async Task EditUser_ReturnsException_WithWrongUser()
         {
             var request = new EditUserRequest(null);
