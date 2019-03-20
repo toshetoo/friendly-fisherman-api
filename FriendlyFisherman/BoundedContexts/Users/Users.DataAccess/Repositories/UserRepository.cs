@@ -53,6 +53,19 @@ namespace Users.DataAccess.Repositories
         }
 
         /// <summary>
+        /// Gets a single user by email from the database
+        /// </summary>
+        /// <param name="email">The email of the searched user</param>
+        /// <returns>A user that matches the given email</returns>
+        public User GetByEmail(string email)
+        {
+            var repo = CreateRepo();
+
+            var user = repo.Get(x => x.Email == email);
+            return user;
+        }
+
+        /// <summary>
         /// Saves or updates a user. If the User object in the parameter has an ID, an Update operation will be performed
         /// otherwise a new user will be created
         /// </summary>

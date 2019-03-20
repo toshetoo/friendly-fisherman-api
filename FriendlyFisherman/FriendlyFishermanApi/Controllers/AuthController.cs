@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FriendlyFisherman.SharedKernel;
+using FriendlyFisherman.SharedKernel.Models.EmailTemplates;
+using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,13 +24,17 @@ namespace FriendlyFishermanApi.Controllers
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IEmailService _emailService;
+        private AppSettings _settings;
 
-        public AuthController(IUserService userService, SignInManager<User> signInManager, UserManager<User> userManager, ILogger<UsersController> logger)
+        public AuthController(IUserService userService, SignInManager<User> signInManager, UserManager<User> userManager, ILogger<UsersController> logger, IEmailService emailService, AppSettings settings)
         {
             _logger = logger;
             _userService = userService;
             _signInManager = signInManager;
             _userManager = userManager;
+            _emailService = emailService;
+            _settings = settings;
         }
 
         [HttpPost]
@@ -62,7 +69,7 @@ namespace FriendlyFishermanApi.Controllers
             var user = new User
             {
                 UserName = model.Username,
-                Email = model.Username,
+                Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName
             };
@@ -86,6 +93,62 @@ namespace FriendlyFishermanApi.Controllers
                 _logger.LogError(response.Exception.Message);
                 return Ok(response.Exception);
             }
+        }
+
+        [HttpPost]
+        [Route("RequestPasswordReset")]
+        public async Task<IActionResult> RequestPasswordReset(ResetPasswordViewModel model)
+        {
+            var request = new GetUserRequest(model.Email);
+            var response = await _userService.GetUserByEmailAsync(request);
+            var user = new User
+            {
+                UserName = response.User.Username,
+                Email = response.User.Email,
+                FirstName = response.User.FirstName,
+                LastName = response.User.LastName
+            };
+
+            if (response.User == null)
+            {
+                // add error
+                return NotFound();
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var callBackUrl = $"{_settings.EmailSettings.SiteRedirectUrl}/reset-password?token={token}";
+            EmailTemplateModel emailModel = EmailTemplateModel.Create(user.FirstName, callBackUrl);
+
+            _emailService.SendAsync(emailModel, _settings.EmailSettings, user.Email, _settings.EmailSettings.ResetPasswordEmailTemplate, _settings.EmailSettings.ResetPasswordSubject);
+
+
+            return Ok(new { token });
+        }
+
+        [HttpPost]
+        [Route("SetNewPassword")]
+        public async Task<IActionResult> SetNewPassword(ResetPasswordViewModel model)
+        {
+            var request = new GetUserRequest(model.Email);
+            var response = await _userService.GetUserByEmailAsync(request);
+            var user = new User
+            {
+                UserName = response.User.Username,
+                Email = response.User.Email,
+                FirstName = response.User.FirstName,
+                LastName = response.User.LastName
+            };
+
+            if (response.User == null)
+            {
+                // add error
+                return NotFound();
+            } 
+
+            await _userManager.ResetPasswordAsync(user, model.PasswordToken, model.Password);
+
+            return Ok();
         }
     }
 }

@@ -191,5 +191,44 @@ namespace Users.Services.Implementation
 
             return response;
         }
+
+        public async Task<GetUserResponse> GetUserByEmailAsync(GetUserRequest request)
+        {
+            return await Task.Run(() => GetUserByEmail(request));
+        }
+
+        /// <summary>
+        /// Extracts a single user from the Database.
+        /// </summary>
+        /// <param name="request">An object containing the email of the searched user</param>
+        /// <returns>A single user with the corresponding Email or an exception with an error message</returns>
+        private GetUserResponse GetUserByEmail(GetUserRequest request)
+        {
+            var response = new GetUserResponse();
+
+            try
+            {
+                var user = _usersRepository.GetByEmail(request.Email);
+                if (ReferenceEquals(user, null))
+                    throw new Exception($"There is no user with email: {request.Email}");
+
+                var userViewModel = new UserViewModel
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Username = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+
+                response.User = userViewModel;
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
+        }
     }
 }
