@@ -109,7 +109,7 @@ namespace Users.Tests.ServiceTests
             var userRequest = new GetUserRequest(Constants.AdminId);
             var user = await _service.GetUserByIdAsync(userRequest);
             var emailRequest = new GetUserRequest(user.User.Id, user.User.Email);
-            var result = await _service.GetUserByIdAsync(emailRequest);
+            var result = await _service.GetUserByEmailAsync(emailRequest);
 
             Assert.NotNull(result);
             Assert.NotNull(result.User);

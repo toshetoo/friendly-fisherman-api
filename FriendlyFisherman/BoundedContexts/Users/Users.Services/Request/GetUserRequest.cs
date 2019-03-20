@@ -7,7 +7,7 @@
         public GetUserRequest(string id, string email = "")
         {
             Id = id;
-            Email = Email;
+            Email = email;
         }
 
         public string Id { get; set; }
