@@ -20,13 +20,13 @@ namespace Users.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<UserLogin>().HasKey(ul => new { ul.LoginProvider, ul.ProviderKey });
-            modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.RoleId, ur.UserId });
-            modelBuilder.Entity<UserToken>().HasKey(ur => new { ur.LoginProvider, ur.UserId, ur.Name });
-            modelBuilder.Entity<User>().ToTable("AspNetUsers");
-            modelBuilder.Entity<Role>().ToTable("AspNetRoles");
-            modelBuilder.Entity<UserRole>().ToTable("AspNetUserRoles");
-            modelBuilder.Entity<UserClaim>().ToTable("AspNetUserClaims");
+            modelBuilder.Entity<UserLogin>().ToTable("UserLogins").HasKey(ul => new { ul.LoginProvider, ul.ProviderKey });
+            modelBuilder.Entity<UserRole>().ToTable("UserRoles").HasKey(ur => new { ur.RoleId, ur.UserId });
+            modelBuilder.Entity<UserToken>().ToTable("UserTokens").HasKey(ur => new { ur.LoginProvider, ur.UserId, ur.Name });
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<Role>().ToTable("Roles");
+            modelBuilder.Entity<UserClaim>().ToTable("UserClaims");
+            modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims");
         }
     }
 }
