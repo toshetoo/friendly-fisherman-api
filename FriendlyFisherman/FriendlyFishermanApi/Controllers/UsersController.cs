@@ -33,29 +33,25 @@ namespace FriendlyFishermanApi.Controllers
             {
                 return Ok(response);
             }
-            else
-            {
-                _logger.LogError(response.Exception.Message);
-                return Ok(response.Exception);
-            }
+
+            _logger.LogError(response.Exception.Message);
+            return Ok(response.Exception);
         }
 
         [HttpGet]
         [Route("GetUserById")]
         public async Task<IActionResult> GetUserById(string id)
         {
-            var request = new GetUserRequest(id);
+            var request = new GetUserRequest() { Id = id };
             var response = await _userService.GetUserByIdAsync(request);
 
             if (ReferenceEquals(response.Exception, null))
             {
                 return Ok(response);
             }
-            else
-            {
-                _logger.LogError(response.Exception.Message);
-                return Ok(response.Exception);
-            }
+
+            _logger.LogError(response.Exception.Message);
+            return Ok(response.Exception);
         }
 
         [HttpPost]
@@ -69,11 +65,9 @@ namespace FriendlyFishermanApi.Controllers
             {
                 return Ok(response);
             }
-            else
-            {
-                _logger.LogError(response.Exception.Message);
-                return Ok(response.Exception);
-            }
+
+            _logger.LogError(response.Exception.Message);
+            return Ok(response.Exception);
         }
     }
 }
