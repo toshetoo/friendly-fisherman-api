@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using Users.Domain.Entities;
 using Users.Domain.EntityViewModels;
 using Users.Services.Abstraction;
 using Users.Services.Request;

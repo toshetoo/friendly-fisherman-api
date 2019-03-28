@@ -23,7 +23,7 @@ namespace FriendlyFishermanApi.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailService _emailService;
-        private AppSettings _settings;
+        private readonly AppSettings _settings;
 
         public AuthController(IUserService userService, SignInManager<User> signInManager, UserManager<User> userManager, ILogger<UsersController> logger, IEmailService emailService, AppSettings settings)
         {
@@ -135,7 +135,7 @@ namespace FriendlyFishermanApi.Controllers
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             var callBackUrl = $"{_settings.EmailSettings.SiteRedirectUrl}/reset-password?token={token}";
-            EmailTemplateModel emailModel = EmailTemplateModel.Create(user.FirstName, callBackUrl);
+            var emailModel = EmailTemplateModel.Create(user.FirstName, callBackUrl);
 
             _emailService.SendAsync(emailModel, _settings.EmailSettings, user.Email, _settings.EmailSettings.ResetPasswordEmailTemplate, _settings.EmailSettings.ResetPasswordSubject);
 

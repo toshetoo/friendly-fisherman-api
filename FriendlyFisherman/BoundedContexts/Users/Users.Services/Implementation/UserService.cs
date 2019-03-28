@@ -18,7 +18,7 @@ namespace Users.Services.Implementation
 {
     public class UserService : IUserService
     {
-        private IUserRepository _usersRepository;
+        private readonly IUserRepository _usersRepository;
         private readonly AppSettings _appSettings;
 
         public UserService(IUserRepository usersRepository, IOptions<AppSettings> appSettings)
@@ -50,7 +50,7 @@ namespace Users.Services.Implementation
 
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
-                ClaimsIdentity identity = new ClaimsIdentity(
+                var identity = new ClaimsIdentity(
                   new GenericIdentity(user.UserName, "TokenAuth"),
                   new[] { new Claim("ID", user.Id.ToString()), new Claim(ClaimTypes.Name, user.UserName) }
                 );

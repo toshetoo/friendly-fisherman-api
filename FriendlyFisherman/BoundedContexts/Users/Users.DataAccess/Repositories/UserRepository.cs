@@ -1,7 +1,5 @@
 ﻿using FriendlyFisherman.SharedKernel.Repositories.Impl;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Users.Domain.Entities;
 using Users.Domain.Repositories;
 

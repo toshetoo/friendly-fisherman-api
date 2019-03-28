@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Users.Domain.EntityViewModels
+﻿namespace Users.Domain.EntityViewModels
 {
     public class UserViewModel
     {
