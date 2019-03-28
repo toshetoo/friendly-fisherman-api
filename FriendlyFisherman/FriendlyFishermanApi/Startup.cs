@@ -14,6 +14,8 @@ using Publishing.DataAccess;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 using System.Text;
+using FriendlyFisherman.SharedKernel.Services.Abstraction;
+using FriendlyFisherman.SharedKernel.Services.Impl;
 using Newtonsoft.Json;
 using Users.DataAccess;
 using Users.DataAccess.Repositories;
@@ -123,6 +125,8 @@ namespace FriendlyFishermanApi
             #region DI
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<IEmailService, EmailService>();
+            services.AddSingleton(Configuration.GetSection(typeof(AppSettings).Name).Get<AppSettings>());
             #endregion
 
             services.AddCors();
