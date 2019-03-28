@@ -16,14 +16,16 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
     {
         public async Task SendAsync(EmailTemplateModel model, EmailSettings settings, string emailTo, string templateName, string subject)
         {
-            MailAddress from = new MailAddress(settings.EmailAccount);
-            MailAddress to = new MailAddress(emailTo);
+            var from = new MailAddress(settings.EmailAccountName);
+            var to = new MailAddress(emailTo);
 
-            MailMessage message = new MailMessage(from, to);
-            message.IsBodyHtml = true;
-            message.Subject = subject;
+            var message = new MailMessage(from, to)
+            {
+                IsBodyHtml = true,
+                Subject = subject
+            };
 
-            string body = ReplaceText(model, FileHelper.LoadTemplate(settings.EmailsTemplatesFolder, templateName));
+            var body = ReplaceText(model, FileHelper.LoadTemplate(settings.EmailsTemplatesFolder, templateName));
             message.Body = body;
 
             CreateMailClient(settings).SendMailAsync(message);
@@ -31,22 +33,24 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
 
         private SmtpClient CreateMailClient(EmailSettings settings)
         {
-            SmtpClient client = new SmtpClient();
-            client.Host = settings.Host;
-            client.Port = settings.Port;
-            client.UseDefaultCredentials = settings.UseDefaultCredentials;
-            client.EnableSsl = settings.EnableSsl;
-            client.Credentials = new NetworkCredential(settings.EmailAccount, settings.EmailPassword);
+            var client = new SmtpClient
+            {
+                Host = settings.Host,
+                Port = settings.Port,
+                UseDefaultCredentials = settings.UseDefaultCredentials,
+                EnableSsl = settings.EnableSsl,
+                Credentials = new NetworkCredential(settings.EmailAccount, settings.EmailPassword)
+            };
 
             return client;
         }
 
         private string ReplaceText(EmailTemplateModel model, string body)
         {
-            foreach (PropertyInfo propertyInfo in model.GetType().GetProperties())
+            foreach (var propertyInfo in model.GetType().GetProperties())
             {
-                string propertyName = "@[" + propertyInfo.Name + "]";
-                string propertyValue = propertyInfo.GetValue(model, null)?.ToString();
+                var propertyName = "@[" + propertyInfo.Name + "]";
+                var propertyValue = propertyInfo.GetValue(model, null)?.ToString();
 
                 body = body.Replace(propertyName, propertyValue);
             }

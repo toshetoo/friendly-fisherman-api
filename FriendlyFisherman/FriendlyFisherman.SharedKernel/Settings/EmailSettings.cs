@@ -7,6 +7,7 @@ namespace FriendlyFisherman.SharedKernel.Settings
     public class EmailSettings
     {
         public string EmailAccount { get; set; }
+        public string EmailAccountName { get; set; }
         public string EmailPassword { get; set; }
         public string SiteRedirectUrl { get; set; }
 
