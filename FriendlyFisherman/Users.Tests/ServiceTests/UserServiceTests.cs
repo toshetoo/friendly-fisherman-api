@@ -75,7 +75,7 @@ namespace Users.Tests.ServiceTests
         [Fact]
         public async Task GetUserById_ReturnsException_WithWrongId()
         {
-            var request = new GetUserRequest(Guid.NewGuid().ToString());
+            var request = new GetUserRequest() { Id = Guid.NewGuid().ToString() };
             var result = await _service.GetUserByIdAsync(request);
 
             Assert.NotNull(result);
@@ -85,7 +85,7 @@ namespace Users.Tests.ServiceTests
         [Fact]
         public async Task GetUserById_ReturnsUser_WithCorrectId()
         {
-            var request = new GetUserRequest(Constants.AdminId);
+            var request = new GetUserRequest() { Id = Constants.AdminId };
             var result = await _service.GetUserByIdAsync(request);
 
             Assert.NotNull(result);
@@ -96,7 +96,7 @@ namespace Users.Tests.ServiceTests
         [Fact]
         public async Task GetUserByEmail_ReturnsException_WithWrongEmail()
         {
-            var request = new GetUserRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+            var request = new GetUserRequest() { Email = Guid.NewGuid().ToString() };
             var result = await _service.GetUserByEmailAsync(request);
 
             Assert.NotNull(result);
@@ -106,9 +106,9 @@ namespace Users.Tests.ServiceTests
         [Fact]
         public async Task GetUserByEmail_ReturnsUser_WithCorrectEmail()
         {
-            var userRequest = new GetUserRequest(Constants.AdminId);
+            var userRequest = new GetUserRequest() { Id = Constants.AdminId };
             var user = await _service.GetUserByIdAsync(userRequest);
-            var emailRequest = new GetUserRequest(user.User.Id, user.User.Email);
+            var emailRequest = new GetUserRequest() { Id = user.User.Id, Email = user.User.Email};
             var result = await _service.GetUserByEmailAsync(emailRequest);
 
             Assert.NotNull(result);
@@ -139,13 +139,13 @@ namespace Users.Tests.ServiceTests
         [Fact]
         public async Task EditUser_UpdatesUser_WithCorrectUser()
         {
-            var userToEdit = await _service.GetUserByIdAsync(new GetUserRequest(Constants.UserId));
+            var userToEdit = await _service.GetUserByIdAsync(new GetUserRequest() {Id = Constants.UserId });
 
             userToEdit.User.FirstName = "Test";
             var request = new EditUserRequest(userToEdit.User);
             await _service.EditUserAsync(request);
 
-            var result = await _service.GetUserByIdAsync(new GetUserRequest(Constants.UserId));
+            var result = await _service.GetUserByIdAsync(new GetUserRequest() { Id = Constants.UserId });
 
             Assert.NotNull(result);
             Assert.NotNull(result.User);
