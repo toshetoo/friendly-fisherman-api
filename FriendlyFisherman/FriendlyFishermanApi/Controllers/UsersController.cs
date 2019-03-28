@@ -68,5 +68,21 @@ namespace FriendlyFishermanApi.Controllers
             _logger.LogError(response.Exception, response.Exception.Message);
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
+
+        [HttpPost]
+        [Route("UploadImage")]
+        public async Task<IActionResult> UploadImage(ImageUploadViewModel model)
+        {
+            var request = new UploadImageRequest(model);
+            var response = await _userService.UploadImageAsync(request);
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
     }
 }

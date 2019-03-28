@@ -14,5 +14,7 @@ namespace Users.Domain.EntityViewModels
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+        
+        public string ImagePath { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -27,12 +28,13 @@ namespace FriendlyFisherman.SharedKernel.Helpers
             File.WriteAllBytes(filePath, imageBytes);
         }
 
-        public static FileStream OpenFile(string filePath)
+        public static string GetImageAsBase64(string filePath)
         {
             if (!File.Exists(filePath))
                 return null;
 
-            return File.OpenRead(filePath);
+            byte[] imageArray = System.IO.File.ReadAllBytes(filePath);
+            return Convert.ToBase64String(imageArray);
         }
     }
 

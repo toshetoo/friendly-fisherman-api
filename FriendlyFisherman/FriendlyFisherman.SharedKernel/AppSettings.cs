@@ -10,5 +10,6 @@ namespace FriendlyFisherman.SharedKernel
     {
         public string Secret { get; set; }
         public EmailSettings EmailSettings { get; set; }
+        public FileUploadSettings FileUploadSettings { get; set; }
     }
 }

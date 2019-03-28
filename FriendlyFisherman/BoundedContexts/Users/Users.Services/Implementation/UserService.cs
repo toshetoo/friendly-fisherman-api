@@ -4,10 +4,12 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using FriendlyFisherman.SharedKernel.Helpers;
 using Users.Domain.EntityViewModels;
 using Users.Domain.Repositories;
 using Users.Services.Abstraction;
@@ -144,6 +146,9 @@ namespace Users.Services.Implementation
                     LastName = user.LastName
                 };
 
+                string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
+                user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+
                 response.User = userViewModel;
             }
             catch (Exception ex)
@@ -181,6 +186,7 @@ namespace Users.Services.Implementation
                 user.UserName = request.User.Username;
                 user.FirstName = request.User.FirstName;
                 user.LastName = request.User.LastName;
+                user.ImagePath = request.User.ImagePath;
 
                 _usersRepository.Save(user);
             }
@@ -221,6 +227,8 @@ namespace Users.Services.Implementation
                     LastName = user.LastName
                 };
 
+                string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
+                user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 response.User = userViewModel;
             }
             catch (Exception ex)
@@ -229,6 +237,42 @@ namespace Users.Services.Implementation
             }
 
             return response;
+        }
+
+        public async Task<UploadImageResponse> UploadImageAsync(UploadImageRequest request)
+        {
+            return await Task.Run(() => UploadImage(request));
+        }
+
+        private UploadImageResponse UploadImage(UploadImageRequest request)
+        {
+            var response = new UploadImageResponse();
+
+            try
+            {
+                var user = _usersRepository.GetById(request.Id);
+                if (ReferenceEquals(user, null))
+                    throw new Exception($"There is no user with Id: {request.Id}");
+
+                user.ImagePath = $"{user.Id}";
+
+                string filePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
+
+                if (!File.Exists(filePath))
+                {
+                    FileHelper.CreateFile(request.ImageSource, filePath);
+
+                    _usersRepository.Save(user);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
+
         }
     }
 }
