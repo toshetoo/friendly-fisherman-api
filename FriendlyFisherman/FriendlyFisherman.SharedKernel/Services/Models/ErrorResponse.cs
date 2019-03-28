@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace FriendlyFisherman.SharedKernel.Services.Models
+{
+    public class ErrorResponse
+    {
+        public string Message { get; set; }
+
+        public ErrorResponse(string message)
+        {
+            Message = message;
+        }
+    }
+}

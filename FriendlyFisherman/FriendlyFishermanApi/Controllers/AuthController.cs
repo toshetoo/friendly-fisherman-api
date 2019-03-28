@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Web;
+using FriendlyFisherman.SharedKernel.Messages;
+using FriendlyFisherman.SharedKernel.Services.Models;
 using Users.Domain.Entities;
 using Users.Domain.EntityViewModels;
 using Users.Services.Abstraction;
@@ -42,14 +44,13 @@ namespace FriendlyFishermanApi.Controllers
             var user = await _userManager.FindByNameAsync(model.Username);
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                // TODO add proper code and error
-                return StatusCode(401);
+                return BadRequest(new ErrorResponse(ErrorMessages.EmailNotConfirmed));
             }
 
             var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
             if (result != Microsoft.AspNetCore.Identity.SignInResult.Success)
             {
-                return Ok(new { error = "Unavailable username or password" });
+                return BadRequest(new ErrorResponse(ErrorMessages.IncorrectUsernameOrPassword));
             }
 
             var request = new UserAuthenticationRequest(model.Username);
@@ -60,8 +61,8 @@ namespace FriendlyFishermanApi.Controllers
                 return Ok(response);
             }
 
-            _logger.LogError(response.Exception.Message);
-            return Ok(response.Exception);
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
 
         }
 
@@ -82,7 +83,7 @@ namespace FriendlyFishermanApi.Controllers
 
             if (!result.Succeeded)
             {
-                return Ok(new { error = "Was not able to create a user." });
+                return Ok(new ErrorResponse(ErrorMessages.CouldNotCreateUser));
             }
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -100,7 +101,7 @@ namespace FriendlyFishermanApi.Controllers
         {
             if (model.Id == null || model.Token == null)
             {
-                return BadRequest();
+                return BadRequest(new ErrorResponse(ErrorMessages.RequiredFields));
             }
 
             var user = await _userManager.FindByIdAsync(model.Id);
@@ -122,14 +123,12 @@ namespace FriendlyFishermanApi.Controllers
 
             if (user == null)
             {
-                // add error
-                return NotFound();
+                return NotFound(new ErrorResponse(ErrorMessages.MissingUserEmail));
             }
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                // TODO add proper code and error
-                return StatusCode(401);
+                return Unauthorized(new ErrorResponse(ErrorMessages.EmailNotConfirmed));
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -151,14 +150,12 @@ namespace FriendlyFishermanApi.Controllers
 
             if (user == null)
             {
-                // add error
-                return NotFound();
+                return NotFound(new ErrorResponse(ErrorMessages.MissingUserEmail));
             }
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                // TODO add proper code and error
-                return StatusCode(401);
+                return Unauthorized(new ErrorResponse(ErrorMessages.EmailNotConfirmed));
             }
 
             await _userManager.ResetPasswordAsync(user, model.PasswordToken, model.Password);

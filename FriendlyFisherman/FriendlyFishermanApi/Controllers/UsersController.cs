@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using FriendlyFisherman.SharedKernel.Services.Models;
 using Users.Domain.EntityViewModels;
 using Users.Services.Abstraction;
 using Users.Services.Request;
@@ -24,23 +26,22 @@ namespace FriendlyFishermanApi.Controllers
         [Route("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var request = new GetAllUsersRequest();
-            var response = await _userService.GetAllUsersAsync(request);
+            var response = await _userService.GetAllUsersAsync(new GetAllUsersRequest());
 
             if (ReferenceEquals(response.Exception, null))
             {
                 return Ok(response);
             }
 
-            _logger.LogError(response.Exception.Message);
-            return Ok(response.Exception);
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
         [HttpGet]
         [Route("GetUserById")]
-        public async Task<IActionResult> GetUserById(string id)
+        public async Task<IActionResult> GetUserById([Required] string id)
         {
-            var request = new GetUserRequest() { Id = id };
+            var request = new GetUserRequest { Id = id };
             var response = await _userService.GetUserByIdAsync(request);
 
             if (ReferenceEquals(response.Exception, null))
@@ -48,8 +49,8 @@ namespace FriendlyFishermanApi.Controllers
                 return Ok(response);
             }
 
-            _logger.LogError(response.Exception.Message);
-            return Ok(response.Exception);
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
         [HttpPost]
@@ -64,8 +65,8 @@ namespace FriendlyFishermanApi.Controllers
                 return Ok(response);
             }
 
-            _logger.LogError(response.Exception.Message);
-            return Ok(response.Exception);
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
     }
 }
