@@ -32,10 +32,10 @@ namespace Users.Tests.ServiceTests
             _dbSetFixture = dbSetFixture;
             _settingsFixture = settingsFixture;
 
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var mockSet = _dbSetFixture.CreateMockSet<User>(data);
             var mockContext = _contextFixture.CreateMockContext<User>(mockSet).Object;
-            _repositoryMock = repositoryFixture.CreateRepository(mockContext);
+            _repositoryMock = repositoryFixture.CreateUsersRepository(mockContext);
 
             var mockSettings = _settingsFixture.CreateMockSettings();
             _service = new UserService(_repositoryMock, mockSettings);

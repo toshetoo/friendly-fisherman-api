@@ -11,7 +11,7 @@ namespace Users.Tests.Fixtures
 {
     public class DbSetFixture
     {
-        public Mock<DbSet<T>> CreateMockSet<T>(List<T> collection = null) where T : User
+        public Mock<DbSet<T>> CreateMockSet<T>(List<T> collection = null) where T: class
         {
             var mockSet = new Mock<DbSet<T>>();
 

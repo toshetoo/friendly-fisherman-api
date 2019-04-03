@@ -7,7 +7,7 @@ namespace Users.Tests.Fixtures
 {
     public class ContextFixture
     {
-        public Mock<UsersDbContext> CreateMockContext<T>(Mock<DbSet<T>> mockSet) where T: User
+        public Mock<UsersDbContext> CreateMockContext<T>(Mock<DbSet<T>> mockSet) where T: class
         {
             var mockContext = new Mock<UsersDbContext>();
 

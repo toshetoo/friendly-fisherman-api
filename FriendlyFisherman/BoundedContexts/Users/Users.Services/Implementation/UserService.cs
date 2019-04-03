@@ -143,11 +143,12 @@ namespace Users.Services.Implementation
                     Email = user.Email,
                     Username = user.UserName,
                     FirstName = user.FirstName,
-                    LastName = user.LastName
+                    LastName = user.LastName,
+                    ImagePath = user.ImagePath
                 };
 
                 string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-                user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                userViewModel.ImagePath = FileHelper.GetImageAsBase64(imagePath);
 
                 response.User = userViewModel;
             }
@@ -224,11 +225,12 @@ namespace Users.Services.Implementation
                     Email = user.Email,
                     Username = user.UserName,
                     FirstName = user.FirstName,
-                    LastName = user.LastName
+                    LastName = user.LastName,
+                    ImagePath = user.ImagePath
                 };
 
                 string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-                user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                userViewModel.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 response.User = userViewModel;
             }
             catch (Exception ex)

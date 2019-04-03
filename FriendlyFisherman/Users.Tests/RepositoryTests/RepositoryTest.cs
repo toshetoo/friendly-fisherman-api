@@ -33,7 +33,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Repo_WithCorrectParams_BuildsOk()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             Assert.NotNull(repo);
@@ -42,7 +42,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Create_WithNull_ThrowsArgumentNullException()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var exception = Assert.Throws<ArgumentNullException>(() => repo.Create(null));
@@ -54,7 +54,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Create_WithCorrectObject_ReturnsOK()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var user = new Fixture().Build<User>().Create();
@@ -67,7 +67,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Get_WithNullAsFilter_ThrowsArgumentNullException()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var exception = Assert.Throws<ArgumentNullException>(() => repo.Get(null));
@@ -79,7 +79,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAll_ReturnsList()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetAll();
@@ -91,7 +91,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAll_WithOrderByNull_ReturnsDefaultOrder()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetAll<User>(false, null).ToList();
@@ -106,7 +106,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Update_WithNull_ThrowsArgumentNullException()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var exception = Assert.Throws<ArgumentNullException>(() => repo.Update(null));
@@ -118,7 +118,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Delete_WithNull_ThrowsArgumentNullException()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var exception = Assert.Throws<ArgumentNullException>(() => repo.Delete((User)null));
@@ -130,7 +130,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void DeleteRange_WithNull_ThrowsArgumentNullException()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var exception = Assert.Throws<ArgumentNullException>(() => repo.DeleteRange(null));
@@ -142,7 +142,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAll_WithoutParameters_ReturnsAll()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var collection = repo.GetAll();
@@ -155,7 +155,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAll_WithOrderByAscParam_ReturnsOrderedByAsc()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var collection = repo.GetAll(false, user => user.FirstName);
@@ -168,7 +168,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAll_WithOrderByDescParam_ReturnsOrderedByDesc()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var collection = repo.GetAll(true, user => user.FirstName);
@@ -181,7 +181,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetWhere_WithNull_ThrowsNullReferenceException()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             Assert.Throws<NullReferenceException>(() => repo.GetWhere(null, null));
@@ -190,7 +190,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetWhere_WithWhereClause_ReturnsFilteredCollection()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var collection = repo.GetWhere(user => user.Email.Contains("admin"));
@@ -202,7 +202,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetWhere_WithWhereClauseAndSorting_ReturnsFilteredSortedAscCollection()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var collection = repo.GetWhere(
@@ -216,7 +216,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetWhere_WithWhereClauseAndSorting_ReturnsFilteredSortedDescCollection()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var collection = repo.GetWhere(
@@ -230,7 +230,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Delete_WithNotExistingWhereClause_ReturnsWithoutDeleting()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             Assert.Equal(3, repo.GetAll().Count());
@@ -245,7 +245,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Delete_WithValidWhereClause_RemovesUser()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             Assert.Equal(3, repo.GetAll().Count());
@@ -263,7 +263,7 @@ namespace Users.Tests.RepositoryTests
         [Fact(Skip = "Delete does not work")]
         public void DeleteRange_WithValidCollection_RemovesTheItems()
         {
-            var data = new UsersTestData().GetUsersData();
+            var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
             Assert.Equal(3, repo.GetAll().Count());
