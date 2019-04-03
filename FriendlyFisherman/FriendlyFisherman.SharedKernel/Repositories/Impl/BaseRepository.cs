@@ -8,23 +8,23 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 {
     public class BaseRepository<T> where T : class
     {
-        DbSet<T> entities;
+        DbSet<T> _entities;
         private DbContext _context;
-        bool disposed = false;
-        bool isContext = true;
+        bool _disposed = false;
+        bool _isContext = true;
 
         public BaseRepository(DbContext context)
         {
 
             _context = context ?? throw new ArgumentNullException(nameof(context)); ;
-            entities = context.Set<T>();
+            _entities = context.Set<T>();
         }
 
         private DbSet<T> GetContext()
         {
-            entities = entities ?? _context.Set<T>();
+            _entities = _entities ?? _context.Set<T>();
 
-            return entities;
+            return _entities;
         }
         private K ExecuteAction<K>(Func<DbSet<T>, K> action)
         {
@@ -35,10 +35,10 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
             }
             finally
             {
-                if (isContext && _context != null)
+                if (_isContext && _context != null)
                 {
                     //_context.Dispose();
-                    entities = null;
+                    _entities = null;
                     _context = null;
                 }
 
@@ -53,11 +53,11 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
             }
             finally
             {
-                if (isContext && _context != null)
+                if (_isContext && _context != null)
                 {
                     //_context.Dispose();
                     _context = null;
-                    entities = null;
+                    _entities = null;
                 }
 
             }
@@ -72,7 +72,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 
                 e.Add(entity);
 
-                if (isContext)
+                if (_isContext)
                     _context.SaveChanges();
             });
         }
@@ -153,7 +153,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
                 _context.Set<T>().Attach(newEntity);
                 _context.Entry(newEntity).State = EntityState.Modified;
 
-                if (isContext)
+                if (_isContext)
                     _context.SaveChanges();
             });
         }
@@ -171,7 +171,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 
                 e.Remove(entity);
 
-                if (isContext)
+                if (_isContext)
                     _context.SaveChanges();
             });
         }
@@ -187,7 +187,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
                 _context.Set<T>().Attach(@object);
                 _context.Set<T>().Remove(@object);
 
-                if (isContext)
+                if (_isContext)
                     _context.SaveChanges();
             });
         }
@@ -201,14 +201,14 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 
                 _context.Set<T>().RemoveRange(objects);
 
-                if (isContext)
+                if (_isContext)
                     _context.SaveChanges();
             });
         }
 
         public void ExecuteInOneContext(Action<DbContext> e)
         {
-            var temp = isContext;
+            var temp = _isContext;
             try
             {
                 //isContext = false;
@@ -217,11 +217,11 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
             }
             finally
             {
-                isContext = temp;
-                if (isContext && _context != null)
+                _isContext = temp;
+                if (_isContext && _context != null)
                 {
                     //_context.Dispose();
-                    entities = null;
+                    _entities = null;
                     _context = null;
                 }
             }
@@ -229,7 +229,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed)
+            if (_disposed)
                 return;
 
             if (disposing)
@@ -237,7 +237,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
                 _context.Dispose();
             }
 
-            disposed = true;
+            _disposed = true;
         }
         public void Dispose()
         {

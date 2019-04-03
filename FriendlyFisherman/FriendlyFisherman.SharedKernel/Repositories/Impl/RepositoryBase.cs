@@ -7,13 +7,13 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 {
     public abstract class RepositoryBase<T> where T : class
     {
-        protected DbContext context;
+        protected DbContext Context;
 
         public RepositoryBase(DbContext context)
         {
-            this.context = context;
+            this.Context = context;
         }
 
-        protected BaseRepository<T> CreateRepo() { return new BaseRepository<T>(context); }
+        protected BaseRepository<T> CreateRepo() { return new BaseRepository<T>(Context); }
     }
 }

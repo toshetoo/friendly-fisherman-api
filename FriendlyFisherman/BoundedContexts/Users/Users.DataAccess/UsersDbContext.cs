@@ -26,6 +26,7 @@ namespace Users.DataAccess
             modelBuilder.Entity<Role>().ToTable("Roles");
             modelBuilder.Entity<UserClaim>().ToTable("UserClaims");
             modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims");
+            modelBuilder.Entity<PersonalMessage>().ToTable("UserPersonalMessages");
         }
     }
 }

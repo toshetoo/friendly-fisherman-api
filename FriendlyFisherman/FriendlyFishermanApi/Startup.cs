@@ -124,6 +124,7 @@ namespace FriendlyFishermanApi
             #endregion
             #region DI
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPersonalMessagesRepository, PersonalMessagesRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton(Configuration.GetSection(typeof(AppSettings).Name).Get<AppSettings>());
