@@ -126,6 +126,9 @@
   <data name="IncorrectUsernameOrPassword" xml:space="preserve">
     <value>Username or password is incorrect.</value>
   </data>
+  <data name="InvalidId" xml:space="preserve">
+    <value>The provided ID is invalid.</value>
+  </data>
   <data name="MissingUserEmail" xml:space="preserve">
     <value>User with this email does not exist.</value>
   </data>

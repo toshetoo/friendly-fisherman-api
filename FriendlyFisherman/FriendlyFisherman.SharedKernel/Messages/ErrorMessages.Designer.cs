@@ -88,6 +88,15 @@ namespace FriendlyFisherman.SharedKernel.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provided ID is invalid..
+        /// </summary>
+        public static string InvalidId {
+            get {
+                return ResourceManager.GetString("InvalidId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User with this email does not exist..
         /// </summary>
         public static string MissingUserEmail {
