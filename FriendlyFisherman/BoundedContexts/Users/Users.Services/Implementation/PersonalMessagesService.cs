@@ -27,6 +27,11 @@ namespace Users.Services.Implementation
             return await Task.Run(() => GetAllMessagesBySenderId(request));
         }
 
+        /// <summary>
+        /// Retrieves all messages for a specific sender and maps them to the ViewModel
+        /// </summary>
+        /// <param name="request">The attributes used to filter the messages</param>
+        /// <returns>A Response object containing the list of messaged and/or an exception if one occured</returns>
         private GetAllMessagesResponse GetAllMessagesBySenderId(GetAllMessagesRequest request)
         {
             var response = new GetAllMessagesResponse();
@@ -52,6 +57,11 @@ namespace Users.Services.Implementation
             return await Task.Run(() => GetAllMessagesByReceiverId(request));
         }
 
+        /// <summary>
+        /// Retrieves all messages for a specific receiver and maps them to the ViewModel
+        /// </summary>
+        /// <param name="request">The attributes used to filter the messages</param>
+        /// <returns>A Response object containing the list of messaged and/or an exception if one occured</returns>
         private GetAllMessagesResponse GetAllMessagesByReceiverId(GetAllMessagesRequest request)
         {
             var response = new GetAllMessagesResponse();
@@ -77,6 +87,11 @@ namespace Users.Services.Implementation
             return await Task.Run(() => GetMessageById(request));
         }
 
+        /// <summary>
+        /// Retrieves a single message and maps it to the ViewModel
+        /// </summary>
+        /// <param name="request">The attributes used to filter the messages</param>
+        /// <returns>A Response object containing the list of messaged and/or an exception if one occured</returns>
         private GetMessageResponse GetMessageById(GetMessagesRequest request)
         {
             var response = new GetMessageResponse();
@@ -102,6 +117,14 @@ namespace Users.Services.Implementation
             return await Task.Run(() => SaveMessage(request));
         }
 
+        /// <summary>
+        /// Modifies an existing message or creates a new one
+        /// </summary>
+        /// <param name="request">
+        /// The message information that should be handled. If an ID exist in
+        /// this object, the message will be modified otherwise a new message will be created
+        /// </param>
+        /// <returns>An exception if the message data is invalid</returns>
         private EditMessageResponse SaveMessage(EditMessageRequest request)
         {
             var response = new EditMessageResponse();
@@ -135,6 +158,11 @@ namespace Users.Services.Implementation
             return await Task.Run(() => MarkMessageAsRead(request));
         }
 
+        /// <summary>
+        /// Marks a message as read or unread depending on the passed flag
+        /// </summary>
+        /// <param name="request">The ID of the message and a flag weather it should be marked as read or unread</param>
+        /// <returns>An exception if the message data is invalid</returns>
         private EditMessageResponse MarkMessageAsRead(EditMessageRequest request)
         {
             var response = new EditMessageResponse();
@@ -163,6 +191,11 @@ namespace Users.Services.Implementation
             return await Task.Run(() => DeleteMessage(request));
         }
 
+        /// <summary>
+        /// Deletes a message from the DB
+        /// </summary>
+        /// <param name="request">A request object containing the ID of the message that should be deleted</param>
+        /// <returns>An exception if the message could not be removed</returns>
         private GetMessageResponse DeleteMessage(GetMessagesRequest request)
         {
             var response = new GetMessageResponse();
