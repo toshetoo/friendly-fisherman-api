@@ -6,6 +6,7 @@ namespace Users.DataAccess
 {
     public class UsersDbContext : IdentityDbContext<User, Role, string, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
     {
+        public DbSet<PersonalMessage> UserPersonalMessages { get; set; }
         public UsersDbContext()
         {
 
@@ -26,7 +27,7 @@ namespace Users.DataAccess
             modelBuilder.Entity<Role>().ToTable("Roles");
             modelBuilder.Entity<UserClaim>().ToTable("UserClaims");
             modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims");
-            modelBuilder.Entity<PersonalMessage>().ToTable("UserPersonalMessages");
+            // modelBuilder.Entity<PersonalMessage>().ToTable("UserPersonalMessages");
         }
     }
 }

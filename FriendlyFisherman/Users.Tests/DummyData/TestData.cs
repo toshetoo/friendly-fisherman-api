@@ -68,6 +68,26 @@ namespace Users.Tests.TestData
                 new PersonalMessage
                 {
                     Id = Guid.NewGuid().ToString(),
+                    ReceiverId = Constants.AdminId,
+                    SenderId = Constants.UserId,
+                    Seen = true,
+                    SentOn = DateTime.Now,
+                    Content = "Test dummy content",
+                    Title = "Test dummy title"
+                },
+                new PersonalMessage
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ReceiverId = Constants.UserId,
+                    SenderId = Constants.AdminId,
+                    Seen = true,
+                    SentOn = DateTime.Now,
+                    Content = "Test dummy content",
+                    Title = "Test dummy title"
+                },
+                new PersonalMessage
+                {
+                    Id = Guid.NewGuid().ToString(),
                     ReceiverId = Constants.UserId,
                     SenderId = Constants.AdminId,
                     Seen = true,
