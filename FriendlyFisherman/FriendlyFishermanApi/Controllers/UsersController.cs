@@ -38,8 +38,8 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserById")]
-        public async Task<IActionResult> GetUserById([Required] string id)
+        [Route("GetUserById/{id}")]
+        public async Task<IActionResult> GetUserById(string id)
         {
             var request = new GetUserRequest { Id = id };
             var response = await _userService.GetUserByIdAsync(request);

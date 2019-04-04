@@ -27,12 +27,12 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetById(string messageId)
+        [Route("GetById/{id}")]
+        public async Task<IActionResult> GetById(string id)
         {
             var response = await _service.GetMessageByIdAsync(new GetMessagesRequest
             {
-                MessageId = messageId
+                MessageId = id
             });
 
             if (ReferenceEquals(response.Exception, null))
@@ -45,12 +45,12 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllForReceiver")]
-        public async Task<IActionResult> GetAllForReceiver(string receiverId)
+        [Route("GetAllForReceiver/{id}")]
+        public async Task<IActionResult> GetAllForReceiver(string id)
         {
             var response = await _service.GetAllMessagesByReceiverIdAsync(new GetAllMessagesRequest
             {
-                ReceiverId = receiverId
+                ReceiverId = id
             });
 
             if (ReferenceEquals(response.Exception, null))
@@ -63,12 +63,12 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllForSender")]
-        public async Task<IActionResult> GetAllForSender(string senderId)
+        [Route("GetAllForSender/{id}")]
+        public async Task<IActionResult> GetAllForSender(string id)
         {
             var response = await _service.GetAllMessagesBySenderIdAsync(new GetAllMessagesRequest
             {
-                SenderId = senderId
+                SenderId = id
             });
 
             if (ReferenceEquals(response.Exception, null))
@@ -111,10 +111,10 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete")]
-        public async Task<IActionResult> Delete(string messageId)
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
-            var response = await _service.DeleteMessageAsync(new GetMessagesRequest { MessageId = messageId });
+            var response = await _service.DeleteMessageAsync(new GetMessagesRequest { MessageId = id });
 
             if (ReferenceEquals(response.Exception, null))
             {
