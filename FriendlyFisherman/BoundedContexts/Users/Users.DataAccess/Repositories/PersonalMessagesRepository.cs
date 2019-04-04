@@ -10,7 +10,7 @@ namespace Users.DataAccess.Repositories
 {
     public class PersonalMessagesRepository: RepositoryBase<PersonalMessage>, IPersonalMessagesRepository
     {
-        public PersonalMessagesRepository(DbContext context) : base(context)
+        public PersonalMessagesRepository(UsersDbContext context) : base(context)
         {
         }
 
