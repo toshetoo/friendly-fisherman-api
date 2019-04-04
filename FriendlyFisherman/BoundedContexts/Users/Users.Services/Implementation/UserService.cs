@@ -137,6 +137,12 @@ namespace Users.Services.Implementation
                 if (ReferenceEquals(user, null))
                     throw new Exception($"There is no user with Id: {request.Id}");
 
+                if (!string.IsNullOrEmpty(user.ImagePath))
+                {
+                    string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
+                    user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                }
+
                 var userViewModel = new UserViewModel
                 {
                     Id = user.Id,
@@ -146,9 +152,6 @@ namespace Users.Services.Implementation
                     LastName = user.LastName,
                     ImagePath = user.ImagePath
                 };
-
-                string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-                userViewModel.ImagePath = FileHelper.GetImageAsBase64(imagePath);
 
                 response.User = userViewModel;
             }
@@ -229,8 +232,11 @@ namespace Users.Services.Implementation
                     ImagePath = user.ImagePath
                 };
 
-                string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-                userViewModel.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                if (!string.IsNullOrEmpty(user.ImagePath))
+                {
+                    string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
+                    userViewModel.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                }
                 response.User = userViewModel;
             }
             catch (Exception ex)
