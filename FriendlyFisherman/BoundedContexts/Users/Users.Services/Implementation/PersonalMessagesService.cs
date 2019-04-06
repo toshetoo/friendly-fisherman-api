@@ -131,6 +131,14 @@ namespace Users.Services.Implementation
 
             try
             {
+                if (!string.IsNullOrEmpty(request.Message.Id))
+                {
+                    var m = _repo.GetMessageById(request.Message.Id);
+                    if (ReferenceEquals(m, null))
+                        throw new Exception($"There is no message with Id: {request.Message.Id}");
+                }
+                
+
                 var message = new PersonalMessage
                 {
                     Id = request.Message.Id,

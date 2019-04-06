@@ -20,6 +20,11 @@ namespace Users.Domain.EntityViewModels.PersonalMessage
         [Required]
         public DateTime SentOn { get; set; }
 
+        public PersonalMessageViewModel()
+        {
+            
+        }
+
         public PersonalMessageViewModel(string id, string senderId, string receiverId, string title, string content, bool seen, DateTime sentOn)
         {
             Id = id;
