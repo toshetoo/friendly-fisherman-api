@@ -19,8 +19,12 @@ using FriendlyFisherman.SharedKernel.Services.Impl;
 using Newtonsoft.Json;
 using Publishing.Domain.Repositories.Categories;
 using Publishing.DataAccess.Repositories.Categories;
+using Publishing.DataAccess.Repositories.Threads;
+using Publishing.Domain.Repositories.Threads;
 using Publishing.Services.Abstraction.Categories;
+using Publishing.Services.Abstraction.Threads;
 using Publishing.Services.Implementation.Categories;
+using Publishing.Services.Implementation.Threads;
 using Users.DataAccess;
 using Users.DataAccess.Repositories;
 using Users.Domain.Entities;
@@ -130,9 +134,11 @@ namespace FriendlyFishermanApi
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPersonalMessagesRepository, PersonalMessagesRepository>();
             services.AddScoped<IThreadCategoriesRepository, ThreadCategoriesRepository>();
+            services.AddScoped<IThreadsRepository, ThreadsRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPersonalMessagesService, PersonalMessagesService>();
             services.AddScoped<IThreadCategoriesService, ThreadCategoriesService>();
+            services.AddScoped<IThreadsService, ThreadsService>();
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton(Configuration.GetSection(typeof(AppSettings).Name).Get<AppSettings>());
             #endregion

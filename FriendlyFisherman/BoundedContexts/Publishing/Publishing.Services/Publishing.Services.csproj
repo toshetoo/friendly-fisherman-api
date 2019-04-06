@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Abstraction\" />
-    <Folder Include="Implementation\" />
-    <Folder Include="Response\" />
-    <Folder Include="Request\" />
+    <Folder Include="Response\Threads\" />
   </ItemGroup>
 
   <ItemGroup>

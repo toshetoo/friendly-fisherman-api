@@ -5,12 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
-    <Folder Include="EntityViewModels\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\FriendlyFisherman.SharedKernel\FriendlyFisherman.SharedKernel.csproj" />
   </ItemGroup>
 
