@@ -4,8 +4,7 @@
     using System.Collections.Generic;
     using Users.Domain.EntityViewModels;
 
-    public class GetAllUsersResponse : ServiceResponseBase
+    public class GetAllUsersResponse : ServiceResponseBase<UserListItemViewModel>
     {
-        public IEnumerable<UserListItemViewModel> Users { get; set; }
     }
 }

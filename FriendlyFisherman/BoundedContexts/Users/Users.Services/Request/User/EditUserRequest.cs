@@ -3,7 +3,7 @@
     using FriendlyFisherman.SharedKernel;
     using Users.Domain.EntityViewModels;
 
-    public class EditUserRequest : ServiceRequestBase
+    public class EditUserRequest : ServiceRequestBase<UserViewModel>
     {
         public EditUserRequest(UserViewModel user)
         {

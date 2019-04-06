@@ -107,7 +107,7 @@ namespace Users.Services.Implementation
                         Email = user.Email
                     });
                 }
-                response.Users = usersListViewModel;
+                response.Items = usersListViewModel;
             }
             catch (Exception ex)
             {
@@ -153,7 +153,7 @@ namespace Users.Services.Implementation
                     ImagePath = user.ImagePath
                 };
 
-                response.User = userViewModel;
+                response.Item = userViewModel;
             }
             catch (Exception ex)
             {
@@ -237,7 +237,7 @@ namespace Users.Services.Implementation
                     string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
                     userViewModel.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
-                response.User = userViewModel;
+                response.Item = userViewModel;
             }
             catch (Exception ex)
             {

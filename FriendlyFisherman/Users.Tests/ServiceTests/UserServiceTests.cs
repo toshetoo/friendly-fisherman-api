@@ -68,8 +68,8 @@ namespace Users.Tests.ServiceTests
         {
             var result = await _service.GetAllUsersAsync(new GetAllUsersRequest());
             Assert.NotNull(result);
-            Assert.NotNull(result.Users);
-            Assert.Equal(3, result.Users.Count());
+            Assert.NotNull(result.Items);
+            Assert.Equal(3, result.Items.Count());
         }
 
         [Fact]
@@ -89,8 +89,8 @@ namespace Users.Tests.ServiceTests
             var result = await _service.GetUserByIdAsync(request);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.User);
-            Assert.Equal(Constants.AdminId, result.User.Id);
+            Assert.NotNull(result.Item);
+            Assert.Equal(Constants.AdminId, result.Item.Id);
         }
 
         [Fact]
@@ -108,12 +108,12 @@ namespace Users.Tests.ServiceTests
         {
             var userRequest = new GetUserRequest() { Id = Constants.AdminId };
             var user = await _service.GetUserByIdAsync(userRequest);
-            var emailRequest = new GetUserRequest() { Id = user.User.Id, Email = user.User.Email};
+            var emailRequest = new GetUserRequest() { Id = user.Item.Id, Email = user.Item.Email};
             var result = await _service.GetUserByEmailAsync(emailRequest);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.User);
-            Assert.Equal(user.User.Email, result.User.Email);
+            Assert.NotNull(result.Item);
+            Assert.Equal(user.Item.Email, result.Item.Email);
         }
 
         [Fact]
@@ -141,15 +141,15 @@ namespace Users.Tests.ServiceTests
         {
             var userToEdit = await _service.GetUserByIdAsync(new GetUserRequest() {Id = Constants.UserId });
 
-            userToEdit.User.FirstName = "Test";
-            var request = new EditUserRequest(userToEdit.User);
+            userToEdit.Item.FirstName = "Test";
+            var request = new EditUserRequest(userToEdit.Item);
             await _service.EditUserAsync(request);
 
             var result = await _service.GetUserByIdAsync(new GetUserRequest() { Id = Constants.UserId });
 
             Assert.NotNull(result);
-            Assert.NotNull(result.User);
-            Assert.Equal("Test", result.User.FirstName);
+            Assert.NotNull(result.Item);
+            Assert.Equal("Test", result.Item.FirstName);
         }
 
     }

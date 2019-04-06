@@ -1,8 +1,10 @@
-﻿namespace Users.Services.Request
+﻿using Users.Domain.EntityViewModels;
+
+namespace Users.Services.Request
 {
     using FriendlyFisherman.SharedKernel;
 
-    public class GetUserRequest : ServiceRequestBase
+    public class GetUserRequest : ServiceRequestBase<UserViewModel>
     {
         public GetUserRequest()
         {

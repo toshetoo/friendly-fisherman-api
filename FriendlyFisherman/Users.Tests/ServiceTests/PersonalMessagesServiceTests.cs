@@ -47,9 +47,9 @@ namespace Users.Tests.ServiceTests
         {
             var res = await _service.GetAllMessagesBySenderIdAsync(new GetAllMessagesRequest {SenderId = Constants.AdminId});
             Assert.NotNull(res);
-            Assert.NotNull(res.Messages);
+            Assert.NotNull(res.Items);
             Assert.Null(res.Exception);
-            Assert.Equal(3, res.Messages.Count());
+            Assert.Equal(3, res.Items.Count());
         }
 
         [Fact]
@@ -57,9 +57,9 @@ namespace Users.Tests.ServiceTests
         {
             var res = await _service.GetAllMessagesBySenderIdAsync(new GetAllMessagesRequest { SenderId = Guid.NewGuid().ToString() });
             Assert.NotNull(res);
-            Assert.NotNull(res.Messages);
+            Assert.NotNull(res.Items);
             Assert.Null(res.Exception);
-            Assert.Empty(res.Messages);
+            Assert.Empty(res.Items);
         }
 
         [Fact]
@@ -73,9 +73,9 @@ namespace Users.Tests.ServiceTests
         {
             var res = await _service.GetAllMessagesByReceiverIdAsync(new GetAllMessagesRequest { ReceiverId = Constants.AdminId });
             Assert.NotNull(res);
-            Assert.NotNull(res.Messages);
+            Assert.NotNull(res.Items);
             Assert.Null(res.Exception);
-            Assert.Equal(2, res.Messages.Count());
+            Assert.Equal(2, res.Items.Count());
         }
 
         [Fact]
@@ -83,9 +83,9 @@ namespace Users.Tests.ServiceTests
         {
             var res = await _service.GetAllMessagesByReceiverIdAsync(new GetAllMessagesRequest { ReceiverId = Guid.NewGuid().ToString() });
             Assert.NotNull(res);
-            Assert.NotNull(res.Messages);
+            Assert.NotNull(res.Items);
             Assert.Null(res.Exception);
-            Assert.Empty(res.Messages);
+            Assert.Empty(res.Items);
         }
 
         [Fact]
@@ -105,8 +105,8 @@ namespace Users.Tests.ServiceTests
             var result = await _service.GetMessageByIdAsync(request);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.Message);
-            Assert.Equal(Constants.PersonalMessageID, result.Message.Id);
+            Assert.NotNull(result.Item);
+            Assert.Equal(Constants.PersonalMessageID, result.Item.Id);
         }
 
         [Fact]
@@ -134,15 +134,15 @@ namespace Users.Tests.ServiceTests
         {
             var messageToEdit = await _service.GetMessageByIdAsync(new GetMessagesRequest() { MessageId = Constants.PersonalMessageID });
 
-            messageToEdit.Message.Title = "Test CHANGED";
-            var request = new EditMessageRequest(messageToEdit.Message);
+            messageToEdit.Item.Title = "Test CHANGED";
+            var request = new EditMessageRequest(messageToEdit.Item);
             await _service.SaveMessageAsync(request);
 
             var result = await _service.GetMessageByIdAsync(new GetMessagesRequest() { MessageId = Constants.PersonalMessageID });
 
             Assert.NotNull(result);
-            Assert.NotNull(result.Message);
-            Assert.Equal("Test CHANGED", result.Message.Title);
+            Assert.NotNull(result.Item);
+            Assert.Equal("Test CHANGED", result.Item.Title);
         }
 
         [Fact]
@@ -164,7 +164,7 @@ namespace Users.Tests.ServiceTests
             var result = await _service.GetMessageByIdAsync(new GetMessagesRequest {MessageId = Constants.PersonalMessageID});
 
             Assert.NotNull(result);
-            Assert.Null(result.Message);
+            Assert.Null(result.Item);
         }
     }
 }

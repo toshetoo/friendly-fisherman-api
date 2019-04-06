@@ -41,7 +41,7 @@ namespace Users.Services.Implementation
                     throw new Exception(ErrorMessages.InvalidId);
 
                 var result = _repo.GetAllMessagesBySenderId(request.SenderId);
-                response.Messages = result.Select(m => new PersonalMessageViewModel(m));
+                response.Items = result.Select(m => new PersonalMessageViewModel(m));
             }
             catch (Exception e)
             {
@@ -71,7 +71,7 @@ namespace Users.Services.Implementation
                     throw new Exception(ErrorMessages.InvalidId);
 
                 var result = _repo.GetAllMessagesByReceiverId(request.ReceiverId);
-                response.Messages = result.Select(m => new PersonalMessageViewModel(m));
+                response.Items = result.Select(m => new PersonalMessageViewModel(m));
             }
             catch (Exception e)
             {
@@ -101,7 +101,7 @@ namespace Users.Services.Implementation
                     throw new Exception(ErrorMessages.InvalidId);
 
                 var result = _repo.GetMessageById(request.MessageId);
-                response.Message = new PersonalMessageViewModel(result);
+                response.Item = new PersonalMessageViewModel(result);
             }
             catch (Exception e)
             {

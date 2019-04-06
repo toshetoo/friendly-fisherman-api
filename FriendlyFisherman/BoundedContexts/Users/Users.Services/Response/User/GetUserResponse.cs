@@ -3,8 +3,7 @@
     using FriendlyFisherman.SharedKernel;
     using Users.Domain.EntityViewModels;
 
-    public class GetUserResponse : ServiceResponseBase
+    public class GetUserResponse : ServiceResponseBase<UserViewModel>
     {
-        public UserViewModel User { get; set; }
     }
 }

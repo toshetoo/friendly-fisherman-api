@@ -6,8 +6,7 @@ using Users.Domain.EntityViewModels.PersonalMessage;
 
 namespace Users.Services.Response.PersonalMessage
 {
-    public class GetMessageResponse: ServiceResponseBase
+    public class GetMessageResponse: ServiceResponseBase<PersonalMessageViewModel>
     {
-        public PersonalMessageViewModel Message { get; set; }
     }
 }
