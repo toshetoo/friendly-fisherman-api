@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BoundedContexts\Administration\Administration.DataAccess\Administration.DataAccess.csproj" />
     <ProjectReference Include="..\BoundedContexts\Publishing\Publishing.DataAccess\Publishing.DataAccess.csproj" />
+    <ProjectReference Include="..\BoundedContexts\Publishing\Publishing.Services\Publishing.Services.csproj" />
     <ProjectReference Include="..\BoundedContexts\Users\Users.DataAccess\Users.DataAccess.csproj" />
     <ProjectReference Include="..\BoundedContexts\Users\Users.Services\Users.Services.csproj" />
     <ProjectReference Include="..\FriendlyFisherman.SharedKernel\FriendlyFisherman.SharedKernel.csproj" />

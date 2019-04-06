@@ -11,4 +11,10 @@
     <Folder Include="Request\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FriendlyFisherman.SharedKernel\FriendlyFisherman.SharedKernel.csproj" />
+    <ProjectReference Include="..\Publishing.DataAccess\Publishing.DataAccess.csproj" />
+    <ProjectReference Include="..\Publishing.Domain\Publishing.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
