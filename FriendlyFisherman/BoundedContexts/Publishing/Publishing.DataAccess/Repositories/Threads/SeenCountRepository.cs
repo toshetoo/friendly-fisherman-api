@@ -26,6 +26,17 @@ namespace Publishing.DataAccess.Repositories.Threads
         }
 
         /// <summary>
+        /// Retrieve a SeenCount with specific ThreadID
+        /// </summary>
+        /// <param name="id">The ID of the thread</param>
+        /// <returns>A single SeenCount</returns>
+        public SeenCount GetByThreadId(string id)
+        {
+            var repo = CreateRepo();
+            return repo.Get(c => c.ThreadId == id);
+        }
+
+        /// <summary>
         /// Get all available SeenCounts
         /// </summary>
         /// <returns>A list of SeenCounts or an empty list if none exist</returns>

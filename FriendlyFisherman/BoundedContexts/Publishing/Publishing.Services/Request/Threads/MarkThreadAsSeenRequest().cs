@@ -10,5 +10,6 @@ namespace Publishing.Services.Request.Threads
     {
         public string SeenBy { get; set; }
         public bool IsSeen { get; set; }
+        public string ThreadId { get; set; }
     }
 }

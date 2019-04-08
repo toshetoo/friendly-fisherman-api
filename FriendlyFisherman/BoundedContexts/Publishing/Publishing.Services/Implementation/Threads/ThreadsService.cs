@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
+using FriendlyFisherman.SharedKernel.Messages;
 using FriendlyFisherman.SharedKernel.Services.Impl;
 using Publishing.DataAccess.Repositories.Threads;
 using Publishing.Domain.Entities.Threads;
@@ -33,7 +34,18 @@ namespace Publishing.Services.Implementation.Threads
 
             try
             {
+                var thread = _repo.GetById(request.ThreadId);
 
+                if (thread == null)
+                    throw new Exception(ErrorMessages.InvalidId);
+
+                var seen = new SeenCount()
+                {
+                    ThreadId = request.ThreadId,
+                    UserId = request.SeenBy
+                };
+
+                _seenCountRepo.Save(seen);
             }
             catch (Exception e)
             {
@@ -43,9 +55,30 @@ namespace Publishing.Services.Implementation.Threads
             return response;
         }
 
-        public Task<ServiceResponseBase<Thread>> GetSeenCountAsync(ServiceRequestBase<Thread> request)
+        public async Task<ServiceResponseBase<Thread>> GetSeenCountAsync(ServiceRequestBase<Thread> request)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() => GetSeenCount(request));
+        }
+
+        private ServiceResponseBase<Thread> GetSeenCount(ServiceRequestBase<Thread> request)
+        {
+            var response = new ServiceResponseBase<Thread>();
+
+            try
+            {
+                var thread = _repo.GetById(request.ID);
+
+                if (thread == null)
+                    throw new Exception(ErrorMessages.InvalidId);
+
+                var res = _seenCountRepo.GetByThreadId(request.ID);
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
         }
     }
 }
