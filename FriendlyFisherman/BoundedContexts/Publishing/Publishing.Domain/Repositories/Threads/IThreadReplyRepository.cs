@@ -6,8 +6,7 @@ using Publishing.Domain.Entities.Threads;
 
 namespace Publishing.Domain.Repositories.Threads
 {
-    public interface ISeenCountRepository: IBaseRepository<SeenCount>
+    interface IThreadReplyRepository: IBaseRepository<Thread>
     {
-        SeenCount GetByThreadId(string id);
     }
 }

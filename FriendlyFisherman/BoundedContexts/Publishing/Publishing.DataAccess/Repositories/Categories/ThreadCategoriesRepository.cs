@@ -8,7 +8,7 @@ using Publishing.Domain.Repositories.Categories;
 
 namespace Publishing.DataAccess.Repositories.Categories
 {
-    public class ThreadCategoriesRepository: RepositoryBase<ThreadCategory>, IThreadCategoriesRepository
+    public class ThreadCategoriesRepository: BaseRepository<ThreadCategory>, IThreadCategoriesRepository
     {
 
         public ThreadCategoriesRepository(PublishingDbContext context) : base(context)
@@ -22,18 +22,16 @@ namespace Publishing.DataAccess.Repositories.Categories
         /// <returns>A single message</returns>
         public ThreadCategory GetById(string id)
         {
-            var repo = CreateRepo();
-            return repo.Get(c => c.Id == id);
+            return base.Get(c => c.Id == id);
         }
 
         /// <summary>
         /// Get all available categories
         /// </summary>
         /// <returns>A list of categories or an empty list if none exist</returns>
-        public IEnumerable<ThreadCategory> GetAll()
+        public new IEnumerable<ThreadCategory> GetAll()
         {
-            var repo = CreateRepo();
-            return repo.GetAll();
+            return base.GetAll();
         }
 
         /// <summary>
@@ -43,15 +41,13 @@ namespace Publishing.DataAccess.Repositories.Categories
         /// <param name="m">A ThreadCategory that should be modified or created</param>
         public void Save(ThreadCategory c)
         {
-            var repo = CreateRepo();
-
             if (c.Id == null)
             {
-                repo.Create(c);
+                base.Create(c);
             }
             else
             {
-                repo.Update(c);
+                base.Update(c);
             }
         }
 
@@ -61,8 +57,7 @@ namespace Publishing.DataAccess.Repositories.Categories
         /// <param name="id">The ID of the ThreadCategory that should be deleted</param>
         public void Delete(string id)
         {
-            var repo = CreateRepo();
-            repo.Delete(c => c.Id == id);
+            base.Delete(c => c.Id == id);
         }
     }
 }

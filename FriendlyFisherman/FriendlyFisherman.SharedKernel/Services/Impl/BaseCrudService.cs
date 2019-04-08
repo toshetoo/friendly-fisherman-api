@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Messages;
-using FriendlyFisherman.SharedKernel.Repositories.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Models;
 
 namespace FriendlyFisherman.SharedKernel.Services.Impl
 {
-    public class BaseCrudService<TE, T> : IBaseCrudService<TE> where T : IBaseCrudRepository<TE> where TE : BaseEntity
+    public class BaseCrudService<TE, T> : IBaseCrudService<TE> where T : IBaseRepository<TE> where TE : BaseEntity
     {
         private readonly T _repo;
 
@@ -31,7 +30,7 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
                 if(string.IsNullOrEmpty(request.ID))
                     throw new Exception(ErrorMessages.InvalidId);
 
-                _repo.Delete(request.ID);
+                _repo.Delete(request.Item);
             }
             catch (Exception e)
             {
@@ -74,7 +73,7 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
                 if (string.IsNullOrEmpty(request.ID))
                     throw new Exception(ErrorMessages.InvalidId);
 
-                response.Item = _repo.GetById(request.ID);
+                response.Item = _repo.Get(item => item.Id == request.ID);
             }
             catch (Exception e)
             {
@@ -94,7 +93,14 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
             var response = new ServiceResponseBase<TE>();
             try
             {
-                _repo.Save(request.Item);
+                if (string.IsNullOrEmpty(request.Item.Id))
+                {
+                    _repo.Create(request.Item);
+                }
+                else
+                {
+                    _repo.Update(request.Item);
+                }
             }
             catch (Exception e)
             {

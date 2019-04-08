@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 {
-    public class BaseRepository<T> where T : class
+    public class BaseRepository<T>: IBaseRepository<T> where T : class
     {
         DbSet<T> _entities;
         private DbContext _context;
