@@ -38,7 +38,7 @@ namespace Publishing.DataAccess.Repositories.Threads
         /// Get all available SeenCounts
         /// </summary>
         /// <returns>A list of SeenCounts or an empty list if none exist</returns>
-        public IEnumerable<SeenCount> GetAll()
+        public new IEnumerable<SeenCount> GetAll()
         {
             return base.GetAll();
         }

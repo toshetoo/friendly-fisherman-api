@@ -8,6 +8,5 @@ namespace Publishing.Domain.Repositories.Threads
 {
     public interface ISeenCountRepository: IBaseRepository<SeenCount>
     {
-        SeenCount GetByThreadId(string id);
     }
 }
