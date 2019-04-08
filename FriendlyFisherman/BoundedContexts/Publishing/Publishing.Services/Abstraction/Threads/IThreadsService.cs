@@ -5,13 +5,17 @@ using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using Publishing.Domain.Entities.Threads;
+using Publishing.Domain.EntityViewModels.Threads;
 using Publishing.Services.Request.Threads;
 
 namespace Publishing.Services.Abstraction.Threads
 {
     public interface IThreadsService: IBaseCrudService<Thread>
     {
-        Task<ServiceResponseBase<Thread>> MarkAsSeenAsync(MarkThreadAsSeenRequest request);
-        Task<ServiceResponseBase<Thread>> GetSeenCountAsync(ServiceRequestBase<Thread> request);
+        Task<ServiceResponseBase<ThreadViewModel>> MarkAsSeenAsync(MarkThreadAsSeenRequest request);
+        Task<ServiceResponseBase<ThreadViewModel>> GetSeenCountAsync(ServiceRequestBase<ThreadViewModel> request);
+        Task<ServiceResponseBase<ThreadReplyViewModel>> AddThreadReplyAsync(ServiceRequestBase<ThreadReplyViewModel> request);
+        Task<ServiceResponseBase<ThreadReplyViewModel>> EditThreadReplyAsync(ServiceRequestBase<ThreadReplyViewModel> request);
+        Task<ServiceResponseBase<ThreadReplyViewModel>> DeleteThreadReplyAsync(ServiceRequestBase<ThreadReplyViewModel> request);
     }
 }

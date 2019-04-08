@@ -6,7 +6,7 @@ using Publishing.Domain.Entities.Threads;
 
 namespace Publishing.Domain.Repositories.Threads
 {
-    interface IThreadReplyRepository: IBaseRepository<Thread>
+    public interface IThreadReplyRepository: IBaseRepository<ThreadReply>
     {
     }
 }
