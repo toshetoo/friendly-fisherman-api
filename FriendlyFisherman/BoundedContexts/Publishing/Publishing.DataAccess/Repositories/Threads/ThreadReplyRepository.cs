@@ -8,7 +8,7 @@ using Publishing.Domain.Repositories.Threads;
 
 namespace Publishing.DataAccess.Repositories.Threads
 {
-    public class ThreadReplyRepository: BaseRepository<Thread>, IThreadReplyRepository
+    public class ThreadReplyRepository: BaseRepository<ThreadReply>, IThreadReplyRepository
     {
         public ThreadReplyRepository(DbContext context) : base(context)
         {
