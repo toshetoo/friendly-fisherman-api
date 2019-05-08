@@ -87,13 +87,16 @@ namespace FriendlyFishermanApi.Controllers
             }
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
             var callBackUrl = $"{_settings.EmailSettings.SiteRedirectUrl}/confirm?id={user.Id}&token={HttpUtility.UrlEncode(token)}";
             var emailTemplateModel = EmailTemplateModel.Create(user.FirstName, callBackUrl);
 
             _emailService.SendAsync(emailTemplateModel, _settings.EmailSettings, user.Email, _settings.EmailSettings.AccountConfirmationEmailTemplate, _settings.EmailSettings.AccountConfirmationSubject);
 
+            
             return NoContent();
         }
+
 
         [HttpPost]
         [Route("ConfirmAccount")]
@@ -106,7 +109,7 @@ namespace FriendlyFishermanApi.Controllers
 
             var user = await _userManager.FindByIdAsync(model.Id);
 
-            var result = await _userManager.ConfirmEmailAsync(user, HttpUtility.UrlDecode(model.Token));
+            var result = await _userManager.ConfirmEmailAsync(user, model.Token);
             if (result.Succeeded)
             {
                 return Ok();
@@ -138,13 +141,12 @@ namespace FriendlyFishermanApi.Controllers
 
             _emailService.SendAsync(emailModel, _settings.EmailSettings, user.Email, _settings.EmailSettings.ResetPasswordEmailTemplate, _settings.EmailSettings.ResetPasswordSubject);
 
-
             return Ok(new { token });
         }
 
         [HttpPost]
         [Route("SetNewPassword")]
-        public async Task<IActionResult> SetNewPassword(ResetPasswordViewModel model)
+        public async Task<IActionResult> SetNewPassword(SetPasswordViewModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
 

@@ -182,8 +182,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
             {
                 if (ReferenceEquals(@object, null))
                     throw new ArgumentNullException(nameof(@object));
-
-                //TODO discuss if this should be manually attached
+                
                 _context.Set<T>().Attach(@object);
                 _context.Set<T>().Remove(@object);
 

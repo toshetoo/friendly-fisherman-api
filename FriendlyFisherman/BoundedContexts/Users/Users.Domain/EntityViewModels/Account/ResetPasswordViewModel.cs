@@ -6,11 +6,5 @@ namespace Users.Domain.EntityViewModels
     {
         [Required]
         public string Email { get; set; }
-        [Required]
-        public string PasswordToken { get; set; }
-        [Required]
-        public string Password { get; set; }
-        [Required]
-        public string RePassword { get; set; }    
     }
 }
