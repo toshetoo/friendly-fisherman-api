@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
 using FriendlyFisherman.SharedKernel.Messages;
 using FriendlyFisherman.SharedKernel.Services.Impl;
-using Publishing.DataAccess.Repositories.Threads;
 using Publishing.Domain.Entities.Threads;
 using Publishing.Domain.EntityViewModels.Threads;
 using Publishing.Domain.Repositories.Threads;
