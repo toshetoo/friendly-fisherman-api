@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using FriendlyFisherman.SharedKernel.Repositories.Impl;
-using Microsoft.EntityFrameworkCore;
 using Publishing.Domain.Entities.Categories;
 using Publishing.Domain.Repositories.Categories;
 

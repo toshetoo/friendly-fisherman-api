@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Messages;
+using FriendlyFisherman.SharedKernel.Repositories.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Models;
 

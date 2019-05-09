@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
 using FriendlyFisherman.SharedKernel.Messages;
 using FriendlyFisherman.SharedKernel.Services.Impl;
+using FriendlyFisherman.SharedKernel.Services.Models;
 using Publishing.Domain.Entities.Threads;
 using Publishing.Domain.EntityViewModels.Threads;
 using Publishing.Domain.Repositories.Threads;

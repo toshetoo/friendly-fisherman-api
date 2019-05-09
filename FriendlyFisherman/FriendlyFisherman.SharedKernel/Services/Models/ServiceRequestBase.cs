@@ -1,4 +1,4 @@
-﻿namespace FriendlyFisherman.SharedKernel
+﻿namespace FriendlyFisherman.SharedKernel.Services.Models
 {
     public class ServiceRequestBase<T>
     {

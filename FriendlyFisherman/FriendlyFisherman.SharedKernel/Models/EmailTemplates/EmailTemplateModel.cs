@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FriendlyFisherman.SharedKernel.Models.EmailTemplates
+﻿namespace FriendlyFisherman.SharedKernel.Models.EmailTemplates
 {
     public class EmailTemplateModel
     {

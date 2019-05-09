@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Users.Domain.EntityViewModels.PersonalMessage;
 using Users.Services.Abstraction;
-using Users.Services.Request;
 using Users.Services.Request.PersonalMessage;
 
 namespace FriendlyFishermanApi.Controllers

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Drawing;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace FriendlyFisherman.SharedKernel.Helpers
 {

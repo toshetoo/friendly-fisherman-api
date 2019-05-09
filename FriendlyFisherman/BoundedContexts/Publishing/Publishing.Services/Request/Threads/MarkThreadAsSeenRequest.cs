@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FriendlyFisherman.SharedKernel;
+using FriendlyFisherman.SharedKernel.Services.Models;
 using Publishing.Domain.Entities.Threads;
 
 namespace Publishing.Services.Request.Threads

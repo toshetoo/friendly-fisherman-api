@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FriendlyFisherman.SharedKernel.Settings
+﻿namespace FriendlyFisherman.SharedKernel.Settings
 {
     public class EmailSettings
     {

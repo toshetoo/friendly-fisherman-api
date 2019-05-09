@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FriendlyFisherman.SharedKernel.Repositories.Impl;
+﻿using FriendlyFisherman.SharedKernel.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 using Publishing.Domain.Entities.Threads;
 using Publishing.Domain.Repositories.Threads;

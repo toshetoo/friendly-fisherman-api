@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace FriendlyFisherman.SharedKernel
+namespace FriendlyFisherman.SharedKernel.Repositories.Abstraction
 {
     public interface IBaseRepository<T> where T : class
     {

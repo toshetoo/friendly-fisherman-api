@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
 using FriendlyFisherman.SharedKernel.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Publishing.Domain.Entities.Categories;
 using Publishing.Domain.Entities.Threads;
-using Publishing.Domain.EntityViewModels.Categories;
 using Publishing.Domain.EntityViewModels.Threads;
-using Publishing.Services.Abstraction.Categories;
 using Publishing.Services.Abstraction.Threads;
 using Publishing.Services.Request.Threads;
 
@@ -22,6 +16,12 @@ namespace FriendlyFishermanApi.Controllers
     {
         private readonly ILogger _logger;
         private readonly IThreadsService _service;
+
+        public ThreadsController(ILogger logger, IThreadsService service)
+        {
+            _logger = logger;
+            _service = service;
+        }
 
         [HttpGet]
         [Route("GetAll")]

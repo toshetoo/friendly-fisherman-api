@@ -1,4 +1,5 @@
 ﻿using FriendlyFisherman.SharedKernel;
+using FriendlyFisherman.SharedKernel.Services.Models;
 using Users.Domain.Entities;
 
 namespace Users.Services.Request

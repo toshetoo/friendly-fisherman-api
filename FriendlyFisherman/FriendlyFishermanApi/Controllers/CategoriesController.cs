@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
 using FriendlyFisherman.SharedKernel.Services.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Publishing.Domain.Entities.Categories;
 using Publishing.Domain.EntityViewModels.Categories;
 using Publishing.Services.Abstraction.Categories;
-using Users.Services.Request.PersonalMessage;
 
 namespace FriendlyFishermanApi.Controllers
 {

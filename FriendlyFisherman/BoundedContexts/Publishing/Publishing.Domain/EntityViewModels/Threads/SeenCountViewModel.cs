@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Publishing.Domain.EntityViewModels.Threads
+﻿namespace Publishing.Domain.EntityViewModels.Threads
 {
     public class SeenCountViewModel
     {

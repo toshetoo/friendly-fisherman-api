@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FriendlyFisherman.SharedKernel.Services.Models;
+﻿using FriendlyFisherman.SharedKernel.Services.Models;
 
 namespace Publishing.Domain.Entities.Categories
 {

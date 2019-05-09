@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Helpers;
 using FriendlyFisherman.SharedKernel.Models.EmailTemplates;

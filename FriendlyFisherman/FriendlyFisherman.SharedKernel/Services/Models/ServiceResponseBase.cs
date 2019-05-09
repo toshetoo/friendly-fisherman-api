@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace FriendlyFisherman.SharedKernel
+namespace FriendlyFisherman.SharedKernel.Services.Models
 {
-    using System;
-
     public class ServiceResponseBase<T>
     {
         public ServiceResponseBase()
