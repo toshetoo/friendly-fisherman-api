@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
 using FriendlyFisherman.SharedKernel.Messages;
@@ -73,7 +74,7 @@ namespace Publishing.Services.Implementation.Threads
                 if (thread == null)
                     throw new Exception(ErrorMessages.InvalidId);
 
-                var res = _seenCountRepo.Get(t => t.ThreadId == request.ID);
+                response.Item.SeenCount = _seenCountRepo.GetWhere(t => t.ThreadId == request.ID).Count();
             }
             catch (Exception e)
             {
