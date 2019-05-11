@@ -15,7 +15,7 @@ namespace FriendlyFishermanApi.Controllers
         private readonly IPersonalMessagesService _service;
         private readonly ILogger _logger;
 
-        public PersonalMessagesController(IPersonalMessagesService service, ILogger logger)
+        public PersonalMessagesController(IPersonalMessagesService service, ILogger<PersonalMessagesController> logger)
         {
             _service = service;
             _logger = logger;

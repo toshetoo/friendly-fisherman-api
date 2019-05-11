@@ -20,7 +20,7 @@ namespace FriendlyFishermanApi.Controllers
         private readonly IEventsService _service;
         private readonly ILogger _logger;
 
-        public EventsController(IEventsService eventsService, ILogger logger)
+        public EventsController(IEventsService eventsService, ILogger<EventsController> logger)
         {
             _service = eventsService;
             _logger = logger;

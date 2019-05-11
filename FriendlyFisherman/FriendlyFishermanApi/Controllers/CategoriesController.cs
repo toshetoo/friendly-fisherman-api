@@ -16,7 +16,7 @@ namespace FriendlyFishermanApi.Controllers
         private readonly ILogger _logger;
         private readonly IThreadCategoriesService _service;
 
-        public CategoriesController(IThreadCategoriesService service, ILogger logger)
+        public CategoriesController(IThreadCategoriesService service, ILogger<CategoriesController> logger)
         {
             _service = service;
             _logger = logger;

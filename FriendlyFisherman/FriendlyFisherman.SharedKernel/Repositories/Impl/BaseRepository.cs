@@ -54,12 +54,12 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
             }
             finally
             {
-                if (_isContext && _context != null)
-                {
-                    //_context.Dispose();
-                    _context = null;
-                    _entities = null;
-                }
+                //if (_isContext && _context != null)
+                //{
+                //    //_context.Dispose();
+                //    _context = null;
+                //    _entities = null;
+                //}
 
             }
         }

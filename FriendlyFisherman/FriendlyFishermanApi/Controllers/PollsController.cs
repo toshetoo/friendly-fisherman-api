@@ -16,7 +16,7 @@ namespace FriendlyFishermanApi.Controllers
         private readonly ILogger _logger;
         private readonly IPollsService _service;
 
-        public PollsController(ILogger logger, IPollsService service)
+        public PollsController(ILogger<PollsController> logger, IPollsService service)
         {
             _logger = logger;
             _service = service;
