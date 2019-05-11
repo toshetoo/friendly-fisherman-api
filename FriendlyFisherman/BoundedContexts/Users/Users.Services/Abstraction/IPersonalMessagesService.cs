@@ -11,6 +11,7 @@ namespace Users.Services.Abstraction
     {
         Task<GetAllMessagesResponse> GetAllMessagesBySenderIdAsync(GetAllMessagesRequest request);       
         Task<GetAllMessagesResponse> GetAllMessagesByReceiverIdAsync(GetAllMessagesRequest request);   
+        Task<GetAllMessagesResponse> GetMessageThreadAsync(GetMessagesRequest request);   
         Task<GetMessageResponse> GetMessageByIdAsync(GetMessagesRequest request);                
         Task<EditMessageResponse> SaveMessageAsync(EditMessageRequest request);
         Task<EditMessageResponse> MarkMessageAsReadAsync(EditMessageRequest request);

@@ -7,5 +7,8 @@ namespace Users.Services.Request.PersonalMessage
     public class GetMessagesRequest
     {
         public string MessageId { get; set; }
+
+        public string SenderId { get; set; }
+        public string ReceiverId { get; set; }
     }
 }

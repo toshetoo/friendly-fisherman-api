@@ -12,6 +12,9 @@ namespace Users.Domain.EntityViewModels.PersonalMessage
         public string SenderId { get; set; }
         [Required]
         public string ReceiverId { get; set; }
+
+        public string ReceiverName { get; set; }
+        public string SenderName { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]

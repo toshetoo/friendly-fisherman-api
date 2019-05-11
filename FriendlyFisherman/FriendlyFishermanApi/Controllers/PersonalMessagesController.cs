@@ -75,6 +75,25 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpGet]
+        [Route("GetMessageThread/{senderId}/{receiverId}")]
+        public async Task<IActionResult> GetAllForReceiver(string senderId, string receiverId)
+        {
+            var response = await _service.GetMessageThreadAsync(new GetMessagesRequest()
+            {
+                ReceiverId = receiverId,
+                SenderId = senderId
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
         [HttpPost]
         [Route("SaveMessage")]
         public async Task<IActionResult> SaveMessage([FromBody] PersonalMessageViewModel model)

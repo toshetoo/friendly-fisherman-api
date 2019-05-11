@@ -9,6 +9,7 @@ namespace Users.Domain.Repositories
     {
         IEnumerable<PersonalMessage> GetAllMessagesBySenderId(string id);
         IEnumerable<PersonalMessage> GetAllMessagesByReceiverId(string id);
+        IEnumerable<PersonalMessage> GetAllMessagesBySenderIdAndReceiverId(string senderId, string receiverId);
         PersonalMessage GetMessageById(string id);
         void SaveMessage(PersonalMessage m);
         void DeleteMessage(string id);

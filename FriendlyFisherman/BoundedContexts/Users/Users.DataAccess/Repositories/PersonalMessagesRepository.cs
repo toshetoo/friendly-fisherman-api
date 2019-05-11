@@ -26,6 +26,17 @@ namespace Users.DataAccess.Repositories
         }
 
         /// <summary>
+        /// Retrieve all messages from the DB for a specific sender and a specific receiver
+        /// </summary>
+        /// <param name="id">The ID of the sender</param>
+        /// <returns>A list of messages</returns>
+        public IEnumerable<PersonalMessage> GetAllMessagesBySenderIdAndReceiverId(string senderId, string receiverId)
+        {
+            var repo = CreateRepo();
+            return repo.GetWhere(m => m.SenderId == senderId && m.ReceiverId == receiverId);
+        }
+
+        /// <summary>
         /// Retrieve all messages from the DB for a specific receiver
         /// </summary>
         /// <param name="id">The ID of the receiver</param>

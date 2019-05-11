@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Messages;
+using Microsoft.AspNetCore.Identity;
 using Users.Domain.Entities;
 using Users.Domain.EntityViewModels.PersonalMessage;
 using Users.Domain.Repositories;
@@ -16,10 +17,12 @@ namespace Users.Services.Implementation
     public class PersonalMessagesService: IPersonalMessagesService
     {
         private readonly IPersonalMessagesRepository _repo;
+        private readonly IUserRepository _usersUserRepository;
 
-        public PersonalMessagesService(IPersonalMessagesRepository repo)
+        public PersonalMessagesService(IPersonalMessagesRepository repo, IUserRepository usersUserRepository)
         {
             _repo = repo;
+            _usersUserRepository = usersUserRepository;
         }
 
         public async Task<GetAllMessagesResponse> GetAllMessagesBySenderIdAsync(GetAllMessagesRequest request)
@@ -42,6 +45,15 @@ namespace Users.Services.Implementation
 
                 var result = _repo.GetAllMessagesBySenderId(request.SenderId);
                 response.Items = result.Select(m => new PersonalMessageViewModel(m));
+
+                foreach (var message in response.Items)
+                {
+                    var receiver = _usersUserRepository.GetById(message.ReceiverId);
+                    message.ReceiverName = receiver.FirstName + receiver.LastName;
+
+                    var sender = _usersUserRepository.GetById(message.SenderId);
+                    message.SenderName = sender.FirstName + sender.LastName;
+                }
             }
             catch (Exception e)
             {
@@ -72,6 +84,55 @@ namespace Users.Services.Implementation
 
                 var result = _repo.GetAllMessagesByReceiverId(request.ReceiverId);
                 response.Items = result.Select(m => new PersonalMessageViewModel(m));
+
+                foreach (var message in response.Items)
+                {
+                    var receiver = _usersUserRepository.GetById(message.ReceiverId);
+                    message.ReceiverName = receiver.FirstName + receiver.LastName;
+
+                    var sender = _usersUserRepository.GetById(message.SenderId);
+                    message.SenderName = sender.FirstName + sender.LastName;
+                }
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+
+            return response;
+        }
+
+        public async Task<GetAllMessagesResponse> GetMessageThreadAsync(GetMessagesRequest request)
+        {
+            return await Task.Run(() => GetMessageThread(request));
+        }
+
+        private GetAllMessagesResponse GetMessageThread(GetMessagesRequest request)
+        {
+            var response = new GetAllMessagesResponse();
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(request.SenderId))
+                    throw new Exception(ErrorMessages.InvalidId);
+
+                if (String.IsNullOrWhiteSpace(request.ReceiverId))
+                    throw new Exception(ErrorMessages.InvalidId);
+
+                response.Items = _repo.GetAllMessagesBySenderIdAndReceiverId(request.SenderId, request.ReceiverId)
+                    .OrderByDescending(m => m.SentOn)
+                    .Select(m => new PersonalMessageViewModel(m))
+                    .ToList();
+
+                foreach (var message in response.Items)
+                {
+                    var receiver = _usersUserRepository.GetById(message.ReceiverId);
+                    message.ReceiverName = receiver.FirstName + receiver.LastName;
+
+                    var sender = _usersUserRepository.GetById(message.SenderId);
+                    message.SenderName = sender.FirstName + sender.LastName;
+                }
             }
             catch (Exception e)
             {
