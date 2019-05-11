@@ -94,5 +94,38 @@ namespace Publishing.Services.Implementation.Reports
 
             return response;
         }
+
+        public async Task<ServiceResponseBase<PostsPerDayReportViewModel>> GetPostsPerDayReportAsync(ServiceRequestBase<ReportParametersModel> request)
+        {
+            return await Task.Run(() => GetPostsPerDayReport(request));
+        }
+
+        private ServiceResponseBase<PostsPerDayReportViewModel> GetPostsPerDayReport(ServiceRequestBase<ReportParametersModel> request)
+        {
+            var response = new ServiceResponseBase<PostsPerDayReportViewModel>();
+
+            try
+            {
+                var startInterval = request.Item.StartDate;
+                var endInterval = request.Item.EndDate;
+
+                var allPostsForPeriod =
+                    _threadReplyRepository.GetWhere(threadReply => threadReply.CreatedOn.Date >= startInterval.Date && threadReply.CreatedOn.Date <= endInterval.Date);
+
+                var grouped = allPostsForPeriod.GroupBy(th => th.CreatedOn.Date);
+
+                response.Item = new PostsPerDayReportViewModel
+                {
+                    Periods = request.Item,
+                    Items = grouped.ToDictionary(g => g.Key, g => g.ToList().Count())
+                };
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
+        }
     }
 }

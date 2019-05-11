@@ -82,5 +82,24 @@ namespace FriendlyFishermanApi.Controllers
             _logger.LogError(response.Exception, response.Exception.Message);
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
+
+        [HttpGet]
+        [Route("PostsPerDayReport")]
+        public async Task<IActionResult> GetPostsPerDayReport(ReportParametersModel model)
+        {
+            var response = await _threadReportsService.GetPostsPerDayReportAsync(
+                new ServiceRequestBase<ReportParametersModel>()
+                {
+                    Item = model
+                });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
     }
 }

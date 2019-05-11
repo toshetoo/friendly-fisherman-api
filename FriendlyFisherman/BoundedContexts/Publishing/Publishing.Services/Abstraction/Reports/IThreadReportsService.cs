@@ -13,5 +13,6 @@ namespace Publishing.Services.Abstraction.Reports
     {
         Task<ServiceResponseBase<ThreadsPerDayReportViewModel>> GetThreadsPerDayReportAsync(ServiceRequestBase<ReportParametersModel> request);
         Task<ServiceResponseBase<MostActiveThreadsReportViewModel>> GetMostActiveThreadsReportAsync(ServiceRequestBase<ReportParametersModel> request);
+        Task<ServiceResponseBase<PostsPerDayReportViewModel>> GetPostsPerDayReportAsync(ServiceRequestBase<ReportParametersModel> request);
     }
 }
