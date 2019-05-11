@@ -15,10 +15,14 @@ namespace Administration.Services.Implementation.Events
     public class EventsService: BaseCrudService<Event, IEventsRepository>, IEventsService
     {
         private readonly IEventParticipantsRepository _participantsRepository;
+        private readonly IEventCommentsRepository _eventCommentsRepository;
 
-        public EventsService(IEventsRepository repo, IEventParticipantsRepository participantsRepository) : base(repo)
+        public EventsService(IEventsRepository repo, 
+            IEventParticipantsRepository participantsRepository,
+            IEventCommentsRepository eventCommentsRepository) : base(repo)
         {
             _participantsRepository = participantsRepository;
+            _eventCommentsRepository = eventCommentsRepository;
         }
 
         public async Task<ServiceResponseBase<EventParticipantViewModel>> GetParticipantsByEventIdAsync(ServiceRequestBase<EventParticipantViewModel> request)
@@ -77,7 +81,7 @@ namespace Administration.Services.Implementation.Events
         {
             return await Task.Run(() => DeleteParticipant(request));
         }
-
+        
         private ServiceResponseBase<EventParticipantViewModel> DeleteParticipant(
             ServiceRequestBase<EventParticipantViewModel> request)
         {
@@ -99,6 +103,127 @@ namespace Administration.Services.Implementation.Events
             {
                 response.Exception = e;
             }
+
+            return response;
+        }
+
+
+        public async Task<ServiceResponseBase<EventCommentViewModel>> GetCommentsByEventIdAsync(ServiceRequestBase<EventCommentViewModel> request)
+        {
+            return await Task.Run(() => GetCommentsByEventId(request));
+        }
+
+        private ServiceResponseBase<EventCommentViewModel> GetCommentsByEventId(
+            ServiceRequestBase<EventCommentViewModel> request)
+        {
+            var response = new ServiceResponseBase<EventCommentViewModel>();
+
+            try
+            {
+                response.Items = _eventCommentsRepository.GetWhere(comment => comment.EventId == request.ID)
+                    .Select(c => new EventCommentViewModel(c));
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+
+            return response;
+        }
+
+        public async Task<ServiceResponseBase<EventCommentViewModel>> AddCommentAsync(ServiceRequestBase<EventCommentViewModel> request)
+        {
+            return await Task.Run(() => AddComment(request));
+        }
+
+        private ServiceResponseBase<EventCommentViewModel> AddComment(
+            ServiceRequestBase<EventCommentViewModel> request)
+        {
+            var response = new ServiceResponseBase<EventCommentViewModel>();
+
+            try
+            {
+                var comment = new EventComment
+                {
+                    Id = request.Item.Id,
+                    CreatedOn = request.Item.CreatedOn,
+                    EventId = request.Item.EventId,
+                    Content = request.Item.Content,
+                    CreatorId = request.Item.CreatorId
+                };
+
+                _eventCommentsRepository.Create(comment);
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+
+            return response;
+        }
+
+        public async Task<ServiceResponseBase<EventCommentViewModel>> EditCommentAsync(ServiceRequestBase<EventCommentViewModel> request)
+        {
+            return await Task.Run(() => EditComment(request));
+        }
+
+        private ServiceResponseBase<EventCommentViewModel> EditComment(
+            ServiceRequestBase<EventCommentViewModel> request)
+        {
+            var response = new ServiceResponseBase<EventCommentViewModel>();
+
+            try
+            {
+                var comment = new EventComment
+                {
+                    Id = request.Item.Id,
+                    CreatedOn = request.Item.CreatedOn,
+                    EventId = request.Item.EventId,
+                    Content = request.Item.Content,
+                    CreatorId = request.Item.CreatorId
+                };
+
+                _eventCommentsRepository.Update(comment);
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+
+            return response;
+        }
+
+        public async Task<ServiceResponseBase<EventCommentViewModel>> DeleteCommentAsync(ServiceRequestBase<EventCommentViewModel> request)
+        {
+            return await Task.Run(() => DeleteComment(request));
+        }
+
+        private ServiceResponseBase<EventCommentViewModel> DeleteComment(
+            ServiceRequestBase<EventCommentViewModel> request)
+        {
+            var response = new ServiceResponseBase<EventCommentViewModel>();
+
+            try
+            {
+                var comment = new EventComment
+                {
+                    Id = request.Item.Id,
+                    CreatedOn = request.Item.CreatedOn,
+                    EventId = request.Item.EventId,
+                    Content = request.Item.Content,
+                    CreatorId = request.Item.CreatorId
+                };
+
+                _eventCommentsRepository.Delete(comment);
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
 
             return response;
         }

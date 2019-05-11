@@ -7,6 +7,7 @@ namespace Administration.DataAccess
     {
         public DbSet<Event> Events { get; set; }
         public DbSet<EventParticipant> EventParticipants { get; set; }
+        public DbSet<EventComment> EventComments { get; set; }
 
         public AdministrationDbContext(DbContextOptions<AdministrationDbContext> options)
             : base(options)

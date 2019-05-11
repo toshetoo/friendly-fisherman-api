@@ -76,6 +76,24 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpGet]
+        [Route("GetCommentsForEvent/{id}")]
+        public async Task<IActionResult> GetCommentsForEvent(string id)
+        {
+            var response = await _service.GetCommentsByEventIdAsync(new ServiceRequestBase<EventCommentViewModel>()
+            {
+                ID = id
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
         [HttpPost]
         [Route("Save")]
         public async Task<IActionResult> SaveMessage([FromBody] EventViewModel model)
@@ -121,6 +139,42 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpPost]
+        [Route("AddComment")]
+        public async Task<IActionResult> AddComment([FromBody] EventCommentViewModel model)
+        {
+            var response = await _service.AddCommentAsync(new ServiceRequestBase<EventCommentViewModel>()
+            {
+                Item = model
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpPost]
+        [Route("EditComment")]
+        public async Task<IActionResult> EditComment([FromBody] EventCommentViewModel model)
+        {
+            var response = await _service.EditCommentAsync(new ServiceRequestBase<EventCommentViewModel>()
+            {
+                Item = model
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
 
         [HttpDelete]
         [Route("Delete/{id}")]
@@ -145,6 +199,24 @@ namespace FriendlyFishermanApi.Controllers
         public async Task<IActionResult> DeleteReply([FromBody] EventParticipantViewModel model)
         {
             var response = await _service.DeleteParticipantAsync(new ServiceRequestBase<EventParticipantViewModel>()
+            {
+                Item = model
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpDelete]
+        [Route("DeleteComment/{id}")]
+        public async Task<IActionResult> DeleteComment([FromBody] EventCommentViewModel model)
+        {
+            var response = await _service.DeleteCommentAsync(new ServiceRequestBase<EventCommentViewModel>()
             {
                 Item = model
             });
