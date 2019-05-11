@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using FriendlyFisherman.SharedKernel.Reports;
+
+namespace Publishing.Domain.EntityViewModels.Reports.Threads
+{
+    public class ThreadsPerDayReportViewModel
+    {
+        public ReportParametersModel Periods;
+        public Dictionary<DateTime, int> Items { get; set; }
+    }
+}

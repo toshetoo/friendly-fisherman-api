@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FriendlyFisherman.SharedKernel.Services.Models;
 
 namespace Publishing.Domain.Entities.Threads
@@ -10,5 +11,7 @@ namespace Publishing.Domain.Entities.Threads
         public string Title { get; set; }  
         public string Subtitle { get; set; }  
         public DateTime CreatedOn { get; set; }  
+
+        public List<ThreadReply> Replies { get; set; }
     }
 }

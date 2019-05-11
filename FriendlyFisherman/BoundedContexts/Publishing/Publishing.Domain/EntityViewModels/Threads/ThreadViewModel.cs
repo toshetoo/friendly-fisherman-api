@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Publishing.Domain.Entities.Threads;
 
 namespace Publishing.Domain.EntityViewModels.Threads
 {
@@ -18,5 +20,19 @@ namespace Publishing.Domain.EntityViewModels.Threads
         [Required] public DateTime CreatedOn { get; set; }
 
         public int SeenCount { get; set; }
+
+        public List<ThreadReply> Replies;
+
+        public ThreadViewModel(Thread t)
+        {
+            Id = t.Id;
+            AuthorId = t.AuthorId;
+            CategoryId = t.CategoryId;
+            CreatedOn = t.CreatedOn;
+            Subtitle = t.Subtitle;
+            Title = t.Title;
+            Replies = t.Replies;
+            
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace Publishing.Domain.Entities.Threads
         public string Content { get; set; }
         public DateTime CreatedOn { get; set; }
 
+        public Thread Thread;
+
         public ThreadReply()
         {
             
