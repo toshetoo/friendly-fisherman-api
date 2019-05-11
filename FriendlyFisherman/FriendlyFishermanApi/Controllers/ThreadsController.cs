@@ -137,6 +137,24 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpPost]
+        [Route("LikeReply")]
+        public async Task<IActionResult> LikeReply([FromBody] LikeViewModel model)
+        {
+            var response = await _service.LikeReplyAsync(new ServiceRequestBase<LikeViewModel>()
+            {
+                Item = model
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpPost]
         [Route("MarkAsSeen")]
         public async Task<IActionResult> MarkAsSeen([FromBody] ThreadReplyViewModel model)
         {

@@ -7,7 +7,7 @@ namespace Publishing.DataAccess.Repositories.Threads
 {
     public class ThreadReplyRepository: BaseRepository<ThreadReply>, IThreadReplyRepository
     {
-        public ThreadReplyRepository(DbContext context) : base(context)
+        public ThreadReplyRepository(PublishingDbContext context) : base(context)
         {
         }
     }

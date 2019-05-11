@@ -8,7 +8,7 @@ namespace Publishing.DataAccess.Repositories.Threads
 {
     public class SeenCountRepository : BaseRepository<SeenCount>, ISeenCountRepository
     {
-        public SeenCountRepository(DbContext context) : base(context)
+        public SeenCountRepository(PublishingDbContext context) : base(context)
         {
         }
 

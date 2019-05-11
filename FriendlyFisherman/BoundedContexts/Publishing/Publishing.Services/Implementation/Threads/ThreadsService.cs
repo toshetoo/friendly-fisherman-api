@@ -18,12 +18,14 @@ namespace Publishing.Services.Implementation.Threads
         private readonly IThreadsRepository _repo;
         private readonly ISeenCountRepository _seenCountRepo;
         private readonly IThreadReplyRepository _replyRepository;
+        private readonly ILikesRepository _likesRepository;
 
-        public ThreadsService(IThreadsRepository repo, ISeenCountRepository seenCountRepo, IThreadReplyRepository replyRepository) : base(repo)
+        public ThreadsService(IThreadsRepository repo, ISeenCountRepository seenCountRepo, IThreadReplyRepository replyRepository, ILikesRepository likesRepository) : base(repo)
         {
             _repo = repo;
             _seenCountRepo = seenCountRepo;
             _replyRepository = replyRepository;
+            _likesRepository = likesRepository;
         }
         
 
@@ -156,6 +158,50 @@ namespace Publishing.Services.Implementation.Threads
                     throw new Exception(ErrorMessages.InvalidId);
 
                 _replyRepository.Delete(new ThreadReply(request.Item));
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponseBase<LikeViewModel>> LikeReplyAsync(ServiceRequestBase<LikeViewModel> request)
+        {
+            return await Task.Run(() => LikeReply(request));
+        }
+
+        private ServiceResponseBase<LikeViewModel> LikeReply(ServiceRequestBase<LikeViewModel> request)
+        {
+            var response = new ServiceResponseBase<LikeViewModel>();
+
+            try
+            {
+                var like = new Like()
+                {
+                    Id = request.Item.Id,
+                    UserId = request.Item.UserId,
+                    IsLiked = request.Item.IsLiked,
+                    ThreadReplyId = request.Item.ThreadReplyId
+                };
+
+                // If we remove our vote
+                if (request.Item.IsLiked == null)
+                {
+                    _likesRepository.Delete(like);
+
+                    return response;
+                }
+
+                if (request.Item.Id != null)
+                {
+                    _likesRepository.Update(like);
+                }
+                else
+                {
+                    _likesRepository.Create(like);
+                }
             }
             catch (Exception e)
             {
