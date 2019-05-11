@@ -141,6 +141,7 @@ namespace FriendlyFishermanApi
             services.AddScoped<IThreadsRepository, ThreadsRepository>();
             services.AddScoped<ILikesRepository, LikesRepository>();
             services.AddScoped<IEventsRepository, EventsRepository>();
+            services.AddScoped<IEventParticipantsRepository, EventParticipantsRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPersonalMessagesService, PersonalMessagesService>();
             services.AddScoped<IThreadCategoriesService, ThreadCategoriesService>();

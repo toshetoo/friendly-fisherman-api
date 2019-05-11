@@ -6,6 +6,7 @@ namespace Administration.DataAccess
     public class AdministrationDbContext : DbContext
     {
         public DbSet<Event> Events { get; set; }
+        public DbSet<EventParticipant> EventParticipants { get; set; }
 
         public AdministrationDbContext(DbContextOptions<AdministrationDbContext> options)
             : base(options)

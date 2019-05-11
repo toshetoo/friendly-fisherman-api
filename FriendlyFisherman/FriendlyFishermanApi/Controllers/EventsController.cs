@@ -9,6 +9,7 @@ using FriendlyFisherman.SharedKernel.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using EventParticipantViewModel = Administration.Domain.EntityViewModels.Events.EventParticipantViewModel;
 
 namespace FriendlyFishermanApi.Controllers
 {
@@ -57,6 +58,24 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpGet]
+        [Route("GetParticipantsForEvent/{id}")]
+        public async Task<IActionResult> GetParticipantsForEvent(string id)
+        {
+            var response = await _service.GetParticipantsByEventIdAsync(new ServiceRequestBase<EventParticipantViewModel>()
+            {
+                ID = id
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
         [HttpPost]
         [Route("Save")]
         public async Task<IActionResult> SaveMessage([FromBody] EventViewModel model)
@@ -84,6 +103,25 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpPost]
+        [Route("AddParticipant")]
+        public async Task<IActionResult> AddParticipant([FromBody] EventParticipantViewModel model)
+        {
+            var response = await _service.AddParticipantAsync(new ServiceRequestBase<EventParticipantViewModel>()
+            {
+                Item = model
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+
         [HttpDelete]
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
@@ -91,6 +129,24 @@ namespace FriendlyFishermanApi.Controllers
             var response = await _service.DeleteAsync(new ServiceRequestBase<Event>()
             {
                 ID = id
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpDelete]
+        [Route("DeleteParticipant/{id}")]
+        public async Task<IActionResult> DeleteReply([FromBody] EventParticipantViewModel model)
+        {
+            var response = await _service.DeleteParticipantAsync(new ServiceRequestBase<EventParticipantViewModel>()
+            {
+                Item = model
             });
 
             if (ReferenceEquals(response.Exception, null))
