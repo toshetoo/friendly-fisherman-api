@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Administration.Domain.Entities;
+using Administration.Domain.Entities.Events;
 using Administration.Domain.Repositories.Events;
 using FriendlyFisherman.SharedKernel.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;

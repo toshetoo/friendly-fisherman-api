@@ -1,4 +1,5 @@
 ﻿using Administration.Domain.Entities;
+using Administration.Domain.Entities.Events;
 using Microsoft.EntityFrameworkCore;
 
 namespace Administration.DataAccess

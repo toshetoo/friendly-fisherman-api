@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FriendlyFisherman.SharedKernel.Services.Models;
+﻿using FriendlyFisherman.SharedKernel.Services.Models;
 
-namespace Administration.Domain.Entities
+namespace Administration.Domain.Entities.Events
 {
     public class EventParticipant: BaseEntity
     {

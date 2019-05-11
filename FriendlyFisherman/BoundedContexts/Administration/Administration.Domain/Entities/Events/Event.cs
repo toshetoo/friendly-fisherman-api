@@ -1,7 +1,7 @@
 ﻿using System;
 using FriendlyFisherman.SharedKernel.Services.Models;
 
-namespace Administration.Domain.Entities
+namespace Administration.Domain.Entities.Events
 {
     public class Event: BaseEntity
     {

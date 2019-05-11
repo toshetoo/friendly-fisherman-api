@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Administration.Domain.Entities;
+using Administration.Domain.Entities.Events;
 using Administration.Domain.EntityViewModels.Events;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Models;
