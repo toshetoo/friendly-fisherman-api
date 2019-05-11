@@ -162,6 +162,7 @@ namespace FriendlyFishermanApi
             services.AddScoped<IEventsService, EventsService>();
             services.AddScoped<IPollsService, PollsService>();
             services.AddScoped<IThreadReportsService, ThreadReportsService>();
+            services.AddScoped<IThreadCategoriesReportsService, ThreadCategoriesReportsService>();
 
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton(Configuration.GetSection(typeof(AppSettings).Name).Get<AppSettings>());

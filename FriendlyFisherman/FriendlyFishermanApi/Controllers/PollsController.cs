@@ -6,11 +6,13 @@ using Administration.Domain.Entities.Polls;
 using Administration.Domain.EntityViewModels.Polls;
 using Administration.Services.Abstraction.Polls;
 using FriendlyFisherman.SharedKernel.Services.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace FriendlyFishermanApi.Controllers
 {
+    [Authorize("Bearer")]
     public class PollsController : BaseApiController
     {
         private readonly ILogger _logger;
