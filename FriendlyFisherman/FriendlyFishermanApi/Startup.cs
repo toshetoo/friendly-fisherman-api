@@ -14,6 +14,10 @@ using Publishing.DataAccess;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 using System.Text;
+using Administration.DataAccess.Repositories.Events;
+using Administration.Domain.Repositories.Events;
+using Administration.Services.Abstraction.Events;
+using Administration.Services.Implementation.Events;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Impl;
 using Newtonsoft.Json;
@@ -136,10 +140,12 @@ namespace FriendlyFishermanApi
             services.AddScoped<IThreadCategoriesRepository, ThreadCategoriesRepository>();
             services.AddScoped<IThreadsRepository, ThreadsRepository>();
             services.AddScoped<ILikesRepository, LikesRepository>();
+            services.AddScoped<IEventsRepository, EventsRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPersonalMessagesService, PersonalMessagesService>();
             services.AddScoped<IThreadCategoriesService, ThreadCategoriesService>();
             services.AddScoped<IThreadsService, ThreadsService>();
+            services.AddScoped<IEventsService, EventsService>();
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton(Configuration.GetSection(typeof(AppSettings).Name).Get<AppSettings>());
             #endregion
