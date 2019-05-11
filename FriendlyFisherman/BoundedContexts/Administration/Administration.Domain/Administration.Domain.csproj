@@ -8,8 +8,4 @@
     <ProjectReference Include="..\..\..\FriendlyFisherman.SharedKernel\FriendlyFisherman.SharedKernel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Polls\" />
-  </ItemGroup>
-
 </Project>

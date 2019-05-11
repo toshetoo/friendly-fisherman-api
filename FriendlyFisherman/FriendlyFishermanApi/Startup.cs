@@ -15,9 +15,13 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 using System.Text;
 using Administration.DataAccess.Repositories.Events;
+using Administration.DataAccess.Repositories.Polls;
 using Administration.Domain.Repositories.Events;
+using Administration.Domain.Repositories.Polls;
 using Administration.Services.Abstraction.Events;
+using Administration.Services.Abstraction.Polls;
 using Administration.Services.Implementation.Events;
+using Administration.Services.Implementation.Polls;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Impl;
 using Newtonsoft.Json;
@@ -143,11 +147,15 @@ namespace FriendlyFishermanApi
             services.AddScoped<IEventsRepository, EventsRepository>();
             services.AddScoped<IEventParticipantsRepository, EventParticipantsRepository>();
             services.AddScoped<IEventCommentsRepository, EventCommentsRepository>();
+            services.AddScoped<IPollsRepository, PollsRepository>();
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPersonalMessagesService, PersonalMessagesService>();
             services.AddScoped<IThreadCategoriesService, ThreadCategoriesService>();
             services.AddScoped<IThreadsService, ThreadsService>();
             services.AddScoped<IEventsService, EventsService>();
+            services.AddScoped<IPollsService, PollsService>();
+
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton(Configuration.GetSection(typeof(AppSettings).Name).Get<AppSettings>());
             #endregion

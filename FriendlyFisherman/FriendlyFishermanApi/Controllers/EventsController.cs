@@ -28,7 +28,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllEvents()
         {
             var response = await _service.GetAllAsync(new ServiceRequestBase<Event>());
 
@@ -97,7 +97,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpPost]
         [Route("Save")]
-        public async Task<IActionResult> SaveMessage([FromBody] EventViewModel model)
+        public async Task<IActionResult> Save([FromBody] EventViewModel model)
         {
             var response = await _service.SaveAsync(new ServiceRequestBase<Event>()
             {

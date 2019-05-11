@@ -25,7 +25,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllThreads()
         {
             var response = await _service.GetAllAsync(new ServiceRequestBase<Thread>());
 
@@ -76,7 +76,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpPost]
         [Route("SaveThread")]
-        public async Task<IActionResult> SaveMessage([FromBody] ThreadViewModel model)
+        public async Task<IActionResult> SaveThread([FromBody] ThreadViewModel model)
         {
             var response = await _service.SaveAsync(new ServiceRequestBase<Thread>()
             {

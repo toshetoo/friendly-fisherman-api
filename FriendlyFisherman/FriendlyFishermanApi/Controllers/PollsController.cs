@@ -1,32 +1,32 @@
-﻿using System.Threading.Tasks;
-using FriendlyFisherman.SharedKernel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Administration.Domain.Entities.Polls;
+using Administration.Domain.EntityViewModels.Polls;
+using Administration.Services.Abstraction.Polls;
 using FriendlyFisherman.SharedKernel.Services.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Publishing.Domain.Entities.Categories;
-using Publishing.Domain.EntityViewModels.Categories;
-using Publishing.Services.Abstraction.Categories;
 
 namespace FriendlyFishermanApi.Controllers
 {
-    [Authorize("Bearer")]
-    public class CategoriesController : BaseApiController
+    public class PollsController : BaseApiController
     {
         private readonly ILogger _logger;
-        private readonly IThreadCategoriesService _service;
+        private readonly IPollsService _service;
 
-        public CategoriesController(IThreadCategoriesService service, ILogger logger)
+        public PollsController(ILogger logger, IPollsService service)
         {
-            _service = service;
             _logger = logger;
+            _service = service;
         }
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<IActionResult> GetAllPolls()
         {
-            var response = await _service.GetAllAsync(new ServiceRequestBase<ThreadCategory>());
+            var response = await _service.GetAllAsync(new ServiceRequestBase<Poll>());
 
             if (ReferenceEquals(response.Exception, null))
             {
@@ -41,7 +41,7 @@ namespace FriendlyFishermanApi.Controllers
         [Route("GetById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var response = await _service.GetByIdAsync(new ServiceRequestBase<ThreadCategory>()
+            var response = await _service.GetByIdAsync(new ServiceRequestBase<Poll>()
             {
                 ID = id
             });
@@ -56,15 +56,19 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpPost]
-        [Route("SaveCategory")]
-        public async Task<IActionResult> SaveCategory([FromBody] ThreadCategoryViewModel model)
+        [Route("Save")]
+        public async Task<IActionResult> SavePoll([FromBody] PollViewModel model)
         {
-            var response = await _service.SaveAsync(new ServiceRequestBase<ThreadCategory>()
+            var response = await _service.SaveAsync(new ServiceRequestBase<Poll>()
             {
-                Item = new ThreadCategory()
+                Item = new Poll()
                 {
                     Id = model.Id,
-                    Name = model.Name
+                    CreatedOn = model.CreatedOn,
+                    Answers = model.Answers,
+                    CreatedBy = model.CreatedBy,
+                    EndOn = model.EndOn,
+                    Question = model.Question
                 }
             });
 
@@ -81,7 +85,7 @@ namespace FriendlyFishermanApi.Controllers
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var response = await _service.DeleteAsync(new ServiceRequestBase<ThreadCategory>()
+            var response = await _service.DeleteAsync(new ServiceRequestBase<Poll>()
             {
                 ID = id
             });
