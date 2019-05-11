@@ -12,6 +12,7 @@ namespace Administration.DataAccess
         public DbSet<EventComment> EventComments { get; set; }
         public DbSet<Poll> Polls { get; set; }
         public DbSet<PollAnswer> PollAnswers { get; set; }
+        public DbSet<UserPollAnswer> UserPollAnswers { get; set; }
 
         public AdministrationDbContext(DbContextOptions<AdministrationDbContext> options)
             : base(options)

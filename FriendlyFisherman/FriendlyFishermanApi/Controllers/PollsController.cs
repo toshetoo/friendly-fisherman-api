@@ -81,6 +81,24 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpPost]
+        [Route("AddPollVote")]
+        public async Task<IActionResult> AddPollVote([FromBody] UserPollAnswerViewModel model)
+        {
+            var response = await _service.AddUserVoteAsync(new ServiceRequestBase<UserPollAnswerViewModel>()
+            {
+                Item = model
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
         [HttpDelete]
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
