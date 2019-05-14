@@ -163,6 +163,52 @@ namespace Users.Services.Implementation
             return response;
         }
 
+        public async Task<GetUserResponse> GetUserByUsernameAsync(GetUserRequest request)
+        {
+            return await Task.Run(() => GetUserByUsername(request));
+        }
+
+        /// <summary>
+        /// Extracts a single user from the Database.
+        /// </summary>
+        /// <param name="request">An object containing the username of the searched user</param>
+        /// <returns>A single user with the corresponding Username or an exception with an error message</returns>
+        private GetUserResponse GetUserByUsername(GetUserRequest request)
+        {
+            var response = new GetUserResponse();
+
+            try
+            {
+                var user = _usersRepository.GetByUsername(request.Username);
+                if (ReferenceEquals(user, null))
+                    throw new Exception($"There is no user with username: {request.Username}");
+
+                if (!string.IsNullOrEmpty(user.ImagePath))
+                {
+                    string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
+                    user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                }
+
+                var userViewModel = new UserViewModel
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Username = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    ImagePath = user.ImagePath
+                };
+
+                response.Item = userViewModel;
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
+        }
+
         public async Task<EditUserResponse> EditUserAsync(EditUserRequest request)
         {
             return await Task.Run(() => EditUser(request));

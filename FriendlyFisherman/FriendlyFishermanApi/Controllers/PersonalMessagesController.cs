@@ -40,6 +40,24 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpGet]
+        [Route("GetNewMessagesCount/{id}")]
+        public async Task<IActionResult> GetNewMessagesCount(string id)
+        {
+            var response = await _service.GetNewMessagesCountAsync(new GetNewMessagesCountRequest
+            {
+                ReceiverId = id
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpGet]
         [Route("GetAllForReceiver/{id}")]
         public async Task<IActionResult> GetAllForReceiver(string id)
         {
@@ -77,7 +95,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetMessageThread/{senderId}/{receiverId}")]
-        public async Task<IActionResult> GetAllForReceiver(string senderId, string receiverId)
+        public async Task<IActionResult> GetMessageThread(string senderId, string receiverId)
         {
             var response = await _service.GetMessageThreadAsync(new GetMessagesRequest()
             {

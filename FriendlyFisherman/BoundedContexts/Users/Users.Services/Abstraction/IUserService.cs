@@ -9,6 +9,7 @@
         Task<UserAuthenticationResponse> GetUserAuthenticationAsync(UserAuthenticationRequest request);
         Task<GetAllUsersResponse> GetAllUsersAsync(GetAllUsersRequest request);
         Task<GetUserResponse> GetUserByIdAsync(GetUserRequest request);
+        Task<GetUserResponse> GetUserByUsernameAsync(GetUserRequest request);
         Task<GetUserResponse> GetUserByEmailAsync(GetUserRequest request);
         Task<EditUserResponse> EditUserAsync(EditUserRequest request);
         Task<UploadImageResponse> UploadImageAsync(UploadImageRequest request);

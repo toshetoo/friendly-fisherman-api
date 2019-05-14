@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using FriendlyFisherman.SharedKernel.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,18 @@ namespace Users.DataAccess.Repositories
         {
             var repo = CreateRepo();
             return repo.GetWhere(m => m.SenderId == id);
+        }
+
+
+        /// <summary>
+        /// Retrieve all the new messages from the DB for a specific reciever
+        /// </summary>
+        /// <param name="id">The ID of the reciever</param>
+        /// <returns>The number of all new messages</returns>
+        public int GetNewMessagesCount(string id)
+        {
+            var repo = CreateRepo();
+            return repo.GetWhere(m => m.ReceiverId == id && m.Seen == false).Count();
         }
 
         /// <summary>

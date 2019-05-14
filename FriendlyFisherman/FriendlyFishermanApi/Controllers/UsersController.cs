@@ -52,6 +52,22 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpGet]
+        [Route("GetUserByUsername/{username}")]
+        public async Task<IActionResult> GetUserByUsername(string username)
+        {
+            var request = new GetUserRequest { Username = username };
+            var response = await _userService.GetUserByUsernameAsync(request);
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
         [HttpPost]
         [Route("EditUser")]
         public async Task<IActionResult> EditUser(UserViewModel model)

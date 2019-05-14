@@ -7,6 +7,7 @@ namespace Users.Domain.Repositories
 {
     public interface IPersonalMessagesRepository
     {
+        int GetNewMessagesCount(string id);
         IEnumerable<PersonalMessage> GetAllMessagesBySenderId(string id);
         IEnumerable<PersonalMessage> GetAllMessagesByReceiverId(string id);
         IEnumerable<PersonalMessage> GetAllMessagesBySenderIdAndReceiverId(string senderId, string receiverId);

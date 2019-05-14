@@ -25,6 +25,35 @@ namespace Users.Services.Implementation
             _usersUserRepository = usersUserRepository;
         }
 
+        public async Task<GetNewMessagesCountResponse> GetNewMessagesCountAsync(GetNewMessagesCountRequest request)
+        {
+            return await Task.Run(() => GetNewMessagesCount(request));
+        }
+
+        /// <summary>
+        /// Retrieves all messages for a specific sender and maps them to the ViewModel
+        /// </summary>
+        /// <param name="request">The attributes used to filter the messages</param>
+        /// <returns>A Response object containing the list of messaged and/or an exception if one occured</returns>
+        private GetNewMessagesCountResponse GetNewMessagesCount(GetNewMessagesCountRequest request)
+        {
+            var response = new GetNewMessagesCountResponse();
+            try
+            {
+                if (String.IsNullOrWhiteSpace(request.ReceiverId))
+                    throw new Exception(ErrorMessages.InvalidId);
+
+                response.NumberOfNewMessages = _repo.GetNewMessagesCount(request.ReceiverId);
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+
+            return response;
+        }
+
         public async Task<GetAllMessagesResponse> GetAllMessagesBySenderIdAsync(GetAllMessagesRequest request)
         {
             return await Task.Run(() => GetAllMessagesBySenderId(request));
@@ -44,16 +73,18 @@ namespace Users.Services.Implementation
                     throw new Exception(ErrorMessages.InvalidId);
 
                 var result = _repo.GetAllMessagesBySenderId(request.SenderId);
-                response.Items = result.Select(m => new PersonalMessageViewModel(m));
+                var messages = result.Select(m => new PersonalMessageViewModel(m)).ToList();
 
-                foreach (var message in response.Items)
+                foreach (var message in messages)
                 {
                     var receiver = _usersUserRepository.GetById(message.ReceiverId);
-                    message.ReceiverName = receiver.FirstName + receiver.LastName;
+                    message.ReceiverName = $"{receiver.FirstName} {receiver.LastName}";
 
                     var sender = _usersUserRepository.GetById(message.SenderId);
-                    message.SenderName = sender.FirstName + sender.LastName;
+                    message.SenderName = $"{sender.FirstName} {sender.LastName}";
                 }
+
+                response.Items = messages;
             }
             catch (Exception e)
             {
@@ -83,16 +114,18 @@ namespace Users.Services.Implementation
                     throw new Exception(ErrorMessages.InvalidId);
 
                 var result = _repo.GetAllMessagesByReceiverId(request.ReceiverId);
-                response.Items = result.Select(m => new PersonalMessageViewModel(m));
+                var messages = result.Select(m => new PersonalMessageViewModel(m)).ToList();
 
-                foreach (var message in response.Items)
+                foreach (var message in messages)
                 {
                     var receiver = _usersUserRepository.GetById(message.ReceiverId);
-                    message.ReceiverName = receiver.FirstName + receiver.LastName;
+                    message.ReceiverName = $"{receiver.FirstName} {receiver.LastName}";
 
                     var sender = _usersUserRepository.GetById(message.SenderId);
-                    message.SenderName = sender.FirstName + sender.LastName;
+                    message.SenderName = $"{sender.FirstName} {sender.LastName}";
                 }
+
+                response.Items = messages;
             }
             catch (Exception e)
             {
@@ -206,7 +239,7 @@ namespace Users.Services.Implementation
                     ReceiverId = request.Message.ReceiverId,
                     SenderId = request.Message.SenderId,
                     Seen = request.Message.Seen,
-                    SentOn = request.Message.SentOn,
+                    SentOn = DateTime.UtcNow,
                     Content = request.Message.Content,
                     Title = request.Message.Title
                 };

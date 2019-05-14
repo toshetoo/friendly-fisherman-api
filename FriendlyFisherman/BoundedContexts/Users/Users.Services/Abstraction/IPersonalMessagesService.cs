@@ -10,6 +10,7 @@ namespace Users.Services.Abstraction
     public interface IPersonalMessagesService
     {
         Task<GetAllMessagesResponse> GetAllMessagesBySenderIdAsync(GetAllMessagesRequest request);       
+        Task<GetNewMessagesCountResponse> GetNewMessagesCountAsync(GetNewMessagesCountRequest request);   
         Task<GetAllMessagesResponse> GetAllMessagesByReceiverIdAsync(GetAllMessagesRequest request);   
         Task<GetAllMessagesResponse> GetMessageThreadAsync(GetMessagesRequest request);   
         Task<GetMessageResponse> GetMessageByIdAsync(GetMessagesRequest request);                
