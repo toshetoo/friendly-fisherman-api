@@ -9,7 +9,7 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
 {
     public class BaseCrudService<TE, T> : IBaseCrudService<TE> where T : IBaseRepository<TE> where TE : BaseEntity
     {
-        private readonly T _repo;
+        protected readonly T _repo;
 
         public BaseCrudService(T repo)
         {
@@ -21,7 +21,7 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
             return await Task.Run(() => Delete(request));
         }
 
-        private ServiceResponseBase<TE> Delete(ServiceRequestBase<TE> request)
+        protected virtual ServiceResponseBase<TE> Delete(ServiceRequestBase<TE> request)
         {
             var response = new ServiceResponseBase<TE>();
             try
@@ -29,7 +29,7 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
                 if(string.IsNullOrEmpty(request.ID))
                     throw new Exception(ErrorMessages.InvalidId);
 
-                _repo.Delete(request.Item);
+                _repo.Delete(item => item.Id == request.ID);
             }
             catch (Exception e)
             {
@@ -44,7 +44,7 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
             return await Task.Run(() => GetAll(request));
         }
 
-        private ServiceResponseBase<TE> GetAll(ServiceRequestBase<TE> request)
+        protected virtual ServiceResponseBase<TE> GetAll(ServiceRequestBase<TE> request)
         {
             var response = new ServiceResponseBase<TE>();
             try
@@ -64,7 +64,7 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
             return await Task.Run(() => GetById(request));
         }
 
-        public ServiceResponseBase<TE> GetById(ServiceRequestBase<TE> request)
+        protected virtual ServiceResponseBase<TE> GetById(ServiceRequestBase<TE> request)
         {
             var response = new ServiceResponseBase<TE>();
             try
@@ -87,7 +87,7 @@ namespace FriendlyFisherman.SharedKernel.Services.Impl
             return await Task.Run(() => Save(request));
         }
 
-        private ServiceResponseBase<TE> Save(ServiceRequestBase<TE> request)
+        protected virtual ServiceResponseBase<TE> Save(ServiceRequestBase<TE> request)
         {
             var response = new ServiceResponseBase<TE>();
             try

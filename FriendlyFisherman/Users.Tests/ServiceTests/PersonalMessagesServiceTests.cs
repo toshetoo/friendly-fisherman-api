@@ -32,8 +32,9 @@ namespace Users.Tests.ServiceTests
             var mockSet = _dbSetFixture.CreateMockSet<PersonalMessage>(data);
             var mockContext = _contextFixture.CreateMockContext<PersonalMessage>(mockSet).Object;
             _repositoryMock = repositoryFixture.CreatePersonalMessagesRepository(mockContext);
+            var _usersRepository = repositoryFixture.CreateUsersRepository(mockContext);
 
-            _service = new PersonalMessagesService(_repositoryMock);
+            _service = new PersonalMessagesService(_repositoryMock, _usersRepository);
         }
 
         [Fact]
