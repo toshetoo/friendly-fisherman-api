@@ -18,5 +18,15 @@ namespace Administration.DataAccess
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Poll>()
+                .HasMany<PollAnswer>(a => a.Answers)
+                .WithOne(p => p.Poll)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
