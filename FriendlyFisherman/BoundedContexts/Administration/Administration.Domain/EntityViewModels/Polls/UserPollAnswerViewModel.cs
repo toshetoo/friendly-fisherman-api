@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Administration.Domain.Entities.Polls;
 
 namespace Administration.Domain.EntityViewModels.Polls
 {
@@ -13,6 +14,8 @@ namespace Administration.Domain.EntityViewModels.Polls
         [Required]
         public string PollId { get; set; }
         [Required]
-        public int AnswerIndex { get; set; }
+        public string AnswerId { get; set; }
+
+        public PollAnswer Answer;
     }
 }

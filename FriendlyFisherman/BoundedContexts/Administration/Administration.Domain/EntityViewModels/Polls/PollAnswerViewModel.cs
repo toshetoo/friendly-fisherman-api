@@ -1,30 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Administration.Domain.EntityViewModels.Polls;
-using FriendlyFisherman.SharedKernel.Services.Models;
+using Administration.Domain.Entities.Polls;
 
-namespace Administration.Domain.Entities.Polls
+namespace Administration.Domain.EntityViewModels.Polls
 {
-    public class PollAnswer: BaseEntity
+    public class PollAnswerViewModel
     {
+        public string Id { get; set; }
         public string PollId { get; set; }
         public string Content { get; set; }
 
-        public Poll Poll { get; set; }
+        public double Percentage { get; set; }
 
-        public PollAnswer()
+        public PollAnswerViewModel()
         {
             
         }
 
-        public PollAnswer(PollAnswerViewModel pollAnswer)
+        public PollAnswerViewModel(PollAnswer pollAnswer)
         {
             Id = pollAnswer.Id;
             PollId = pollAnswer.PollId;
             Content = pollAnswer.Content;
         }
     }
-
-    
 }

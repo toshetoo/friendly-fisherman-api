@@ -23,6 +23,11 @@ namespace Publishing.Domain.EntityViewModels.Threads
 
         public List<ThreadReply> Replies;
 
+
+        public ThreadViewModel()
+        {
+            
+        }
         public ThreadViewModel(Thread t)
         {
             Id = t.Id;

@@ -4,14 +4,16 @@ using Administration.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Administration.DataAccess.Migrations
 {
     [DbContext(typeof(AdministrationDbContext))]
-    partial class AdministrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190515152354_AddPollOfTheWeekField")]
+    partial class AddPollOfTheWeekField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,15 +118,13 @@ namespace Administration.DataAccess.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AnswerId");
+                    b.Property<int>("AnswerIndex");
 
                     b.Property<string>("PollId");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AnswerId");
 
                     b.ToTable("UserPollAnswers");
                 });
@@ -135,13 +135,6 @@ namespace Administration.DataAccess.Migrations
                         .WithMany("Answers")
                         .HasForeignKey("PollId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Administration.Domain.Entities.Polls.UserPollAnswer", b =>
-                {
-                    b.HasOne("Administration.Domain.Entities.Polls.PollAnswer", "Answer")
-                        .WithMany()
-                        .HasForeignKey("AnswerId");
                 });
 #pragma warning restore 612, 618
         }

@@ -57,6 +57,21 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpGet]
+        [Route("GetPollOfTheWeek")]
+        public async Task<IActionResult> GetPollOfTheWeek()
+        {
+            var response = await _service.GetPollOfTheWeekAsync(new ServiceRequestBase<PollViewModel>());
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
         [HttpPost]
         [Route("Save")]
         public async Task<IActionResult> SavePoll([FromBody] PollViewModel model)
@@ -67,11 +82,29 @@ namespace FriendlyFishermanApi.Controllers
                 {
                     Id = model.Id,
                     CreatedOn = model.CreatedOn,
-                    Answers = model.Answers,
+                    Answers = model.Answers.Select(p => new PollAnswer(p)).ToList(),
                     CreatedBy = model.CreatedBy,
                     EndOn = model.EndOn,
                     Question = model.Question
                 }
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpPost]
+        [Route("MakePollOfTheWeek/{id}")]
+        public async Task<IActionResult> MakePollOfTheWeek(string id)
+        {
+            var response = await _service.MakePollOfTheWeekAsync(new ServiceRequestBase<PollViewModel>()
+            {
+                ID = id
             });
 
             if (ReferenceEquals(response.Exception, null))

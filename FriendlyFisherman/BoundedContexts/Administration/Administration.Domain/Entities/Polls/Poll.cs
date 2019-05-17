@@ -11,6 +11,8 @@ namespace Administration.Domain.Entities.Polls
         public DateTime EndOn { get; set; }
         public string CreatedBy { get; set; }
         public string Question { get; set; }
+
+        public bool IsPollOfTheWeek { get; set; }
         public List<PollAnswer> Answers { get; set; }
     }
 }
