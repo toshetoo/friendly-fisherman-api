@@ -13,7 +13,7 @@ using FriendlyFisherman.SharedKernel.Services.Models;
 
 namespace Administration.Services.Implementation.Events
 {
-    public class EventsService: BaseCrudService<Event, IEventsRepository>, IEventsService
+    public class EventsService: BaseCrudService<EventViewModel, Event, IEventsRepository>, IEventsService
     {
         private readonly IEventParticipantsRepository _participantsRepository;
         private readonly IEventCommentsRepository _eventCommentsRepository;

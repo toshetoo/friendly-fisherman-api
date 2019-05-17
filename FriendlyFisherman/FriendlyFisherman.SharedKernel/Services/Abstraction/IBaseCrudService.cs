@@ -6,11 +6,11 @@ using FriendlyFisherman.SharedKernel.Services.Models;
 
 namespace FriendlyFisherman.SharedKernel.Services.Abstraction
 {
-    public interface IBaseCrudService<T>
+    public interface IBaseCrudService<TR, T>
     {
-        Task<ServiceResponseBase<T>> GetByIdAsync(ServiceRequestBase<T> request);
-        Task<ServiceResponseBase<T>> GetAllAsync(ServiceRequestBase<T> request);
-        Task<ServiceResponseBase<T>> SaveAsync(ServiceRequestBase<T> request);
-        Task<ServiceResponseBase<T>> DeleteAsync(ServiceRequestBase<T> request);
+        Task<ServiceResponseBase<TR>> GetByIdAsync(ServiceRequestBase<T> request);
+        Task<ServiceResponseBase<TR>> GetAllAsync(ServiceRequestBase<T> request);
+        Task<ServiceResponseBase<TR>> SaveAsync(ServiceRequestBase<T> request);
+        Task<ServiceResponseBase<TR>> DeleteAsync(ServiceRequestBase<T> request);
     }
 }

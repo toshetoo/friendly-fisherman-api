@@ -13,7 +13,7 @@ using Publishing.Services.Request.Threads;
 
 namespace Publishing.Services.Implementation.Threads
 {
-    public class ThreadsService: BaseCrudService<Thread, IThreadsRepository>, IThreadsService
+    public class ThreadsService: BaseCrudService<ThreadViewModel, Thread, IThreadsRepository>, IThreadsService
     {
         private readonly IThreadsRepository _repo;
         private readonly ISeenCountRepository _seenCountRepo;

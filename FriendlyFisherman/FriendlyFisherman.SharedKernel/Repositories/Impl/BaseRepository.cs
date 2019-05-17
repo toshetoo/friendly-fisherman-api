@@ -39,8 +39,8 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
                 if (_isContext && _context != null)
                 {
                     //_context.Dispose();
-                    _entities = null;
-                    _context = null;
+                    //_entities = null;
+                    //_context = null;
                 }
 
             }
@@ -221,8 +221,8 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
                 if (_isContext && _context != null)
                 {
                     //_context.Dispose();
-                    _entities = null;
-                    _context = null;
+                    //_entities = null;
+                    //_context = null;
                 }
             }
         }

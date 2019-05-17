@@ -10,7 +10,7 @@ using FriendlyFisherman.SharedKernel.Services.Models;
 
 namespace Administration.Services.Abstraction.Events
 {
-    public interface IEventsService: IBaseCrudService<Event>
+    public interface IEventsService: IBaseCrudService<EventViewModel, Event>
     {
         Task<ServiceResponseBase<EventParticipantViewModel>> GetParticipantsByEventIdAsync(ServiceRequestBase<EventParticipantViewModel> request);
         Task<ServiceResponseBase<EventParticipantViewModel>> AddParticipantAsync(ServiceRequestBase<EventParticipantViewModel> request);

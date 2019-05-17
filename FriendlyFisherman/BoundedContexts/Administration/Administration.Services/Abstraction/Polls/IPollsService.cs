@@ -9,8 +9,12 @@ using FriendlyFisherman.SharedKernel.Services.Models;
 
 namespace Administration.Services.Abstraction.Polls
 {
-    public interface IPollsService: IBaseCrudService<Poll>
+    public interface IPollsService: IBaseCrudService<PollViewModel, Poll>
     {
         Task<ServiceResponseBase<UserPollAnswerViewModel>> AddUserVoteAsync(ServiceRequestBase<UserPollAnswerViewModel> request);
+
+        Task<ServiceResponseBase<PollViewModel>> MakePollOfTheWeekAsync(ServiceRequestBase<PollViewModel> request);
+
+        Task<ServiceResponseBase<PollViewModel>> GetPollOfTheWeekAsync(ServiceRequestBase<PollViewModel> request);
     }
 }

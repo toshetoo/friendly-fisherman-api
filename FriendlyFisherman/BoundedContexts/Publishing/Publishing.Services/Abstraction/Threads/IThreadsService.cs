@@ -11,7 +11,7 @@ using Publishing.Services.Request.Threads;
 
 namespace Publishing.Services.Abstraction.Threads
 {
-    public interface IThreadsService: IBaseCrudService<Thread>
+    public interface IThreadsService: IBaseCrudService<ThreadViewModel, Thread>
     {
         Task<ServiceResponseBase<ThreadViewModel>> MarkAsSeenAsync(MarkThreadAsSeenRequest request);
         Task<ServiceResponseBase<ThreadViewModel>> GetSeenCountAsync(ServiceRequestBase<ThreadViewModel> request);
