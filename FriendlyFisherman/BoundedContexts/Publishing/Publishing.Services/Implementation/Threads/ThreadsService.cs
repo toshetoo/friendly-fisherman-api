@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
+using FriendlyFisherman.SharedKernel.Helpers;
 using FriendlyFisherman.SharedKernel.Messages;
 using FriendlyFisherman.SharedKernel.Services.Impl;
 using FriendlyFisherman.SharedKernel.Services.Models;
@@ -178,13 +179,7 @@ namespace Publishing.Services.Implementation.Threads
 
             try
             {
-                var like = new Like()
-                {
-                    Id = request.Item.Id,
-                    UserId = request.Item.UserId,
-                    IsLiked = request.Item.IsLiked,
-                    ThreadReplyId = request.Item.ThreadReplyId
-                };
+                var like = Mapper<Like, LikeViewModel>.Map(request.Item);
 
                 // If we remove our vote
                 if (request.Item.IsLiked == null)

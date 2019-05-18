@@ -78,13 +78,7 @@ namespace Administration.Services.Implementation.Polls
                     _pollAnswersRepository.Delete(oldVote);
                 }
 
-                var pollResp = new UserPollAnswer
-                {
-                    Id = request.Item.Id,
-                    UserId = request.Item.UserId,
-                    AnswerId = request.Item.AnswerId,
-                    PollId = request.Item.PollId
-                };
+                var pollResp = Mapper<UserPollAnswer, UserPollAnswerViewModel>.Map(request.Item);
                 _pollAnswersRepository.Create(pollResp);
             }
             catch (Exception e)

@@ -8,6 +8,7 @@ using Administration.Domain.Entities.Events;
 using Administration.Domain.EntityViewModels.Events;
 using Administration.Domain.Repositories.Events;
 using Administration.Services.Abstraction.Events;
+using FriendlyFisherman.SharedKernel.Helpers;
 using FriendlyFisherman.SharedKernel.Services.Impl;
 using FriendlyFisherman.SharedKernel.Services.Models;
 
@@ -60,14 +61,7 @@ namespace Administration.Services.Implementation.Events
 
             try
             {
-                var participant = new EventParticipant
-                {
-                    Id = request.Item.Id,
-                    UserId = request.Item.UserId,
-                    EventId = request.Item.EventId,
-                    ParticipantStatus = request.Item.ParticipantStatus
-                };
-
+                var participant = Mapper<EventParticipant, EventParticipantViewModel>.Map(request.Item);
                 _participantsRepository.Create(participant);
             }
             catch (Exception e)
@@ -90,14 +84,7 @@ namespace Administration.Services.Implementation.Events
 
             try
             {
-                var participant = new EventParticipant
-                {
-                    Id = request.Item.Id,
-                    UserId = request.Item.UserId,
-                    EventId = request.Item.EventId,
-                    ParticipantStatus = request.Item.ParticipantStatus
-                };
-
+                var participant = Mapper<EventParticipant, EventParticipantViewModel>.Map(request.Item);
                 _participantsRepository.Delete(participant);
             }
             catch (Exception e)
@@ -145,15 +132,7 @@ namespace Administration.Services.Implementation.Events
 
             try
             {
-                var comment = new EventComment
-                {
-                    Id = request.Item.Id,
-                    CreatedOn = request.Item.CreatedOn,
-                    EventId = request.Item.EventId,
-                    Content = request.Item.Content,
-                    CreatorId = request.Item.CreatorId
-                };
-
+                var comment = Mapper<EventComment, EventCommentViewModel>.Map(request.Item);
                 _eventCommentsRepository.Create(comment);
             }
             catch (Exception e)
@@ -177,15 +156,7 @@ namespace Administration.Services.Implementation.Events
 
             try
             {
-                var comment = new EventComment
-                {
-                    Id = request.Item.Id,
-                    CreatedOn = request.Item.CreatedOn,
-                    EventId = request.Item.EventId,
-                    Content = request.Item.Content,
-                    CreatorId = request.Item.CreatorId
-                };
-
+                var comment = Mapper<EventComment, EventCommentViewModel>.Map(request.Item);
                 _eventCommentsRepository.Update(comment);
             }
             catch (Exception e)
@@ -209,15 +180,7 @@ namespace Administration.Services.Implementation.Events
 
             try
             {
-                var comment = new EventComment
-                {
-                    Id = request.Item.Id,
-                    CreatedOn = request.Item.CreatedOn,
-                    EventId = request.Item.EventId,
-                    Content = request.Item.Content,
-                    CreatorId = request.Item.CreatorId
-                };
-
+                var comment = Mapper<EventComment, EventCommentViewModel>.Map(request.Item);
                 _eventCommentsRepository.Delete(comment);
             }
             catch (Exception e)
