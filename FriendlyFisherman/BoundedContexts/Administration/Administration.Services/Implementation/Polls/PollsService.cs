@@ -37,8 +37,11 @@ namespace Administration.Services.Implementation.Polls
                     .GetWhere(a => a.PollId == response.Item.Id);
                     
                     
-                var grouped = answers.GroupBy(a => a.AnswerId)
-                    .ToDictionary(e => e.Key, e => e.Count());
+                var grouped = response.Item.Answers.GroupBy(a => a.Id)
+                    .ToDictionary(e => e.Key, e =>
+                    {
+                        return answers.Count(ans => ans.AnswerId == e.Key);
+                    });
 
                 for (int i = 0; i < response.Item.Answers.Count; i++)
                 {
