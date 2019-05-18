@@ -55,6 +55,21 @@ namespace FriendlyFishermanApi.Controllers
             return StatusCode(500, new ErrorResponse(response.Exception.Message));
         }
 
+        [HttpGet]
+        [Route("TrendingCategories")]
+        public async Task<IActionResult> TrendingCategories()
+        {
+            var response = await _service.GetTrendingCategoriesAsync(new ServiceRequestBase<ThreadCategoryViewModel>());
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
         [HttpPost]
         [Route("SaveCategory")]
         public async Task<IActionResult> SaveCategory([FromBody] ThreadCategoryViewModel model)
