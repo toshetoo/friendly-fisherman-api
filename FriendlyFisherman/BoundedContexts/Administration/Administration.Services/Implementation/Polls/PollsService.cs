@@ -7,6 +7,7 @@ using Administration.Domain.Entities.Polls;
 using Administration.Domain.EntityViewModels.Polls;
 using Administration.Domain.Repositories.Polls;
 using Administration.Services.Abstraction.Polls;
+using FriendlyFisherman.SharedKernel.Helpers;
 using FriendlyFisherman.SharedKernel.Messages;
 using FriendlyFisherman.SharedKernel.Services.Impl;
 using FriendlyFisherman.SharedKernel.Services.Models;
@@ -65,6 +66,15 @@ namespace Administration.Services.Implementation.Polls
 
             try
             {
+                // if we have old vote, remove it
+                var oldVote = _pollAnswersRepository.Get(ans =>
+                    ans.PollId == request.Item.PollId && ans.UserId == request.Item.UserId);
+
+                if (oldVote != null)
+                {
+                    _pollAnswersRepository.Delete(oldVote);
+                }
+
                 var pollResp = new UserPollAnswer
                 {
                     Id = request.Item.Id,
@@ -73,6 +83,31 @@ namespace Administration.Services.Implementation.Polls
                     PollId = request.Item.PollId
                 };
                 _pollAnswersRepository.Create(pollResp);
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponseBase<UserPollAnswerViewModel>> GetVotedAnswerForPollAsync(ServiceRequestBase<UserPollAnswerViewModel> request)
+        {
+            return await Task.Run(() => GetVotedAnswerForPoll(request));
+        }
+
+        private ServiceResponseBase<UserPollAnswerViewModel> GetVotedAnswerForPoll(ServiceRequestBase<UserPollAnswerViewModel> request)
+        {
+            var response = new ServiceResponseBase<UserPollAnswerViewModel>();
+
+            try
+            {
+                var answer = _pollAnswersRepository.Get(ans =>
+                    ans.PollId == request.Item.PollId && ans.UserId == request.Item.UserId);
+
+                if (answer != null)
+                    response.Item = Mapper<UserPollAnswerViewModel,UserPollAnswer>.Map(answer);
             }
             catch (Exception e)
             {
@@ -125,6 +160,13 @@ namespace Administration.Services.Implementation.Polls
             try
             {
                 var poll = _repo.Get(p => p.IsPollOfTheWeek);
+
+                if (poll == null)
+                {
+                    response.Item = null;
+                    return response;
+                }
+
                 response.Item = GetById(new ServiceRequestBase<Poll>() {ID = poll.Id}).Item;
             }
             catch (Exception e)

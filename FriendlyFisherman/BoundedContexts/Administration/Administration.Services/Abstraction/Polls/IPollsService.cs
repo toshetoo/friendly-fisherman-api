@@ -13,6 +13,9 @@ namespace Administration.Services.Abstraction.Polls
     {
         Task<ServiceResponseBase<UserPollAnswerViewModel>> AddUserVoteAsync(ServiceRequestBase<UserPollAnswerViewModel> request);
 
+        Task<ServiceResponseBase<UserPollAnswerViewModel>> GetVotedAnswerForPollAsync(
+            ServiceRequestBase<UserPollAnswerViewModel> request);
+
         Task<ServiceResponseBase<PollViewModel>> MakePollOfTheWeekAsync(ServiceRequestBase<PollViewModel> request);
 
         Task<ServiceResponseBase<PollViewModel>> GetPollOfTheWeekAsync(ServiceRequestBase<PollViewModel> request);
