@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace FriendlyFisherman.SharedKernel.Helpers
@@ -14,10 +15,12 @@ namespace FriendlyFisherman.SharedKernel.Helpers
 
             for (int j = 0; j < props.Length; j++)
             {
-
-                var newValue = item.GetType().GetProperty(props[j].Name).GetValue(item);
-                var propInfo = result.GetType().GetProperty(props[j].Name);
-                propInfo.SetValue(result, Convert.ChangeType(newValue, propInfo.PropertyType));
+                if (item.GetType().GetProperty(props[j].Name) != null)
+                {
+                    var newValue = item.GetType().GetProperty(props[j].Name).GetValue(item);
+                    var propInfo = result.GetType().GetProperty(props[j].Name);
+                    propInfo.SetValue(result, Convert.ChangeType(newValue, propInfo.PropertyType));
+                }
             }
 
             return result;
