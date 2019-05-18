@@ -37,10 +37,12 @@ namespace FriendlyFisherman.SharedKernel.Helpers
 
                 for (int j = 0; j < props.Length; j++)
                 {
-
-                    var newValue = el.GetType().GetProperty(props[j].Name).GetValue(el);
-                    var propInfo = propEl.GetType().GetProperty(props[j].Name);
-                    propInfo.SetValue(propEl, Convert.ChangeType(newValue, propInfo.PropertyType));
+                    if (el.GetType().GetProperty(props[j].Name) != null)
+                    {
+                        var newValue = el.GetType().GetProperty(props[j].Name).GetValue(el);
+                        var propInfo = propEl.GetType().GetProperty(props[j].Name);
+                        propInfo.SetValue(propEl, Convert.ChangeType(newValue, propInfo.PropertyType));
+                    }
                 }
 
                 result.Add(propEl);
