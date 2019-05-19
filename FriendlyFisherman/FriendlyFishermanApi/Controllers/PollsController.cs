@@ -85,7 +85,8 @@ namespace FriendlyFishermanApi.Controllers
                     Answers = model.Answers.Select(p => new PollAnswer(p)).ToList(),
                     CreatedBy = model.CreatedBy,
                     EndOn = model.EndOn,
-                    Question = model.Question
+                    Question = model.Question,
+                    IsPollOfTheWeek = model.IsPollOfTheWeek
                 }
             });
 
