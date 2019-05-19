@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Publishing.Domain.Entities.Threads;
+using Publishing.Domain.EntityViewModels.Categories;
 using Publishing.Domain.EntityViewModels.Threads;
 using Publishing.Services.Abstraction.Reports;
 using Publishing.Services.Abstraction.Threads;
@@ -159,11 +160,11 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpPost]
         [Route("MarkAsSeen")]
-        public async Task<IActionResult> MarkAsSeen([FromBody] ThreadReplyViewModel model)
+        public async Task<IActionResult> MarkAsSeen([FromBody] SeenViewModel model)
         {
             var response = await _service.MarkAsSeenAsync(new MarkThreadAsSeenRequest()
             {
-                ThreadId = model.ThreadId,
+                ThreadId = model.ThreadReplyId,
                 ID = model.Id,
                 IsSeen = true,
                 SeenBy = model.UserId

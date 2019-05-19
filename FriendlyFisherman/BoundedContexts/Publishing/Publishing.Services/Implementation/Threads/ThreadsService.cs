@@ -16,16 +16,16 @@ using Users.Services.Request;
 
 namespace Publishing.Services.Implementation.Threads
 {
-    public class ThreadsService: BaseCrudService<ThreadViewModel, Thread, IThreadsRepository>, IThreadsService
+    public class ThreadsService : BaseCrudService<ThreadViewModel, Thread, IThreadsRepository>, IThreadsService
     {
         private readonly ISeenCountRepository _seenCountRepo;
         private readonly IThreadReplyRepository _replyRepository;
         private readonly ILikesRepository _likesRepository;
         private readonly IUserService _userService;
 
-        public ThreadsService(IThreadsRepository repo, 
-            ISeenCountRepository seenCountRepo, 
-            IThreadReplyRepository replyRepository, 
+        public ThreadsService(IThreadsRepository repo,
+            ISeenCountRepository seenCountRepo,
+            IThreadReplyRepository replyRepository,
             ILikesRepository likesRepository,
             IUserService userService) : base(repo)
         {
@@ -49,10 +49,47 @@ namespace Publishing.Services.Implementation.Threads
                     thread.SeenCount = _seenCountRepo.GetWhere(seen => seen.ThreadId == thread.Id).Count();
                     thread.AnswersCount = _replyRepository.GetWhere(rep => rep.ThreadId == thread.Id).Count();
                     thread.AuthorImageUrl = _userService
-                        .GetUserByIdAsync(new GetUserRequest {Id = thread.AuthorId}).Result.Item.ImagePath;
+                        .GetUserByIdAsync(new GetUserRequest { Id = thread.AuthorId }).Result.Item.ImagePath;
                 }
 
                 response.Items = threads;
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
+        }
+
+        protected override ServiceResponseBase<ThreadViewModel> GetById(ServiceRequestBase<Thread> request)
+        {
+            var response = new ServiceResponseBase<ThreadViewModel>();
+
+            try
+            {
+                var thread = Mapper<ThreadViewModel, Thread>.Map(_repo.Get(t => t.Id == request.ID));
+                thread.Replies = Mapper<ThreadReplyViewModel, ThreadReply>.MapList(_replyRepository.GetWhere(rep => rep.ThreadId == thread.Id).ToList()).ToList();
+                thread.AnswersCount = thread.Replies.Count();
+
+                var threadReactions = _likesRepository.GetWhere(l => l.ThreadReplyId == thread.Id);
+                thread.Likes = threadReactions.Count(l => l.IsLiked.HasValue && l.IsLiked == 1);
+                thread.Dislikes = threadReactions.Count(l => l.IsLiked.HasValue && l.IsLiked == 0);
+                thread.SeenCount = _seenCountRepo.GetWhere(seen => seen.ThreadId == thread.Id).Count();
+                thread.AuthorImageUrl = _userService
+                    .GetUserByIdAsync(new GetUserRequest { Id = thread.AuthorId }).Result.Item.ImagePath;
+
+                foreach (var reply in thread.Replies)
+                {
+                    reply.AuthorImageUrl = _userService
+                        .GetUserByIdAsync(new GetUserRequest { Id = reply.UserId }).Result.Item.ImagePath;
+
+                    var reactions = _likesRepository.GetWhere(l => l.ThreadReplyId == reply.Id);
+                    reply.Likes = reactions.Count(l => l.IsLiked.HasValue && l.IsLiked == 1);
+                    reply.Dislikes = reactions.Count(l => l.IsLiked.HasValue && l.IsLiked == 0);
+                }
+
+                response.Item = thread;
             }
             catch (Exception e)
             {

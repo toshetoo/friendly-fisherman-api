@@ -22,24 +22,9 @@ namespace Publishing.Domain.EntityViewModels.Threads
         public int SeenCount { get; set; }
         public int AnswersCount { get; set; }
         public string AuthorImageUrl { get; set; }
+        public int Likes { get; set; }
+        public int Dislikes { get; set; }
 
-        public List<ThreadReply> Replies;
-
-
-        public ThreadViewModel()
-        {
-            
-        }
-        public ThreadViewModel(Thread t)
-        {
-            Id = t.Id;
-            AuthorId = t.AuthorId;
-            CategoryId = t.CategoryId;
-            CreatedOn = t.CreatedOn;
-            Subtitle = t.Subtitle;
-            Title = t.Title;
-            Replies = t.Replies;
-            
-        }
+        public List<ThreadReplyViewModel> Replies;
     }
 }

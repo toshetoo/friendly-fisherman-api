@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FriendlyFisherman.SharedKernel.Helpers;
 using FriendlyFisherman.SharedKernel.Reports;
 using FriendlyFisherman.SharedKernel.Services.Models;
+using Publishing.Domain.Entities.Threads;
 using Publishing.Domain.EntityViewModels.Reports.Threads;
 using Publishing.Domain.EntityViewModels.Threads;
 using Publishing.Domain.Repositories.Threads;
@@ -78,7 +80,7 @@ namespace Publishing.Services.Implementation.Reports
                             t => t.CreatedOn.Date >= startInterval.Date && t.CreatedOn.Date <= endInterval.Date,
                             t => t.Replies)
                         .OrderByDescending(thread => thread.Replies.Count())
-                        .Take(request.Item.Limit).Select(t => new ThreadViewModel(t));
+                        .Take(request.Item.Limit).Select(Mapper<ThreadViewModel, Thread>.Map);
 
                 response.Item = new MostActiveThreadsReportViewModel()
                 {

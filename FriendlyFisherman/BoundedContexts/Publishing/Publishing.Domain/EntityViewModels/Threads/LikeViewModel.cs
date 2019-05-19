@@ -7,7 +7,6 @@ namespace Publishing.Domain.EntityViewModels.Threads
 {
     public class LikeViewModel
     {
-        [Required]
         public string Id { get; set; }
 
         [Required]
