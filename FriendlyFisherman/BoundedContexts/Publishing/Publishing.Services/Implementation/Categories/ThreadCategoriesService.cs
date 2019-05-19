@@ -23,32 +23,40 @@ namespace Publishing.Services.Implementation.Categories
             _threadsRepository = threadsRepository;
         }
 
-        public async Task<ServiceResponseBase<Dictionary<ThreadCategoryViewModel, int>>> GetTrendingCategoriesAsync(ServiceRequestBase<ThreadCategoryViewModel> request)
+        public async Task<ServiceResponseBase<Dictionary<string, TrendingCategoryViewModel>>> GetTrendingCategoriesAsync(ServiceRequestBase<ThreadCategoryViewModel> request)
         {
             return await Task.Run(() => GetTrendingCategories(request));
         }
 
-        private ServiceResponseBase<Dictionary<ThreadCategoryViewModel, int>> GetTrendingCategories(ServiceRequestBase<ThreadCategoryViewModel> request)
+        private ServiceResponseBase<Dictionary<string, TrendingCategoryViewModel>> GetTrendingCategories(ServiceRequestBase<ThreadCategoryViewModel> request)
         {
-            var response = new ServiceResponseBase<Dictionary<ThreadCategoryViewModel, int>>();
+            var response = new ServiceResponseBase<Dictionary<string, TrendingCategoryViewModel>>();
 
             try
             {
                 var startDate = DateTime.Now.AddDays(-7);
                 var categories = _repo.GetAll();
-                var threads = _threadsRepository
-                    .GetAll(false, t => t.CreatedOn >= startDate)
-                    .ToDictionary(c => c.CategoryId,
-                        c => _threadsRepository.GetWhere(th => th.CategoryId == c.Id).Count())
+                var threadsInPeriod = _threadsRepository
+                    .GetAll(false, t => t.CreatedOn >= startDate);
+                var threadsDictionary = threadsInPeriod
+                    .GroupBy(c => c.CategoryId)
+                    .ToDictionary(c => c.Key,
+                        c => _threadsRepository.GetWhere(th => th.CategoryId == c.Key).Count());
+                var orderedDictionary = threadsDictionary
                     .OrderByDescending(el => el.Value)
                     .Take(10)
                     .ToDictionary(el => el.Key, el => el.Value);
 
-                var result = new Dictionary<ThreadCategoryViewModel, int>();
-                foreach (var th in threads)
+                var result = new Dictionary<string, TrendingCategoryViewModel>();
+                foreach (var th in orderedDictionary)
                 {
                     var vm = Mapper<ThreadCategoryViewModel, ThreadCategory>.Map(categories.First(t => t.Id == th.Key));
-                    result.Add(vm, th.Value);
+                    result.Add(vm.Id, new TrendingCategoryViewModel
+                    {
+                        Id = th.Key,
+                        Count = th.Value,
+                        Name = vm.Name
+                    });
                 }
 
                 response.Item = result;

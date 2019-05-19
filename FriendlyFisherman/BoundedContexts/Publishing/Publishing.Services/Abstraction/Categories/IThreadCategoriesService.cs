@@ -9,7 +9,7 @@ namespace Publishing.Services.Abstraction.Categories
 {
     public interface IThreadCategoriesService: IBaseCrudService<ThreadCategoryViewModel, ThreadCategory>
     {
-        Task<ServiceResponseBase<Dictionary<ThreadCategoryViewModel, int>>> GetTrendingCategoriesAsync(
+        Task<ServiceResponseBase<Dictionary<string, TrendingCategoryViewModel>>> GetTrendingCategoriesAsync(
             ServiceRequestBase<ThreadCategoryViewModel> request);
     }
 }
