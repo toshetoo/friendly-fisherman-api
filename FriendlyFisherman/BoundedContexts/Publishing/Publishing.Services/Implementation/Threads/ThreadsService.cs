@@ -11,24 +11,56 @@ using Publishing.Domain.EntityViewModels.Threads;
 using Publishing.Domain.Repositories.Threads;
 using Publishing.Services.Abstraction.Threads;
 using Publishing.Services.Request.Threads;
+using Users.Services.Abstraction;
+using Users.Services.Request;
 
 namespace Publishing.Services.Implementation.Threads
 {
     public class ThreadsService: BaseCrudService<ThreadViewModel, Thread, IThreadsRepository>, IThreadsService
     {
-        private readonly IThreadsRepository _repo;
         private readonly ISeenCountRepository _seenCountRepo;
         private readonly IThreadReplyRepository _replyRepository;
         private readonly ILikesRepository _likesRepository;
+        private readonly IUserService _userService;
 
-        public ThreadsService(IThreadsRepository repo, ISeenCountRepository seenCountRepo, IThreadReplyRepository replyRepository, ILikesRepository likesRepository) : base(repo)
+        public ThreadsService(IThreadsRepository repo, 
+            ISeenCountRepository seenCountRepo, 
+            IThreadReplyRepository replyRepository, 
+            ILikesRepository likesRepository,
+            IUserService userService) : base(repo)
         {
-            _repo = repo;
             _seenCountRepo = seenCountRepo;
             _replyRepository = replyRepository;
             _likesRepository = likesRepository;
+            _userService = userService;
         }
-        
+
+        protected override ServiceResponseBase<ThreadViewModel> GetAll(ServiceRequestBase<Thread> request)
+        {
+            var response = new ServiceResponseBase<ThreadViewModel>();
+
+            try
+            {
+                var allThreads = _repo.GetAll().ToList();
+                var threads = Mapper<ThreadViewModel, Thread>.MapList(allThreads);
+
+                foreach (var thread in threads)
+                {
+                    thread.SeenCount = _seenCountRepo.GetWhere(seen => seen.ThreadId == thread.Id).Count();
+                    thread.AnswersCount = _replyRepository.GetWhere(rep => rep.ThreadId == thread.Id).Count();
+                    thread.AuthorImageUrl = _userService
+                        .GetUserByIdAsync(new GetUserRequest {Id = thread.AuthorId}).Result.Item.ImagePath;
+                }
+
+                response.Items = threads;
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
+        }
 
         public async Task<ServiceResponseBase<ThreadViewModel>> MarkAsSeenAsync(MarkThreadAsSeenRequest request)
         {

@@ -13,5 +13,6 @@ namespace Publishing.Domain.Entities.Threads
         public DateTime CreatedOn { get; set; }  
 
         public List<ThreadReply> Replies { get; set; }
+        public List<SeenCount> SeenCount { get; set; }
     }
 }

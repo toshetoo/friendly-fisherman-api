@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\FriendlyFisherman.SharedKernel\FriendlyFisherman.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\Users\Users.Services\Users.Services.csproj" />
     <ProjectReference Include="..\Publishing.DataAccess\Publishing.DataAccess.csproj" />
     <ProjectReference Include="..\Publishing.Domain\Publishing.Domain.csproj" />
   </ItemGroup>

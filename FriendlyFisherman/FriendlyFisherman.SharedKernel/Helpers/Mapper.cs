@@ -18,8 +18,11 @@ namespace FriendlyFisherman.SharedKernel.Helpers
                 if (item.GetType().GetProperty(props[j].Name) != null)
                 {
                     var newValue = item.GetType().GetProperty(props[j].Name).GetValue(item);
-                    var propInfo = result.GetType().GetProperty(props[j].Name);
-                    propInfo.SetValue(result, Convert.ChangeType(newValue, propInfo.PropertyType));
+                    if (newValue != null)
+                    {
+                        var propInfo = result.GetType().GetProperty(props[j].Name);
+                        propInfo.SetValue(result, Convert.ChangeType(newValue, propInfo.PropertyType));
+                    }
                 }
             }
 
@@ -40,8 +43,12 @@ namespace FriendlyFisherman.SharedKernel.Helpers
                     if (el.GetType().GetProperty(props[j].Name) != null)
                     {
                         var newValue = el.GetType().GetProperty(props[j].Name).GetValue(el);
-                        var propInfo = propEl.GetType().GetProperty(props[j].Name);
-                        propInfo.SetValue(propEl, Convert.ChangeType(newValue, propInfo.PropertyType));
+                        if (newValue != null)
+                        {
+                            var propInfo = propEl.GetType().GetProperty(props[j].Name);
+                            propInfo.SetValue(propEl, Convert.ChangeType(newValue, propInfo.PropertyType));
+                        }
+                       
                     }
                 }
 

@@ -20,6 +20,8 @@ namespace Publishing.Domain.EntityViewModels.Threads
         [Required] public DateTime CreatedOn { get; set; }
 
         public int SeenCount { get; set; }
+        public int AnswersCount { get; set; }
+        public string AuthorImageUrl { get; set; }
 
         public List<ThreadReply> Replies;
 
