@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Publishing.DataAccess;
 
 namespace Publishing.DataAccess.Migrations
 {
     [DbContext(typeof(PublishingDbContext))]
-    partial class PublishingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190524150449_AddDeleteConstraint")]
+    partial class AddDeleteConstraint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,8 +109,7 @@ namespace Publishing.DataAccess.Migrations
                 {
                     b.HasOne("Publishing.Domain.Entities.Threads.Thread", "Thread")
                         .WithMany("SeenCount")
-                        .HasForeignKey("ThreadId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ThreadId");
                 });
 
             modelBuilder.Entity("Publishing.Domain.Entities.Threads.ThreadReply", b =>

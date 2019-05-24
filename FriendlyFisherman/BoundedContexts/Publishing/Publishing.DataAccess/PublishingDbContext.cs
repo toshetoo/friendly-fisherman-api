@@ -25,6 +25,11 @@ namespace Publishing.DataAccess
                 .HasMany<ThreadReply>(a => a.Replies)
                 .WithOne(p => p.Thread)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Thread>()
+                .HasMany<SeenCount>(a => a.SeenCount)
+                .WithOne(p => p.Thread)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
