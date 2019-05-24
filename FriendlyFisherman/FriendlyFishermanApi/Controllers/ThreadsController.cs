@@ -44,11 +44,12 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetById/{id}")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetById(string id, string userId)
         {
-            var response = await _service.GetByIdAsync(new ServiceRequestBase<Thread>()
+            var response = await _service.GetByIdAsync(new GetByIdRequest()
             {
-                ID = id
+                ID = id,
+                UserId = userId
             });
 
             if (ReferenceEquals(response.Exception, null))

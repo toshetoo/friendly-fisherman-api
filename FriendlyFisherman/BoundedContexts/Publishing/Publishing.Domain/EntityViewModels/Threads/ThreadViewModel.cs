@@ -24,6 +24,7 @@ namespace Publishing.Domain.EntityViewModels.Threads
         public string AuthorImageUrl { get; set; }
         public int Likes { get; set; }
         public int Dislikes { get; set; }
+        public LikeViewModel UserLike { get; set; }
 
         public List<ThreadReplyViewModel> Replies;
     }

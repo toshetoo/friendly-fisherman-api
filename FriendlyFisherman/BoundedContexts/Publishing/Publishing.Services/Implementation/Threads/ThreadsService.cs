@@ -64,6 +64,7 @@ namespace Publishing.Services.Implementation.Threads
 
         protected override ServiceResponseBase<ThreadViewModel> GetById(ServiceRequestBase<Thread> request)
         {
+            var mappedRequest = Mapper<GetByIdRequest, ServiceRequestBase<Thread>>.Map(request);
             var response = new ServiceResponseBase<ThreadViewModel>();
 
             try
@@ -79,6 +80,12 @@ namespace Publishing.Services.Implementation.Threads
                 thread.AuthorImageUrl = _userService
                     .GetUserByIdAsync(new GetUserRequest { Id = thread.AuthorId }).Result.Item.ImagePath;
 
+                var userLikeAnswer = threadReactions.FirstOrDefault(tr => tr.UserId == mappedRequest.UserId);
+                if (userLikeAnswer != null)
+                {
+                    thread.UserLike = Mapper<LikeViewModel, Like>.Map(userLikeAnswer);
+                }
+
                 foreach (var reply in thread.Replies)
                 {
                     reply.AuthorImageUrl = _userService
@@ -87,6 +94,12 @@ namespace Publishing.Services.Implementation.Threads
                     var reactions = _likesRepository.GetWhere(l => l.ThreadReplyId == reply.Id);
                     reply.Likes = reactions.Count(l => l.IsLiked.HasValue && l.IsLiked == 1);
                     reply.Dislikes = reactions.Count(l => l.IsLiked.HasValue && l.IsLiked == 0);
+
+                    var userLikeReply = reactions.FirstOrDefault(tr => tr.UserId == mappedRequest.ID);
+                    if (userLikeAnswer != null)
+                    {
+                        reply.UserLike = Mapper<LikeViewModel, Like>.Map(userLikeReply);
+                    }
                 }
 
                 response.Item = thread;
@@ -237,35 +250,96 @@ namespace Publishing.Services.Implementation.Threads
             return response;
         }
 
-        public async Task<ServiceResponseBase<LikeViewModel>> LikeReplyAsync(ServiceRequestBase<LikeViewModel> request)
+        public async Task<ServiceResponseBase<ThreadLikeViewModel>> LikeReplyAsync(ServiceRequestBase<LikeViewModel> request)
         {
             return await Task.Run(() => LikeReply(request));
         }
 
-        private ServiceResponseBase<LikeViewModel> LikeReply(ServiceRequestBase<LikeViewModel> request)
+        private ServiceResponseBase<ThreadLikeViewModel> LikeReply(ServiceRequestBase<LikeViewModel> request)
         {
-            var response = new ServiceResponseBase<LikeViewModel>();
+            var response = new ServiceResponseBase<ThreadLikeViewModel>();
 
             try
             {
                 var like = Mapper<Like, LikeViewModel>.Map(request.Item);
 
-                // If we remove our vote
-                if (request.Item.IsLiked == null)
+                var existingLike =
+                    _likesRepository.Get(l => l.ThreadReplyId == like.ThreadReplyId && l.UserId == like.UserId);
+
+                if (existingLike != null)
                 {
-                    _likesRepository.Delete(like);
+                    if (like.IsLiked == existingLike.IsLiked) like.IsLiked = null;
+
+                    existingLike.IsLiked = like.IsLiked;
+                }
+
+                // If we remove our vote
+                if (like.IsLiked == null)
+                {
+                    _likesRepository.Delete(dbLike => dbLike.UserId == like.UserId);
+
+                    response.Item = new ThreadLikeViewModel()
+                    {
+                        Likes = _likesRepository.GetWhere(l => l.ThreadReplyId == request.Item.ThreadReplyId)
+                            .GroupBy(l => l.IsLiked)
+                            .ToDictionary(e => e.Key, e => e.Count())
+                    };
+
+                    var userLikeReply = _likesRepository.Get(tr => tr.UserId == like.UserId);
+                    if (userLikeReply != null)
+                    {
+                        response.Item.UserLike = Mapper<LikeViewModel, Like>.Map(userLikeReply);
+                    }
 
                     return response;
                 }
 
-                if (request.Item.Id != null)
+                if (like.Id != null)
                 {
-                    _likesRepository.Update(like);
+                    _likesRepository.Update(existingLike);
                 }
                 else
                 {
                     _likesRepository.Create(like);
                 }
+
+                response.Item = new ThreadLikeViewModel
+                {
+                    Likes = _likesRepository.GetWhere(l => l.ThreadReplyId == request.Item.ThreadReplyId)
+                        .GroupBy(l => l.IsLiked)
+                        .ToDictionary(e => e.Key, e => e.Count())
+                };
+
+                var userLike = _likesRepository.Get(tr => tr.UserId == like.UserId);
+                if (userLike != null)
+                {
+                    response.Item.UserLike = Mapper<LikeViewModel, Like>.Map(userLike);
+                }
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponseBase<LikeViewModel>> GetUserLikeAsync(ServiceRequestBase<LikeViewModel> request)
+        {
+            return await Task.Run(() => GetUserLike(request));
+        }
+
+        private ServiceResponseBase<LikeViewModel> GetUserLike(ServiceRequestBase<LikeViewModel> request)
+        {
+            var response = new ServiceResponseBase<LikeViewModel>();
+
+            try
+            {
+                var userLike = _likesRepository.Get(like =>
+                    like.ThreadReplyId == request.Item.ThreadReplyId && like.UserId == request.Item.UserId);
+
+                if(userLike != null)
+                    response.Item = Mapper<LikeViewModel, Like>.Map(userLike);
             }
             catch (Exception e)
             {
