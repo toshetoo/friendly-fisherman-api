@@ -128,6 +128,14 @@ namespace Publishing.Services.Implementation.Threads
                 if (thread == null)
                     throw new Exception(ErrorMessages.InvalidId);
 
+                var existingSeen = _seenCountRepo.Get(s =>
+                    s.UserId == request.SeenBy && s.ThreadId == request.ThreadId);
+
+                if (existingSeen != null)
+                {
+                    return response;
+                }
+
                 var seen = new SeenCount()
                 {
                     ThreadId = request.ThreadId,
@@ -240,7 +248,7 @@ namespace Publishing.Services.Implementation.Threads
                 if (reply == null)
                     throw new Exception(ErrorMessages.InvalidId);
 
-                _replyRepository.Delete(new ThreadReply(request.Item));
+                _replyRepository.Delete(reply);
             }
             catch (Exception e)
             {

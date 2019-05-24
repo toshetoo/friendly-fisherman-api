@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FriendlyFisherman.SharedKernel.Services.Models;
 using Publishing.Domain.EntityViewModels.Threads;
 
@@ -11,7 +12,7 @@ namespace Publishing.Domain.Entities.Threads
         public string Content { get; set; }
         public DateTime CreatedOn { get; set; }
 
-        public Thread Thread;
+        public Thread Thread { get; set; }
 
         public ThreadReply()
         {

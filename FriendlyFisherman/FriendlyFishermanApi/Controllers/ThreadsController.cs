@@ -200,11 +200,11 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpDelete]
         [Route("DeleteReply/{id}")]
-        public async Task<IActionResult> DeleteReply([FromBody] ThreadReplyViewModel model)
+        public async Task<IActionResult> DeleteReply(string id)
         {
             var response = await _service.DeleteThreadReplyAsync(new ServiceRequestBase<ThreadReplyViewModel>()
             {
-               Item = model
+                ID = id
             });
 
             if (ReferenceEquals(response.Exception, null))
