@@ -276,7 +276,7 @@ namespace Publishing.Services.Implementation.Threads
                 // If we remove our vote
                 if (like.IsLiked == null)
                 {
-                    _likesRepository.Delete(dbLike => dbLike.UserId == like.UserId);
+                    _likesRepository.Delete(existingLike);
 
                     response.Item = new ThreadLikeViewModel()
                     {
@@ -294,7 +294,7 @@ namespace Publishing.Services.Implementation.Threads
                     return response;
                 }
 
-                if (like.Id != null)
+                if (existingLike != null && existingLike.Id != null)
                 {
                     _likesRepository.Update(existingLike);
                 }
