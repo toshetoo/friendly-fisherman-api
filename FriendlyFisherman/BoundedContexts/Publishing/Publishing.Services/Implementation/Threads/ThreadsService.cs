@@ -80,7 +80,7 @@ namespace Publishing.Services.Implementation.Threads
                 thread.AuthorImageUrl = _userService
                     .GetUserByIdAsync(new GetUserRequest { Id = thread.AuthorId }).Result.Item.ImagePath;
 
-                var userLikeAnswer = threadReactions.FirstOrDefault(tr => tr.UserId == mappedRequest.UserId);
+                var userLikeAnswer = threadReactions.FirstOrDefault(tr => tr.UserId == mappedRequest.UserId & tr.ThreadReplyId == thread.Id);
                 if (userLikeAnswer != null)
                 {
                     thread.UserLike = Mapper<LikeViewModel, Like>.Map(userLikeAnswer);
@@ -95,8 +95,8 @@ namespace Publishing.Services.Implementation.Threads
                     reply.Likes = reactions.Count(l => l.IsLiked.HasValue && l.IsLiked == 1);
                     reply.Dislikes = reactions.Count(l => l.IsLiked.HasValue && l.IsLiked == 0);
 
-                    var userLikeReply = reactions.FirstOrDefault(tr => tr.UserId == mappedRequest.ID);
-                    if (userLikeAnswer != null)
+                    var userLikeReply = reactions.FirstOrDefault(tr => tr.UserId == mappedRequest.UserId && tr.ThreadReplyId == reply.Id);
+                    if (userLikeReply != null)
                     {
                         reply.UserLike = Mapper<LikeViewModel, Like>.Map(userLikeReply);
                     }
@@ -181,7 +181,7 @@ namespace Publishing.Services.Implementation.Threads
 
             try
             {
-                var thread = _repo.Get(t => t.Id == request.ID);
+                var thread = _repo.Get(t => t.Id == request.Item.ThreadId);
 
                 if (thread == null)
                     throw new Exception(ErrorMessages.InvalidId);
@@ -285,7 +285,7 @@ namespace Publishing.Services.Implementation.Threads
                             .ToDictionary(e => e.Key, e => e.Count())
                     };
 
-                    var userLikeReply = _likesRepository.Get(tr => tr.UserId == like.UserId);
+                    var userLikeReply = _likesRepository.Get(tr => tr.UserId == like.UserId && tr.ThreadReplyId == like.ThreadReplyId);
                     if (userLikeReply != null)
                     {
                         response.Item.UserLike = Mapper<LikeViewModel, Like>.Map(userLikeReply);
@@ -310,7 +310,7 @@ namespace Publishing.Services.Implementation.Threads
                         .ToDictionary(e => e.Key, e => e.Count())
                 };
 
-                var userLike = _likesRepository.Get(tr => tr.UserId == like.UserId);
+                var userLike = _likesRepository.Get(tr => tr.UserId == like.UserId && tr.ThreadReplyId == like.ThreadReplyId);
                 if (userLike != null)
                 {
                     response.Item.UserLike = Mapper<LikeViewModel, Like>.Map(userLike);

@@ -91,7 +91,7 @@ namespace FriendlyFishermanApi.Controllers
                     AuthorId = model.AuthorId,
                     CategoryId = model.CategoryId,
                     CreatedOn = model.CreatedOn,
-                    Subtitle = model.Subtitle,
+                    Content = model.Content,
                     Title = model.Title
                 }
             });
