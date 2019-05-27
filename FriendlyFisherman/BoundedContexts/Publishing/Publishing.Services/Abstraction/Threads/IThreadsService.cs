@@ -18,6 +18,6 @@ namespace Publishing.Services.Abstraction.Threads
         Task<ServiceResponseBase<ThreadReplyViewModel>> AddThreadReplyAsync(ServiceRequestBase<ThreadReplyViewModel> request);
         Task<ServiceResponseBase<ThreadReplyViewModel>> EditThreadReplyAsync(ServiceRequestBase<ThreadReplyViewModel> request);
         Task<ServiceResponseBase<ThreadReplyViewModel>> DeleteThreadReplyAsync(ServiceRequestBase<ThreadReplyViewModel> request);
-        Task<ServiceResponseBase<LikeViewModel>> LikeReplyAsync(ServiceRequestBase<LikeViewModel> request);
+        Task<ServiceResponseBase<ThreadLikeViewModel>> LikeReplyAsync(ServiceRequestBase<LikeViewModel> request);
     }
 }

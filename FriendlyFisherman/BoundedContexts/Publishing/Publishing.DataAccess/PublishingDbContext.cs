@@ -16,5 +16,20 @@ namespace Publishing.DataAccess
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Thread>()
+                .HasMany<ThreadReply>(a => a.Replies)
+                .WithOne(p => p.Thread)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Thread>()
+                .HasMany<SeenCount>(a => a.SeenCount)
+                .WithOne(p => p.Thread)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

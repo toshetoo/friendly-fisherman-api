@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Publishing.DataAccess;
 
 namespace Publishing.DataAccess.Migrations
 {
     [DbContext(typeof(PublishingDbContext))]
-    partial class PublishingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190524123431_RenameContentFieldThreads")]
+    partial class RenameContentFieldThreads
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,18 +107,16 @@ namespace Publishing.DataAccess.Migrations
 
             modelBuilder.Entity("Publishing.Domain.Entities.Threads.SeenCount", b =>
                 {
-                    b.HasOne("Publishing.Domain.Entities.Threads.Thread", "Thread")
+                    b.HasOne("Publishing.Domain.Entities.Threads.Thread")
                         .WithMany("SeenCount")
-                        .HasForeignKey("ThreadId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ThreadId");
                 });
 
             modelBuilder.Entity("Publishing.Domain.Entities.Threads.ThreadReply", b =>
                 {
-                    b.HasOne("Publishing.Domain.Entities.Threads.Thread", "Thread")
+                    b.HasOne("Publishing.Domain.Entities.Threads.Thread")
                         .WithMany("Replies")
-                        .HasForeignKey("ThreadId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ThreadId");
                 });
 #pragma warning restore 612, 618
         }

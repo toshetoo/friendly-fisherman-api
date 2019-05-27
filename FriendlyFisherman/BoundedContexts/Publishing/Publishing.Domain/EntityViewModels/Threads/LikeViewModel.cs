@@ -13,7 +13,8 @@ namespace Publishing.Domain.EntityViewModels.Threads
         public string UserId { get; set; }
         [Required]
         public string ThreadReplyId { get; set; }
-        [Required]
         public int? IsLiked { get; set; }
+
+        public Dictionary<int?, int> Likes { get; set; }
     }
 }

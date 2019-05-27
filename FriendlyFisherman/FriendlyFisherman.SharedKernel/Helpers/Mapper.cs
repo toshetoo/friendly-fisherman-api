@@ -21,7 +21,7 @@ namespace FriendlyFisherman.SharedKernel.Helpers
                     if (newValue != null)
                     {
                         var propInfo = result.GetType().GetProperty(props[j].Name);
-                        propInfo.SetValue(result, Convert.ChangeType(newValue, propInfo.PropertyType));
+                        propInfo.SetValue(result, ChangeType(newValue, propInfo.PropertyType));
                     }
                 }
             }
@@ -46,9 +46,9 @@ namespace FriendlyFisherman.SharedKernel.Helpers
                         if (newValue != null)
                         {
                             var propInfo = propEl.GetType().GetProperty(props[j].Name);
-                            propInfo.SetValue(propEl, Convert.ChangeType(newValue, propInfo.PropertyType));
+                            propInfo.SetValue(propEl, ChangeType(newValue, propInfo.PropertyType));
                         }
-                       
+
                     }
                 }
 
@@ -57,5 +57,40 @@ namespace FriendlyFisherman.SharedKernel.Helpers
 
             return result;
         }
+
+        public static object ChangeType(object value, Type conversion)
+        {
+            var t = conversion;
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                if (value == null)
+                {
+                    return null;
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return Convert.ChangeType(value, t);
+        }
+
+        public static T ChangeType<T>(object value)
+        {
+            var t = typeof(T);
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                if (value == null)
+                {
+                    return default(T);
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return (T)Convert.ChangeType(value, t);
+        }
     }
+
 }

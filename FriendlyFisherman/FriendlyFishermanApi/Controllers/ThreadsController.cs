@@ -44,11 +44,12 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetById/{id}")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetById(string id, string userId)
         {
-            var response = await _service.GetByIdAsync(new ServiceRequestBase<Thread>()
+            var response = await _service.GetByIdAsync(new GetByIdRequest()
             {
-                ID = id
+                ID = id,
+                UserId = userId
             });
 
             if (ReferenceEquals(response.Exception, null))
@@ -90,7 +91,7 @@ namespace FriendlyFishermanApi.Controllers
                     AuthorId = model.AuthorId,
                     CategoryId = model.CategoryId,
                     CreatedOn = model.CreatedOn,
-                    Subtitle = model.Subtitle,
+                    Content = model.Content,
                     Title = model.Title
                 }
             });
@@ -199,11 +200,11 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpDelete]
         [Route("DeleteReply/{id}")]
-        public async Task<IActionResult> DeleteReply([FromBody] ThreadReplyViewModel model)
+        public async Task<IActionResult> DeleteReply(string id)
         {
             var response = await _service.DeleteThreadReplyAsync(new ServiceRequestBase<ThreadReplyViewModel>()
             {
-               Item = model
+                ID = id
             });
 
             if (ReferenceEquals(response.Exception, null))

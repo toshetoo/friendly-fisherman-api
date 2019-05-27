@@ -15,7 +15,7 @@ namespace Publishing.Domain.EntityViewModels.Threads
 
         [Required] public string Title { get; set; }
 
-        [Required] public string Subtitle { get; set; }
+        [Required] public string Content { get; set; }
 
         [Required] public DateTime CreatedOn { get; set; }
 
@@ -24,6 +24,7 @@ namespace Publishing.Domain.EntityViewModels.Threads
         public string AuthorImageUrl { get; set; }
         public int Likes { get; set; }
         public int Dislikes { get; set; }
+        public LikeViewModel UserLike { get; set; }
 
         public List<ThreadReplyViewModel> Replies;
     }
