@@ -14,7 +14,7 @@ using Users.Services.Response.PersonalMessage;
 
 namespace Users.Services.Implementation
 {
-    public class PersonalMessagesService: IPersonalMessagesService
+    public class PersonalMessagesService : IPersonalMessagesService
     {
         private readonly IPersonalMessagesRepository _repo;
         private readonly IUserRepository _usersUserRepository;
@@ -90,7 +90,7 @@ namespace Users.Services.Implementation
             {
                 response.Exception = e;
             }
-            
+
 
             return response;
         }
@@ -231,7 +231,9 @@ namespace Users.Services.Implementation
                     if (ReferenceEquals(m, null))
                         throw new Exception($"There is no message with Id: {request.Message.Id}");
                 }
-                
+
+                if (request.Message.ReceiverId == request.Message.SenderId)
+                    throw new Exception("You can't send messages to your self.");
 
                 var message = new PersonalMessage
                 {
@@ -241,7 +243,9 @@ namespace Users.Services.Implementation
                     Seen = request.Message.Seen,
                     SentOn = DateTime.UtcNow,
                     Content = request.Message.Content,
-                    Title = request.Message.Title
+                    Title = request.Message.Title,
+                    DeletedByReceiver = request.Message.DeletedByReceiver,
+                    DeletedBySender = request.Message.DeletedBySender
                 };
 
                 _repo.SaveMessage(message);
@@ -307,7 +311,28 @@ namespace Users.Services.Implementation
                 if (String.IsNullOrWhiteSpace(request.MessageId))
                     throw new Exception(ErrorMessages.InvalidId);
 
-                _repo.DeleteMessage(request.MessageId);
+                var getMessageByIdResponse = GetMessageById(request);
+
+                if (getMessageByIdResponse.Item.ReceiverId == request.UserId && getMessageByIdResponse.Item.DeletedBySender
+                   || getMessageByIdResponse.Item.SenderId == request.UserId && getMessageByIdResponse.Item.DeletedByReceiver)
+                {
+                    _repo.DeleteMessage(request.MessageId);
+                }
+                else
+                {
+                    var message = getMessageByIdResponse.Item;
+
+                    if (getMessageByIdResponse.Item.ReceiverId == request.UserId)
+                    {
+                        message.DeletedByReceiver = true;
+                        SaveMessage(new EditMessageRequest(message));
+                    }
+                    else
+                    {
+                        message.DeletedBySender = true;
+                        SaveMessage(new EditMessageRequest(message));
+                    }
+                }
             }
             catch (Exception e)
             {

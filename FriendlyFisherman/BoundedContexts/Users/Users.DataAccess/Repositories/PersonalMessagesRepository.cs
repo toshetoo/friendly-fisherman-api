@@ -23,7 +23,7 @@ namespace Users.DataAccess.Repositories
         public IEnumerable<PersonalMessage> GetAllMessagesBySenderId(string id)
         {
             var repo = CreateRepo();
-            return repo.GetWhere(m => m.SenderId == id);
+            return repo.GetWhere(m => m.SenderId == id && m.DeletedBySender == false);
         }
 
 
@@ -57,7 +57,7 @@ namespace Users.DataAccess.Repositories
         public IEnumerable<PersonalMessage> GetAllMessagesByReceiverId(string id)
         {
             var repo = CreateRepo();
-            return repo.GetWhere(m => m.ReceiverId == id);
+            return repo.GetWhere(m => m.ReceiverId == id && m.DeletedByReceiver == false);
         }
 
         /// <summary>

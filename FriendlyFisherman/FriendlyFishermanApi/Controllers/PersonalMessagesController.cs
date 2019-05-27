@@ -143,10 +143,10 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [Route("Delete/{id}/{userId}")]
+        public async Task<IActionResult> Delete(string id, string userId)
         {
-            var response = await _service.DeleteMessageAsync(new GetMessagesRequest { MessageId = id });
+            var response = await _service.DeleteMessageAsync(new GetMessagesRequest { MessageId = id, UserId = userId  });
 
             if (ReferenceEquals(response.Exception, null))
             {

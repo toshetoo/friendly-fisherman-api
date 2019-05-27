@@ -23,6 +23,9 @@ namespace Users.Domain.EntityViewModels.PersonalMessage
         [Required]
         public DateTime SentOn { get; set; }
 
+        public bool DeletedByReceiver { get; set; }
+        public bool DeletedBySender { get; set; }
+
         public PersonalMessageViewModel()
         {
             
@@ -48,6 +51,8 @@ namespace Users.Domain.EntityViewModels.PersonalMessage
             Content = message.Content;
             Seen = message.Seen;
             SentOn = message.SentOn;
+            DeletedByReceiver = message.DeletedByReceiver;
+            DeletedBySender = message.DeletedBySender;
         }
     }
 }

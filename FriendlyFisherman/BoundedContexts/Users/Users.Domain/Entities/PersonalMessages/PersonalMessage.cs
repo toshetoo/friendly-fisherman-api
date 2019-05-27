@@ -13,5 +13,7 @@ namespace Users.Domain.Entities
         public string Content { get; set; }
         public bool Seen { get; set; }
         public DateTime SentOn { get; set; }
+        public bool DeletedBySender { get; set; }
+        public bool DeletedByReceiver { get; set; }
     }
 }

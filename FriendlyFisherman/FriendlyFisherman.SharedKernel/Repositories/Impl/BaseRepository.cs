@@ -7,7 +7,7 @@ using FriendlyFisherman.SharedKernel.Repositories.Abstraction;
 
 namespace FriendlyFisherman.SharedKernel.Repositories.Impl
 {
-    public class BaseRepository<T>: IBaseRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         DbSet<T> _entities;
         private DbContext _context;
@@ -148,6 +148,13 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
         {
             ExecuteInOneContext(e =>
             {
+                var entity = e.ChangeTracker.Entries<T>().FirstOrDefault(x => x.Entity.GetType().GetProperty("Id") == newEntity.GetType().GetProperty("Id"));
+
+                if (ReferenceEquals(entity, null) == false && entity.State != EntityState.Detached)
+                {
+                    entity.State = EntityState.Detached;
+                }
+
                 if (ReferenceEquals(newEntity, null))
                     throw new ArgumentNullException(nameof(newEntity));
 
@@ -183,7 +190,7 @@ namespace FriendlyFisherman.SharedKernel.Repositories.Impl
             {
                 if (ReferenceEquals(@object, null))
                     throw new ArgumentNullException(nameof(@object));
-                
+
                 _context.Set<T>().Attach(@object);
                 _context.Set<T>().Remove(@object);
 
