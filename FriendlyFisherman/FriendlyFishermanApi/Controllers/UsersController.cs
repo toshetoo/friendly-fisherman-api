@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Services.Models;
 using Users.Domain.EntityViewModels;
+using Users.Domain.EntityViewModels.User;
 using Users.Services.Abstraction;
 using Users.Services.Request;
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Users.Domain.Entities;
 using Users.Domain.EntityViewModels;
+using Users.Domain.EntityViewModels.User;
 using Users.Domain.Repositories;
 using Users.Services.Abstraction;
 using Users.Services.Implementation;

@@ -1,5 +1,6 @@
 ﻿using FriendlyFisherman.SharedKernel.Services.Models;
 using Users.Domain.EntityViewModels;
+using Users.Domain.EntityViewModels.User;
 
 namespace Users.Services.Request
 {

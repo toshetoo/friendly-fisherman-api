@@ -5,12 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Helpers;
+using Users.Domain.Entities;
 using Users.Domain.EntityViewModels;
+using Users.Domain.EntityViewModels.User;
 using Users.Domain.Repositories;
 using Users.Services.Abstraction;
 using Users.Services.Request;
@@ -95,19 +98,7 @@ namespace Users.Services.Implementation
 
             try
             {
-                var users = _usersRepository.GetAllUsers();
-                var usersListViewModel = new List<UserListItemViewModel>();
-
-                foreach (var user in users)
-                {
-                    usersListViewModel.Add(new UserListItemViewModel
-                    {
-                        Id = user.Id,
-                        Username = user.UserName,
-                        Email = user.Email
-                    });
-                }
-                response.Items = usersListViewModel;
+                response.Items = Mapper<UserListItemViewModel, User>.MapList(_usersRepository.GetAllUsers().ToList());
             }
             catch (Exception ex)
             {
@@ -143,17 +134,7 @@ namespace Users.Services.Implementation
                     user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
 
-                var userViewModel = new UserViewModel
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    ImagePath = user.ImagePath
-                };
-
-                response.Item = userViewModel;
+                response.Item = Mapper<UserViewModel, User>.Map(user);
             }
             catch (Exception ex)
             {
@@ -189,17 +170,7 @@ namespace Users.Services.Implementation
                     user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
 
-                var userViewModel = new UserViewModel
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    ImagePath = user.ImagePath
-                };
-
-                response.Item = userViewModel;
+                response.Item = Mapper<UserViewModel, User>.Map(user);
             }
             catch (Exception ex)
             {
@@ -233,7 +204,7 @@ namespace Users.Services.Implementation
                     throw new Exception($"There is no user with Id: {request.User.Id}");
 
                 user.Email = request.User.Email;
-                user.UserName = request.User.Username;
+                user.UserName = request.User.UserName;
                 user.FirstName = request.User.FirstName;
                 user.LastName = request.User.LastName;
                 user.ImagePath = request.User.ImagePath;
@@ -268,22 +239,12 @@ namespace Users.Services.Implementation
                 if (ReferenceEquals(user, null))
                     throw new Exception($"There is no user with email: {request.Email}");
 
-                var userViewModel = new UserViewModel
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    ImagePath = user.ImagePath
-                };
-
                 if (!string.IsNullOrEmpty(user.ImagePath))
                 {
                     string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-                    userViewModel.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                    user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
-                response.Item = userViewModel;
+                response.Item = Mapper<UserViewModel, User>.Map(user);
             }
             catch (Exception ex)
             {
