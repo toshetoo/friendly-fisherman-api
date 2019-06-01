@@ -34,23 +34,23 @@ namespace Users.DataAccess
                 RoleId = roleId,
                 UserId = userId
             });
-            
+
             modelBuilder.Entity<UserToken>().ToTable("UserTokens").HasKey(ur => new { ur.LoginProvider, ur.UserId, ur.Name });
             modelBuilder.Entity<User>().ToTable("Users").HasData(new User()
-                {
-                    Id = userId,
-                    Email = "admin@ff.com",
-                    EmailConfirmed = true,
-                    FirstName = "Admin",
-                    LastName = "Adminov",
-                    UserName = "admin",
-                    AccessFailedCount = 0,
-                    NormalizedEmail = "ADMIN@FF.COM",
-                    NormalizedUserName = "ADMIN",
-                    PhoneNumber = "99999999",
-                    PhoneNumberConfirmed = true,
-                    PasswordHash = Crypto.HashPassword("Qwerty123!")
-                }
+            {
+                Id = userId,
+                Email = "admin@ff.com",
+                EmailConfirmed = true,
+                FirstName = "Admin",
+                LastName = "Adminov",
+                UserName = "admin",
+                AccessFailedCount = 0,
+                NormalizedEmail = "ADMIN@FF.COM",
+                NormalizedUserName = "ADMIN",
+                PhoneNumber = "99999999",
+                PhoneNumberConfirmed = true,
+                PasswordHash = Crypto.HashPassword("Qwerty123!")
+            }
             );
             modelBuilder.Entity<Role>().ToTable("Roles").HasData(new Role()
             {
@@ -58,7 +58,14 @@ namespace Users.DataAccess
                 Name = "Admin",
                 NormalizedName = "ADMIN",
                 ConcurrencyStamp = Guid.NewGuid().ToString()
-            });
+            },
+                new Role()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "User",
+                    NormalizedName = "USER",
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
+                });
             modelBuilder.Entity<UserClaim>().ToTable("UserClaims");
             modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims");
             // modelBuilder.Entity<PersonalMessage>().ToTable("UserPersonalMessages");

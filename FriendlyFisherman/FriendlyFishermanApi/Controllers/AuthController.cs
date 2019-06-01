@@ -80,11 +80,17 @@ namespace FriendlyFishermanApi.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
+            var id = await _userManager.GetUserIdAsync(user);
 
             if (!result.Succeeded)
             {
                 return Ok(new ErrorResponse(ErrorMessages.CouldNotCreateUser));
             }
+
+            await _userService.AssignUserRoleAsync(new GetUserRequest()
+            {
+                Id = id
+            });
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 

@@ -199,6 +199,37 @@ namespace Users.Services.Implementation
             return response;
         }
 
+        public async Task<GetUserResponse> AssignUserRoleAsync(GetUserRequest request)
+        {
+            return await Task.Run(() => AssignUserRole(request));
+        }
+
+        /// <summary>
+        /// Assigns the "User" role to a newly created users
+        /// </summary>
+        /// <param name="request">An object containing the id of the searched user</param>
+        private GetUserResponse AssignUserRole(GetUserRequest request)
+        {
+            var response = new GetUserResponse();
+
+            try
+            {
+                var roleUser = _rolesRepository.Get(r => r.Name == "User");
+                _userRolesRepository.Create(new UserRole()
+                {
+                    UserId = request.Id,
+                    RoleId = roleUser.Id
+                });
+
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
+        }
+
         public async Task<EditUserResponse> EditUserAsync(EditUserRequest request)
         {
             return await Task.Run(() => EditUser(request));

@@ -11,6 +11,7 @@
         Task<GetUserResponse> GetUserByIdAsync(GetUserRequest request);
         Task<GetUserResponse> GetUserByUsernameAsync(GetUserRequest request);
         Task<GetUserResponse> GetUserByEmailAsync(GetUserRequest request);
+        Task<GetUserResponse> AssignUserRoleAsync(GetUserRequest request);
         Task<EditUserResponse> EditUserAsync(EditUserRequest request);
         Task<UploadImageResponse> UploadImageAsync(UploadImageRequest request);
     }
