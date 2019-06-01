@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Users.DataAccess;
 
 namespace Users.DataAccess.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190601193245_InitialSeed")]
+    partial class InitialSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,15 +65,6 @@ namespace Users.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "e7db626f-0edb-4bec-a4b3-354ac26a51eb",
-                            ConcurrencyStamp = "1aca8f36-54b9-45b2-b1cd-f47ab0396c44",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        });
                 });
 
             modelBuilder.Entity("Users.Domain.Entities.RoleClaim", b =>
@@ -153,18 +146,14 @@ namespace Users.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a25c996b-4318-4bcb-8bef-6c777a8b5825",
+                            Id = "b3974a22-e113-4fb1-a7f1-492f151ab5f1",
                             AccessFailedCount = 0,
                             Email = "admin@ff.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
                             LastName = "Adminov",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@FF.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AOI191Ls8igwemUWnyFcFIMOXrtzIp7JIXmpRb3fc+X6sOg99YkoGEUl8/EUd8HcMw==",
-                            PhoneNumber = "99999999",
-                            PhoneNumberConfirmed = true,
+                            PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -221,13 +210,6 @@ namespace Users.DataAccess.Migrations
                     b.HasAlternateKey("UserId", "RoleId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = "e7db626f-0edb-4bec-a4b3-354ac26a51eb",
-                            UserId = "a25c996b-4318-4bcb-8bef-6c777a8b5825"
-                        });
                 });
 
             modelBuilder.Entity("Users.Domain.Entities.UserToken", b =>
