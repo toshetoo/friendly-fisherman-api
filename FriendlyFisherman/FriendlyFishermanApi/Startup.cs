@@ -24,6 +24,7 @@ using Administration.Services.Implementation.Events;
 using Administration.Services.Implementation.Polls;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Impl;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Publishing.Domain.Repositories.Categories;
@@ -143,6 +144,8 @@ namespace FriendlyFishermanApi
             #endregion
             #region DI
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRolesRepository, UserRolesRepository>();
+            services.AddScoped<IRolesRepository, RolesRepository>();
             services.AddScoped<IPersonalMessagesRepository, PersonalMessagesRepository>();
             services.AddScoped<IThreadCategoriesRepository, ThreadCategoriesRepository>();
             services.AddScoped<IThreadsRepository, ThreadsRepository>();

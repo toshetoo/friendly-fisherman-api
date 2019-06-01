@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Users.Domain.Entities;
 
 namespace Users.Domain.EntityViewModels.User
 {
@@ -30,5 +31,7 @@ namespace Users.Domain.EntityViewModels.User
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+
+        public RoleViewModel Role { get; set; }
     }
 }

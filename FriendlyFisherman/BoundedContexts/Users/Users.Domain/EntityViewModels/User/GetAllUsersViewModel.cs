@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Users.Domain.Entities;
+using Users.Domain.EntityViewModels.User;
 
 namespace Users.Domain.EntityViewModels
 {
@@ -28,5 +30,6 @@ namespace Users.Domain.EntityViewModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ImagePath { get; set; }
+        public RoleViewModel Role { get; set; }
     }
 }

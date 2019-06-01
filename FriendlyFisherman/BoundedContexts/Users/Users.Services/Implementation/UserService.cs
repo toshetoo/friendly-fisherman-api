@@ -11,6 +11,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Users.Domain.Entities;
 using Users.Domain.EntityViewModels;
 using Users.Domain.EntityViewModels.User;
@@ -24,11 +25,15 @@ namespace Users.Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUserRepository _usersRepository;
+        private readonly IUserRolesRepository _userRolesRepository;
+        private readonly IRolesRepository _rolesRepository;
         private readonly AppSettings _appSettings;
 
-        public UserService(IUserRepository usersRepository, IOptions<AppSettings> appSettings)
+        public UserService(IUserRepository usersRepository, IOptions<AppSettings> appSettings, IUserRolesRepository userRolesRepository, IRolesRepository rolesRepository)
         {
             _usersRepository = usersRepository;
+            _userRolesRepository = userRolesRepository;
+            _rolesRepository = rolesRepository;
             _appSettings = appSettings.Value;
         }
 
@@ -49,7 +54,8 @@ namespace Users.Services.Implementation
             try
             {
                 var user = _usersRepository.GetByUsername(request.Username);
-
+                var userRole = _userRolesRepository.GetUserRole(user.Id);
+                var role = _rolesRepository.Get(r => r.Id == userRole.RoleId);
                 if (ReferenceEquals(user, null))
                     return null;
 
@@ -57,7 +63,9 @@ namespace Users.Services.Implementation
 
                 var identity = new ClaimsIdentity(
                   new GenericIdentity(user.UserName, "TokenAuth"),
-                  new[] { new Claim("ID", user.Id.ToString()), new Claim(ClaimTypes.Name, user.UserName) }
+                  new[] { new Claim("ID", user.Id.ToString()),
+                      new Claim(ClaimTypes.Name, user.UserName),
+                      new Claim(ClaimTypes.Role, role.Name),  }
                 );
 
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -99,6 +107,11 @@ namespace Users.Services.Implementation
             try
             {
                 response.Items = Mapper<UserListItemViewModel, User>.MapList(_usersRepository.GetAllUsers().ToList());
+                foreach (var user in response.Items)
+                {
+                    var userRole = _userRolesRepository.GetUserRole(user.Id);
+                   user.Role = Mapper<RoleViewModel, Role>.Map(_rolesRepository.Get(r => r.Id == userRole.RoleId));
+                }
             }
             catch (Exception ex)
             {
@@ -135,6 +148,9 @@ namespace Users.Services.Implementation
                 }
 
                 response.Item = Mapper<UserViewModel, User>.Map(user);
+                var userRole = _userRolesRepository.GetUserRole(user.Id);
+                response.Item.Role = Mapper<RoleViewModel, Role>.Map(_rolesRepository.Get(r => r.Id == userRole.RoleId));
+                
             }
             catch (Exception ex)
             {
@@ -171,6 +187,9 @@ namespace Users.Services.Implementation
                 }
 
                 response.Item = Mapper<UserViewModel, User>.Map(user);
+                var userRole = _userRolesRepository.GetUserRole(user.Id);
+                response.Item.Role = Mapper<RoleViewModel, Role>.Map(_rolesRepository.Get(r => r.Id == userRole.RoleId));
+
             }
             catch (Exception ex)
             {
@@ -244,7 +263,10 @@ namespace Users.Services.Implementation
                     string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
                     user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
+
                 response.Item = Mapper<UserViewModel, User>.Map(user);
+                var userRole = _userRolesRepository.GetUserRole(user.Id);
+                response.Item.Role = Mapper<RoleViewModel, Role>.Map(_rolesRepository.Get(r => r.Id == userRole.RoleId));
             }
             catch (Exception ex)
             {
