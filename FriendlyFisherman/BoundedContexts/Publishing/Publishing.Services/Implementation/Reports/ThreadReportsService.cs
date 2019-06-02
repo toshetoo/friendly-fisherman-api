@@ -43,7 +43,7 @@ namespace Publishing.Services.Implementation.Reports
                 var endInterval = request.Item.EndDate;
 
                 var allThreadsForPeriod =
-                    _threadsRepository.GetWhere(t => t.CreatedOn.Date >= startInterval.Date && t.CreatedOn.Date <= endInterval.Date);
+                    _threadsRepository.GetWhere(t => t.CreatedOn.Date >= DateTime.Parse(startInterval) && t.CreatedOn.Date <= DateTime.Parse(endInterval));
 
                 var grouped = allThreadsForPeriod.GroupBy(th => th.CreatedOn.Date);
 
@@ -77,7 +77,7 @@ namespace Publishing.Services.Implementation.Reports
 
                 var allThreadsForPeriod =
                     _threadsRepository.GetWhere(
-                            t => t.CreatedOn.Date >= startInterval.Date && t.CreatedOn.Date <= endInterval.Date,
+                            t => t.CreatedOn.Date >= DateTime.Parse(startInterval) && t.CreatedOn.Date <= DateTime.Parse(endInterval),
                             t => t.Replies)
                         .OrderByDescending(thread => thread.Replies.Count())
                         .Take(request.Item.Limit).Select(Mapper<ThreadViewModel, Thread>.Map);
@@ -112,7 +112,7 @@ namespace Publishing.Services.Implementation.Reports
                 var endInterval = request.Item.EndDate;
 
                 var allPostsForPeriod =
-                    _threadReplyRepository.GetWhere(threadReply => threadReply.CreatedOn.Date >= startInterval.Date && threadReply.CreatedOn.Date <= endInterval.Date);
+                    _threadReplyRepository.GetWhere(threadReply => threadReply.CreatedOn.Date >= DateTime.Parse(startInterval) && threadReply.CreatedOn.Date <= DateTime.Parse(endInterval));
 
                 var grouped = allPostsForPeriod.GroupBy(th => th.CreatedOn.Date);
 
