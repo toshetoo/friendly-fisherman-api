@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
 using FriendlyFisherman.SharedKernel.Helpers;
 using FriendlyFisherman.SharedKernel.Messages;
+using FriendlyFisherman.SharedKernel.Requests.Images;
+using FriendlyFisherman.SharedKernel.Responses.Images;
+using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Impl;
 using FriendlyFisherman.SharedKernel.Services.Models;
 using Publishing.Domain.Entities.Threads;
@@ -22,17 +25,20 @@ namespace Publishing.Services.Implementation.Threads
         private readonly IThreadReplyRepository _replyRepository;
         private readonly ILikesRepository _likesRepository;
         private readonly IUserService _userService;
+        private readonly IImageUploaderService _imageUploaderService;
 
         public ThreadsService(IThreadsRepository repo,
             ISeenCountRepository seenCountRepo,
             IThreadReplyRepository replyRepository,
             ILikesRepository likesRepository,
-            IUserService userService) : base(repo)
+            IUserService userService, 
+            IImageUploaderService imageUploaderService) : base(repo)
         {
             _seenCountRepo = seenCountRepo;
             _replyRepository = replyRepository;
             _likesRepository = likesRepository;
             _userService = userService;
+            _imageUploaderService = imageUploaderService;
         }
 
         protected override ServiceResponseBase<ThreadViewModel> GetAll(ServiceRequestBase<Thread> request)
@@ -355,6 +361,30 @@ namespace Publishing.Services.Implementation.Threads
             }
 
             return response;
+        }
+
+        public async Task<UploadImageResponse> UploadImageAsync(UploadImageRequest request)
+        {
+            return await Task.Run(() => UploadImage(request));
+        }
+
+        private UploadImageResponse UploadImage(UploadImageRequest request)
+        {
+            var response = new UploadImageResponse();
+
+            try
+            {
+                var imageResp = _imageUploaderService.UploadImageAsync(request).Result;
+                response.Item = imageResp.Item;
+
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
+
         }
     }
 }

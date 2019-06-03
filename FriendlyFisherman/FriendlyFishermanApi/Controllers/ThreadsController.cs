@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
 using FriendlyFisherman.SharedKernel.Reports;
+using FriendlyFisherman.SharedKernel.Requests.Images;
 using FriendlyFisherman.SharedKernel.Services.Models;
+using FriendlyFisherman.SharedKernel.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,6 +14,9 @@ using Publishing.Domain.EntityViewModels.Threads;
 using Publishing.Services.Abstraction.Reports;
 using Publishing.Services.Abstraction.Threads;
 using Publishing.Services.Request.Threads;
+using Users.Domain.EntityViewModels;
+using Users.Domain.EntityViewModels.User;
+using Users.Services.Request;
 
 namespace FriendlyFishermanApi.Controllers
 {
@@ -206,6 +211,22 @@ namespace FriendlyFishermanApi.Controllers
             {
                 ID = id
             });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpPost]
+        [Route("UploadImage")]
+        public async Task<IActionResult> UploadImage(ImageUploadViewModel model)
+        {
+            var request = new UploadImageRequest(model);
+            var response = await _service.UploadImageAsync(request);
 
             if (ReferenceEquals(response.Exception, null))
             {

@@ -1,4 +1,7 @@
-﻿namespace Users.Services.Abstraction
+﻿using FriendlyFisherman.SharedKernel.Requests.Images;
+using FriendlyFisherman.SharedKernel.Responses.Images;
+
+namespace Users.Services.Abstraction
 {
     using System.Threading.Tasks;
     using Users.Services.Request;

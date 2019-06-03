@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Users.Domain.EntityViewModels;
+﻿using FriendlyFisherman.SharedKernel.ViewModels;
 
-namespace Users.Services.Request
+namespace FriendlyFisherman.SharedKernel.Requests.Images
 {
     public class UploadImageRequest
     {

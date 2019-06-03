@@ -168,6 +168,7 @@ namespace FriendlyFishermanApi
             services.AddScoped<IThreadCategoriesReportsService, ThreadCategoriesReportsService>();
 
             services.AddSingleton<IEmailService, EmailService>();
+            services.AddSingleton<IImageUploaderService, ImageUploaderService>();
             services.AddSingleton(Configuration.GetSection(typeof(AppSettings).Name).Get<AppSettings>());
             #endregion
 

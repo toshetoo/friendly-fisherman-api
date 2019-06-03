@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using FriendlyFisherman.SharedKernel.Requests.Images;
 using FriendlyFisherman.SharedKernel.Services.Models;
+using FriendlyFisherman.SharedKernel.ViewModels;
 using Users.Domain.EntityViewModels;
 using Users.Domain.EntityViewModels.User;
 using Users.Services.Abstraction;

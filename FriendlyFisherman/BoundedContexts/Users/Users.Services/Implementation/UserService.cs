@@ -11,11 +11,14 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Helpers;
-using Microsoft.AspNetCore.Identity;
-using Users.Domain.Entities;
+using FriendlyFisherman.SharedKernel.Requests.Images;
+using FriendlyFisherman.SharedKernel.Responses.Images;
+using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using Users.Domain.EntityViewModels;
 using Users.Domain.EntityViewModels.User;
 using Users.Domain.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Users.Domain.Entities;
 using Users.Services.Abstraction;
 using Users.Services.Request;
 using Users.Services.Response;
@@ -28,13 +31,15 @@ namespace Users.Services.Implementation
         private readonly IUserRolesRepository _userRolesRepository;
         private readonly IRolesRepository _rolesRepository;
         private readonly AppSettings _appSettings;
+        private readonly IImageUploaderService _imageUploaderService;
 
-        public UserService(IUserRepository usersRepository, IOptions<AppSettings> appSettings, IUserRolesRepository userRolesRepository, IRolesRepository rolesRepository)
+        public UserService(IUserRepository usersRepository, IOptions<AppSettings> appSettings, IUserRolesRepository userRolesRepository, IRolesRepository rolesRepository, IImageUploaderService imageUploaderService)
         {
             _usersRepository = usersRepository;
             _userRolesRepository = userRolesRepository;
             _rolesRepository = rolesRepository;
             _appSettings = appSettings.Value;
+            _imageUploaderService = imageUploaderService;
         }
 
         public async Task<UserAuthenticationResponse> GetUserAuthenticationAsync(UserAuthenticationRequest request)
@@ -322,16 +327,9 @@ namespace Users.Services.Implementation
                 if (ReferenceEquals(user, null))
                     throw new Exception($"There is no user with Id: {request.Id}");
 
-                user.ImagePath = $"{user.Id}";
-
-                string filePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-
-                if (!File.Exists(filePath))
-                {
-                    FileHelper.CreateFile(request.ImageSource, filePath);
-
-                    _usersRepository.Save(user);
-                }
+                var imageResp = _imageUploaderService.UploadImageAsync(request).Result;
+                user.ImagePath = $"{imageResp.Item.ImageSource}";
+                _usersRepository.Save(user);
 
             }
             catch (Exception ex)
