@@ -51,6 +51,9 @@ namespace Publishing.Services.Implementation.Reports
                 {
                     Periods = request.Item,
                     Items = grouped.ToDictionary(g => g.Key, g => g.ToList().Count())
+                        .OrderByDescending(g => g.Value)
+                        .Take(request.Item.Limit)
+                        .ToDictionary(e => e.Key, e => e.Value)
                 };
             }
             catch (Exception e)
@@ -75,12 +78,15 @@ namespace Publishing.Services.Implementation.Reports
                 var startInterval = request.Item.StartDate;
                 var endInterval = request.Item.EndDate;
 
-                var allThreadsForPeriod =
-                    _threadsRepository.GetWhere(
-                            t => t.CreatedOn.Date >= DateTime.Parse(startInterval) && t.CreatedOn.Date <= DateTime.Parse(endInterval),
-                            t => t.Replies)
+                var allThreadsForPeriod = _threadsRepository.GetWhere(
+                        t => t.CreatedOn.Date >= DateTime.Parse(startInterval) && t.CreatedOn.Date <= DateTime.Parse(endInterval),
+                        t => t.Replies)
                         .OrderByDescending(thread => thread.Replies.Count())
-                        .Take(request.Item.Limit).Select(Mapper<ThreadViewModel, Thread>.Map);
+                        .Take(request.Item.Limit).Select(t => new ThreadViewModel()
+                        {
+                            Title = t.Title,
+                            AnswersCount = t.Replies.Count
+                        });
 
                 response.Item = new MostActiveThreadsReportViewModel()
                 {
@@ -120,6 +126,9 @@ namespace Publishing.Services.Implementation.Reports
                 {
                     Periods = request.Item,
                     Items = grouped.ToDictionary(g => g.Key, g => g.ToList().Count())
+                        .OrderByDescending(g => g.Value)
+                        .Take(request.Item.Limit)
+                        .ToDictionary(e => e.Key, e => e.Value)
                 };
             }
             catch (Exception e)
