@@ -28,12 +28,17 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("ThreadsPerDayReport")]
-        public async Task<IActionResult> GetThreadsPerDayReport(ReportParametersModel model)
+        public async Task<IActionResult> GetThreadsPerDayReport(int limit, string startDate, string endDate)
         {
             var response = await _threadReportsService.GetThreadsPerDayReportAsync(
                 new ServiceRequestBase<ReportParametersModel>()
                 {
-                    Item = model
+                    Item = new ReportParametersModel
+                    {
+                        EndDate = endDate,
+                        Limit = limit,
+                        StartDate = startDate
+                    }
                 });
 
             if (ReferenceEquals(response.Exception, null))
@@ -47,12 +52,17 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("MostActiveThreadsReport")]
-        public async Task<IActionResult> GetMostActiveThreadsReport(ReportParametersModel model)
+        public async Task<IActionResult> GetMostActiveThreadsReport(int limit, string startDate, string endDate)
         {
             var response = await _threadReportsService.GetMostActiveThreadsReportAsync(
                 new ServiceRequestBase<ReportParametersModel>()
                 {
-                    Item = model
+                    Item = new ReportParametersModel
+                    {
+                        EndDate = endDate,
+                        Limit = limit,
+                        StartDate = startDate
+                    }
                 });
 
             if (ReferenceEquals(response.Exception, null))
@@ -66,12 +76,17 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("MostUsedCategories")]
-        public async Task<IActionResult> GetMostUsedCategoriesReport(ReportParametersModel model)
+        public async Task<IActionResult> GetMostUsedCategoriesReport(int limit, string startDate, string endDate)
         {
             var response = await _categoriesReportsService.GetMostUsedCategoriesReportAsync(
                 new ServiceRequestBase<ReportParametersModel>()
                 {
-                    Item = model
+                    Item = new ReportParametersModel
+                    {
+                        EndDate = endDate,
+                        Limit = limit,
+                        StartDate = startDate
+                    }
                 });
 
             if (ReferenceEquals(response.Exception, null))
@@ -85,12 +100,17 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("PostsPerDayReport")]
-        public async Task<IActionResult> GetPostsPerDayReport(ReportParametersModel model)
+        public async Task<IActionResult> GetPostsPerDayReport(int limit, string startDate, string endDate)
         {
             var response = await _threadReportsService.GetPostsPerDayReportAsync(
                 new ServiceRequestBase<ReportParametersModel>()
                 {
-                    Item = model
+                    Item = new ReportParametersModel
+                    {
+                        EndDate = endDate,
+                        Limit = limit,
+                        StartDate = startDate
+                    }
                 });
 
             if (ReferenceEquals(response.Exception, null))

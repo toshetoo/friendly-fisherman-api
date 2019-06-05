@@ -39,14 +39,20 @@ namespace Publishing.Services.Implementation.Reports
             try
             {
                 var allCategories = _categoriesRepository.GetAll().ToList();
-                response.Item.AllCategoriesCount = allCategories.Count();
+                response.Item = new MostUsedCategoriesReportViewModel
+                {
+                    AllCategoriesCount = allCategories.Count()
+                };
 
                 // TODO optimize
-                response.Item.Items = allCategories.ToDictionary(c => c,
-                        c => _threadsRepository.GetWhere(th => th.CategoryId == c.Id).Count())
-                    .OrderByDescending(el => el.Value)
-                    .Take(request.Item.Limit)
+                var dict = allCategories.ToDictionary(c => c.Name,
+                    c => _threadsRepository.GetWhere(th => th.CategoryId == c.Id).Count());
+                var ordered = dict.OrderByDescending(el => el.Value);
+                var dict2 = ordered.Take(request.Item.Limit)
                     .ToDictionary(el => el.Key, el => el.Value);
+                response.Item.Items = dict2;
+
+
 
             }
             catch (Exception e)

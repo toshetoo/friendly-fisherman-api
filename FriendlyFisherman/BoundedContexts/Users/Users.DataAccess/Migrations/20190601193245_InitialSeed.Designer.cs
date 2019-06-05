@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Users.DataAccess;
 
 namespace Users.DataAccess.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190601193245_InitialSeed")]
+    partial class InitialSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,10 +27,6 @@ namespace Users.DataAccess.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content");
-
-                    b.Property<bool>("DeletedByReceiver");
-
-                    b.Property<bool>("DeletedBySender");
 
                     b.Property<string>("ReceiverId");
 
@@ -67,22 +65,6 @@ namespace Users.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "12da2c97-0655-4b4f-8f2d-1138aed72aa6",
-                            ConcurrencyStamp = "974bb73f-9834-406e-93cd-ebe7eac6ba43",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "2dba9841-c2d7-46bd-8006-ad4d109e2c37",
-                            ConcurrencyStamp = "96578a79-a0b8-4079-8595-e293f0f0447f",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Users.Domain.Entities.RoleClaim", b =>
@@ -164,18 +146,14 @@ namespace Users.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1820df53-5b29-4be9-a65b-56a5037c8ffc",
+                            Id = "b3974a22-e113-4fb1-a7f1-492f151ab5f1",
                             AccessFailedCount = 0,
                             Email = "admin@ff.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
                             LastName = "Adminov",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@FF.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "ACtX2q+2zrEpSYxFBqHKv0C63lZus1YL3gqXmR6iobntI9ltprz5VhWFT9izZFYKUQ==",
-                            PhoneNumber = "99999999",
-                            PhoneNumberConfirmed = true,
+                            PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -232,13 +210,6 @@ namespace Users.DataAccess.Migrations
                     b.HasAlternateKey("UserId", "RoleId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = "12da2c97-0655-4b4f-8f2d-1138aed72aa6",
-                            UserId = "1820df53-5b29-4be9-a65b-56a5037c8ffc"
-                        });
                 });
 
             modelBuilder.Entity("Users.Domain.Entities.UserToken", b =>

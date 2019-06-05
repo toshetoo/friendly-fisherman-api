@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FriendlyFisherman.SharedKernel.Services.Abstraction;
+using FriendlyFisherman.SharedKernel.Services.Impl;
+using Moq;
+using Microsoft.AspNetCore.Identity;
 using Users.Domain.Entities;
 using Users.Domain.EntityViewModels;
+using Users.Domain.EntityViewModels.User;
 using Users.Domain.Repositories;
 using Users.Services.Abstraction;
 using Users.Services.Implementation;
@@ -17,23 +22,29 @@ namespace Users.Tests.ServiceTests
     {
         private readonly IUserService _service;
         private readonly IUserRepository _repositoryMock;
+        private readonly IUserRolesRepository _userRolesRepository;
+        private readonly IRolesRepository _rolesRepository;
+        private readonly UserManager<User> _userManager;
         private readonly ContextFixture _contextFixture;
         private readonly DbSetFixture _dbSetFixture;
         private readonly AppSettingsFixture _settingsFixture;
 
-        public UserServiceTests(ContextFixture contextFixture, DbSetFixture dbSetFixture, RepositoryFixture repositoryFixture, AppSettingsFixture settingsFixture)
+        public UserServiceTests(ContextFixture contextFixture, DbSetFixture dbSetFixture, RepositoryFixture repositoryFixture, AppSettingsFixture settingsFixture, IUserRolesRepository userRolesRepository, IRolesRepository rolesRepository)
         {
             _contextFixture = contextFixture;
             _dbSetFixture = dbSetFixture;
             _settingsFixture = settingsFixture;
+            _userRolesRepository = userRolesRepository;
+            _rolesRepository = rolesRepository;
 
             var data = new TestData.TestData().GetUsersData();
             var mockSet = _dbSetFixture.CreateMockSet<User>(data);
             var mockContext = _contextFixture.CreateMockContext<User>(mockSet).Object;
             _repositoryMock = repositoryFixture.CreateUsersRepository(mockContext);
+            var imageUploaderService = new Mock<IImageUploaderService>();
 
             var mockSettings = _settingsFixture.CreateMockSettings();
-            _service = new UserService(_repositoryMock, mockSettings);
+            _service = new UserService(_repositoryMock, mockSettings, _userRolesRepository, _rolesRepository, imageUploaderService.Object);
         }
 
         [Fact]

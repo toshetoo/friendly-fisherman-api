@@ -1,4 +1,7 @@
-﻿namespace Users.Services.Abstraction
+﻿using FriendlyFisherman.SharedKernel.Requests.Images;
+using FriendlyFisherman.SharedKernel.Responses.Images;
+
+namespace Users.Services.Abstraction
 {
     using System.Threading.Tasks;
     using Users.Services.Request;
@@ -11,6 +14,7 @@
         Task<GetUserResponse> GetUserByIdAsync(GetUserRequest request);
         Task<GetUserResponse> GetUserByUsernameAsync(GetUserRequest request);
         Task<GetUserResponse> GetUserByEmailAsync(GetUserRequest request);
+        Task<GetUserResponse> AssignUserRoleAsync(GetUserRequest request);
         Task<EditUserResponse> EditUserAsync(EditUserRequest request);
         Task<UploadImageResponse> UploadImageAsync(UploadImageRequest request);
     }

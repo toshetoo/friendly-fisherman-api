@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel;
+using FriendlyFisherman.SharedKernel.Requests.Images;
+using FriendlyFisherman.SharedKernel.Responses.Images;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Models;
 using Publishing.Domain.Entities.Threads;
@@ -19,5 +21,6 @@ namespace Publishing.Services.Abstraction.Threads
         Task<ServiceResponseBase<ThreadReplyViewModel>> EditThreadReplyAsync(ServiceRequestBase<ThreadReplyViewModel> request);
         Task<ServiceResponseBase<ThreadReplyViewModel>> DeleteThreadReplyAsync(ServiceRequestBase<ThreadReplyViewModel> request);
         Task<ServiceResponseBase<ThreadLikeViewModel>> LikeReplyAsync(ServiceRequestBase<LikeViewModel> request);
+        Task<UploadImageResponse> UploadImageAsync(UploadImageRequest request);
     }
 }

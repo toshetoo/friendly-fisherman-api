@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Users.DataAccess;
 
 namespace Users.DataAccess.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190601194521_InitialSeedOfRoleAndUserRole")]
+    partial class InitialSeedOfRoleAndUserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,10 +27,6 @@ namespace Users.DataAccess.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content");
-
-                    b.Property<bool>("DeletedByReceiver");
-
-                    b.Property<bool>("DeletedBySender");
 
                     b.Property<string>("ReceiverId");
 
@@ -71,17 +69,10 @@ namespace Users.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "12da2c97-0655-4b4f-8f2d-1138aed72aa6",
-                            ConcurrencyStamp = "974bb73f-9834-406e-93cd-ebe7eac6ba43",
+                            Id = "e7db626f-0edb-4bec-a4b3-354ac26a51eb",
+                            ConcurrencyStamp = "1aca8f36-54b9-45b2-b1cd-f47ab0396c44",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "2dba9841-c2d7-46bd-8006-ad4d109e2c37",
-                            ConcurrencyStamp = "96578a79-a0b8-4079-8595-e293f0f0447f",
-                            Name = "User",
-                            NormalizedName = "USER"
                         });
                 });
 
@@ -164,7 +155,7 @@ namespace Users.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1820df53-5b29-4be9-a65b-56a5037c8ffc",
+                            Id = "a25c996b-4318-4bcb-8bef-6c777a8b5825",
                             AccessFailedCount = 0,
                             Email = "admin@ff.com",
                             EmailConfirmed = true,
@@ -173,7 +164,7 @@ namespace Users.DataAccess.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@FF.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "ACtX2q+2zrEpSYxFBqHKv0C63lZus1YL3gqXmR6iobntI9ltprz5VhWFT9izZFYKUQ==",
+                            PasswordHash = "AOI191Ls8igwemUWnyFcFIMOXrtzIp7JIXmpRb3fc+X6sOg99YkoGEUl8/EUd8HcMw==",
                             PhoneNumber = "99999999",
                             PhoneNumberConfirmed = true,
                             TwoFactorEnabled = false,
@@ -236,8 +227,8 @@ namespace Users.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            RoleId = "12da2c97-0655-4b4f-8f2d-1138aed72aa6",
-                            UserId = "1820df53-5b29-4be9-a65b-56a5037c8ffc"
+                            RoleId = "e7db626f-0edb-4bec-a4b3-354ac26a51eb",
+                            UserId = "a25c996b-4318-4bcb-8bef-6c777a8b5825"
                         });
                 });
 

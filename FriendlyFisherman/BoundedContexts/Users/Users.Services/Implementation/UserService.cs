@@ -5,13 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Helpers;
+using FriendlyFisherman.SharedKernel.Requests.Images;
+using FriendlyFisherman.SharedKernel.Responses.Images;
+using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using Users.Domain.EntityViewModels;
+using Users.Domain.EntityViewModels.User;
 using Users.Domain.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Users.Domain.Entities;
 using Users.Services.Abstraction;
 using Users.Services.Request;
 using Users.Services.Response;
@@ -21,12 +28,18 @@ namespace Users.Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUserRepository _usersRepository;
+        private readonly IUserRolesRepository _userRolesRepository;
+        private readonly IRolesRepository _rolesRepository;
         private readonly AppSettings _appSettings;
+        private readonly IImageUploaderService _imageUploaderService;
 
-        public UserService(IUserRepository usersRepository, IOptions<AppSettings> appSettings)
+        public UserService(IUserRepository usersRepository, IOptions<AppSettings> appSettings, IUserRolesRepository userRolesRepository, IRolesRepository rolesRepository, IImageUploaderService imageUploaderService)
         {
             _usersRepository = usersRepository;
+            _userRolesRepository = userRolesRepository;
+            _rolesRepository = rolesRepository;
             _appSettings = appSettings.Value;
+            _imageUploaderService = imageUploaderService;
         }
 
         public async Task<UserAuthenticationResponse> GetUserAuthenticationAsync(UserAuthenticationRequest request)
@@ -46,7 +59,8 @@ namespace Users.Services.Implementation
             try
             {
                 var user = _usersRepository.GetByUsername(request.Username);
-
+                var userRole = _userRolesRepository.GetUserRole(user.Id);
+                var role = _rolesRepository.Get(r => r.Id == userRole.RoleId);
                 if (ReferenceEquals(user, null))
                     return null;
 
@@ -54,7 +68,9 @@ namespace Users.Services.Implementation
 
                 var identity = new ClaimsIdentity(
                   new GenericIdentity(user.UserName, "TokenAuth"),
-                  new[] { new Claim("ID", user.Id.ToString()), new Claim(ClaimTypes.Name, user.UserName) }
+                  new[] { new Claim("ID", user.Id.ToString()),
+                      new Claim(ClaimTypes.Name, user.UserName),
+                      new Claim(ClaimTypes.Role, role.Name),  }
                 );
 
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -95,19 +111,12 @@ namespace Users.Services.Implementation
 
             try
             {
-                var users = _usersRepository.GetAllUsers();
-                var usersListViewModel = new List<UserListItemViewModel>();
-
-                foreach (var user in users)
+                response.Items = Mapper<UserListItemViewModel, User>.MapList(_usersRepository.GetAllUsers().ToList());
+                foreach (var user in response.Items)
                 {
-                    usersListViewModel.Add(new UserListItemViewModel
-                    {
-                        Id = user.Id,
-                        Username = user.UserName,
-                        Email = user.Email
-                    });
+                    var userRole = _userRolesRepository.GetUserRole(user.Id);
+                   user.Role = Mapper<RoleViewModel, Role>.Map(_rolesRepository.Get(r => r.Id == userRole.RoleId));
                 }
-                response.Items = usersListViewModel;
             }
             catch (Exception ex)
             {
@@ -143,17 +152,10 @@ namespace Users.Services.Implementation
                     user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
 
-                var userViewModel = new UserViewModel
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    ImagePath = user.ImagePath
-                };
-
-                response.Item = userViewModel;
+                response.Item = Mapper<UserViewModel, User>.Map(user);
+                var userRole = _userRolesRepository.GetUserRole(user.Id);
+                response.Item.Role = Mapper<RoleViewModel, Role>.Map(_rolesRepository.Get(r => r.Id == userRole.RoleId));
+                
             }
             catch (Exception ex)
             {
@@ -189,17 +191,41 @@ namespace Users.Services.Implementation
                     user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
 
-                var userViewModel = new UserViewModel
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    ImagePath = user.ImagePath
-                };
+                response.Item = Mapper<UserViewModel, User>.Map(user);
+                var userRole = _userRolesRepository.GetUserRole(user.Id);
+                response.Item.Role = Mapper<RoleViewModel, Role>.Map(_rolesRepository.Get(r => r.Id == userRole.RoleId));
 
-                response.Item = userViewModel;
+            }
+            catch (Exception ex)
+            {
+                response.Exception = ex;
+            }
+
+            return response;
+        }
+
+        public async Task<GetUserResponse> AssignUserRoleAsync(GetUserRequest request)
+        {
+            return await Task.Run(() => AssignUserRole(request));
+        }
+
+        /// <summary>
+        /// Assigns the "User" role to a newly created users
+        /// </summary>
+        /// <param name="request">An object containing the id of the searched user</param>
+        private GetUserResponse AssignUserRole(GetUserRequest request)
+        {
+            var response = new GetUserResponse();
+
+            try
+            {
+                var roleUser = _rolesRepository.Get(r => r.Name == "User");
+                _userRolesRepository.Create(new UserRole()
+                {
+                    UserId = request.Id,
+                    RoleId = roleUser.Id
+                });
+
             }
             catch (Exception ex)
             {
@@ -233,7 +259,7 @@ namespace Users.Services.Implementation
                     throw new Exception($"There is no user with Id: {request.User.Id}");
 
                 user.Email = request.User.Email;
-                user.UserName = request.User.Username;
+                user.UserName = request.User.UserName;
                 user.FirstName = request.User.FirstName;
                 user.LastName = request.User.LastName;
                 user.ImagePath = request.User.ImagePath;
@@ -268,22 +294,15 @@ namespace Users.Services.Implementation
                 if (ReferenceEquals(user, null))
                     throw new Exception($"There is no user with email: {request.Email}");
 
-                var userViewModel = new UserViewModel
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Username = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    ImagePath = user.ImagePath
-                };
-
                 if (!string.IsNullOrEmpty(user.ImagePath))
                 {
                     string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-                    userViewModel.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                    user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
-                response.Item = userViewModel;
+
+                response.Item = Mapper<UserViewModel, User>.Map(user);
+                var userRole = _userRolesRepository.GetUserRole(user.Id);
+                response.Item.Role = Mapper<RoleViewModel, Role>.Map(_rolesRepository.Get(r => r.Id == userRole.RoleId));
             }
             catch (Exception ex)
             {
@@ -308,16 +327,9 @@ namespace Users.Services.Implementation
                 if (ReferenceEquals(user, null))
                     throw new Exception($"There is no user with Id: {request.Id}");
 
-                user.ImagePath = $"{user.Id}";
-
-                string filePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-
-                if (!File.Exists(filePath))
-                {
-                    FileHelper.CreateFile(request.ImageSource, filePath);
-
-                    _usersRepository.Save(user);
-                }
+                var imageResp = _imageUploaderService.UploadImageAsync(request).Result;
+                user.ImagePath = $"{imageResp.Item.ImageSource}";
+                _usersRepository.Save(user);
 
             }
             catch (Exception ex)

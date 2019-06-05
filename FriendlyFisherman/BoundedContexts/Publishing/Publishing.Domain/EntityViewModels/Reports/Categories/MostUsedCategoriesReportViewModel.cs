@@ -12,6 +12,6 @@ namespace Publishing.Domain.EntityViewModels.Reports.Categories
         public ReportParametersModel Period { get; set; }
         public int AllCategoriesCount { get; set; }
 
-        public Dictionary<ThreadCategory, int> Items { get; set; }
+        public Dictionary<string, int> Items { get; set; }
     }
 }
