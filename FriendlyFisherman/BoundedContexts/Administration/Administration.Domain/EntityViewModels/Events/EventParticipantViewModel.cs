@@ -16,14 +16,5 @@ namespace Administration.Domain.EntityViewModels.Events
         public string UserId { get; set; }
         [Required]
         public ParticipantStatus ParticipantStatus { get; set; }
-
-
-        public EventParticipantViewModel(EventParticipant e)
-        {
-            Id = e.Id;
-            EventId = e.EventId;
-            ParticipantStatus = e.ParticipantStatus;
-            UserId = e.UserId;
-        }
     }
 }

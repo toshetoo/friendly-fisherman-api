@@ -11,10 +11,12 @@ namespace Administration.Domain.Entities.Events
         public EventStatus EventStatus { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string Lat { get; set; }
+        public string Lng { get; set; }
     }
 
     public enum EventStatus
     {
-        Active, Pending, Completed
+        Pending, Active, Completed
     }
 }

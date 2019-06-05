@@ -6,8 +6,10 @@ using Administration.Domain.Entities;
 using Administration.Domain.Entities.Events;
 using Administration.Domain.EntityViewModels.Events;
 using Administration.Services.Abstraction.Events;
+using Administration.Services.Request;
 using FriendlyFisherman.SharedKernel.Services.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using EventParticipantViewModel = Administration.Domain.EntityViewModels.Events.EventParticipantViewModel;
@@ -78,6 +80,28 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpGet]
+        [Route("GetParticipantForEvent/{eventId}/{participantId}")]
+        public async Task<IActionResult> GetParticipantForEvent(string eventId, string participantId)
+        {
+            var response = await _service.GetParticipantByEventIdAndUserIdAsync(new ServiceRequestBase<EventParticipantViewModel>()
+            {
+                Item = new EventParticipantViewModel()
+                {
+                    EventId = eventId,
+                    UserId = participantId,
+                }
+            });
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpGet]
         [Route("GetCommentsForEvent/{id}")]
         public async Task<IActionResult> GetCommentsForEvent(string id)
         {
@@ -99,6 +123,17 @@ namespace FriendlyFishermanApi.Controllers
         [Route("Save")]
         public async Task<IActionResult> Save([FromBody] EventViewModel model)
         {
+            if (model.ImageName != null && model.ImageData != null)
+            {
+                var request = new SaveImageCoverRequest(model.ImageName, model.ImageData);
+                var saveImageCoverResponse = await _service.SaveImageCoverAsync(request);
+
+                if (ReferenceEquals(saveImageCoverResponse.Exception, null))
+                {
+                    model.ImageCover = saveImageCoverResponse.ImageCoverFilePath;
+                }
+            }
+
             var response = await _service.SaveAsync(new ServiceRequestBase<Event>()
             {
                 Item = new Event()
@@ -109,7 +144,9 @@ namespace FriendlyFishermanApi.Controllers
                     EndDate = model.EndDate,
                     EventStatus = model.EventStatus,
                     ImageCover = model.ImageCover,
-                    StartDate = model.StartDate
+                    StartDate = model.StartDate,
+                    Lat = model.Lat,
+                    Lng = model.Lng
                 }
             });
 
@@ -141,28 +178,10 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpPost]
-        [Route("AddComment")]
+        [Route("SaveComment")]
         public async Task<IActionResult> AddComment([FromBody] EventCommentViewModel model)
         {
             var response = await _service.AddCommentAsync(new ServiceRequestBase<EventCommentViewModel>()
-            {
-                Item = model
-            });
-
-            if (ReferenceEquals(response.Exception, null))
-            {
-                return Ok(response);
-            }
-
-            _logger.LogError(response.Exception, response.Exception.Message);
-            return StatusCode(500, new ErrorResponse(response.Exception.Message));
-        }
-
-        [HttpPost]
-        [Route("EditComment")]
-        public async Task<IActionResult> EditComment([FromBody] EventCommentViewModel model)
-        {
-            var response = await _service.EditCommentAsync(new ServiceRequestBase<EventCommentViewModel>()
             {
                 Item = model
             });
@@ -215,11 +234,11 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpDelete]
         [Route("DeleteComment/{id}")]
-        public async Task<IActionResult> DeleteComment([FromBody] EventCommentViewModel model)
+        public async Task<IActionResult> DeleteComment(string Id)
         {
             var response = await _service.DeleteCommentAsync(new ServiceRequestBase<EventCommentViewModel>()
             {
-                Item = model
+                ID = Id
             });
 
             if (ReferenceEquals(response.Exception, null))

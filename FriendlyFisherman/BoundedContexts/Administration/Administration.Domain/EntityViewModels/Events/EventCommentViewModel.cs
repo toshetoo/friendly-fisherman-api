@@ -14,18 +14,11 @@ namespace Administration.Domain.EntityViewModels.Events
         public string EventId { get; set; }
         [Required]
         public string CreatorId { get; set; }
+        public string CreatorName { get; set; }
+        public string CreatorProfileImagePath { get; set; }
         [Required]
         public string Content { get; set; }
         [Required]
         public DateTime CreatedOn { get; set; }
-
-        public EventCommentViewModel(EventComment c)
-        {
-            Id = c.Id;
-            Content = c.Content;
-            CreatedOn = c.CreatedOn;
-            CreatorId = c.CreatorId;
-            EventId = c.EventId;
-        }
     }
 }

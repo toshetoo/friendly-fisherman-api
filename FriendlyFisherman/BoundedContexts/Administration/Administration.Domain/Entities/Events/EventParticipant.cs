@@ -11,6 +11,6 @@ namespace Administration.Domain.Entities.Events
 
     public enum ParticipantStatus
     {
-        Going, NotGoing, Interested
+        Going, Interested, NotGoing
     }
 }

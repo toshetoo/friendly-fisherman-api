@@ -5,12 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Response\" />
-    <Folder Include="Request\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\FriendlyFisherman.SharedKernel\FriendlyFisherman.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\Users\Users.Domain\Users.Domain.csproj" />
     <ProjectReference Include="..\Administration.Domain\Administration.Domain.csproj" />
   </ItemGroup>
 

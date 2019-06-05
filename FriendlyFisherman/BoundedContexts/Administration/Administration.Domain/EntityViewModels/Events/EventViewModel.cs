@@ -15,11 +15,14 @@ namespace Administration.Domain.EntityViewModels.Events
         [Required]
         public string Description { get; set; }
         public string ImageCover { get; set; }
-        [Required]
         public EventStatus EventStatus { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
         [Required]
         public DateTime EndDate { get; set; }
+        public string Lat { get; set; }
+        public string Lng { get; set; }
+        public string ImageData { get; set; }
+        public string ImageName { get; set; }
     }
 }
