@@ -37,6 +37,27 @@ namespace Administration.Services.Implementation.Events
             _usersUserRepository = userRepository;
             _appSettings = appSettings;
         }
+        public async Task<ServiceResponseBase<EventViewModel>> GetLatestEventsAsync(ServiceRequestBase<EventViewModel> request)
+        {
+            return await Task.Run(() => GetLatestEvents(request));
+        }
+
+        private ServiceResponseBase<EventViewModel> GetLatestEvents(
+            ServiceRequestBase<EventViewModel> request)
+        {
+            var response = new ServiceResponseBase<EventViewModel>();
+
+            try
+            {
+                response.Items = Mapper<EventViewModel, Event>.MapList(_repo.GetAll(true, ev => ev.StartDate).Take(3).ToList());
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
+        }
 
         public async Task<ServiceResponseBase<EventParticipantViewModel>> GetParticipantsByEventIdAsync(ServiceRequestBase<EventParticipantViewModel> request)
         {

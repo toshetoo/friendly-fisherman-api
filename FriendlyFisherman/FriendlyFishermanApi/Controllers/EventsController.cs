@@ -44,6 +44,21 @@ namespace FriendlyFishermanApi.Controllers
         }
 
         [HttpGet]
+        [Route("GetLatestEvents")]
+        public async Task<IActionResult> GetLatestEvents()
+        {
+            var response = await _service.GetLatestEventsAsync(new ServiceRequestBase<EventViewModel>());
+
+            if (ReferenceEquals(response.Exception, null))
+            {
+                return Ok(response);
+            }
+
+            _logger.LogError(response.Exception, response.Exception.Message);
+            return StatusCode(500, new ErrorResponse(response.Exception.Message));
+        }
+
+        [HttpGet]
         [Route("GetById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {

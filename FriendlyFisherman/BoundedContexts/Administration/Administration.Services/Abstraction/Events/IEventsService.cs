@@ -14,6 +14,7 @@ namespace Administration.Services.Abstraction.Events
 {
     public interface IEventsService: IBaseCrudService<EventViewModel, Event>
     {
+        Task<ServiceResponseBase<EventViewModel>> GetLatestEventsAsync(ServiceRequestBase<EventViewModel> request);
         Task<ServiceResponseBase<EventParticipantViewModel>> GetParticipantsByEventIdAsync(ServiceRequestBase<EventParticipantViewModel> request);
         Task<ServiceResponseBase<EventParticipantViewModel>> GetParticipantByEventIdAndUserIdAsync(ServiceRequestBase<EventParticipantViewModel> request);
         Task<ServiceResponseBase<EventParticipantViewModel>> AddParticipantAsync(ServiceRequestBase<EventParticipantViewModel> request);
