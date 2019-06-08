@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Users.Domain.Entities;
-using Users.Tests.TestData;
 
-namespace Users.Tests.TestData
+namespace Users.Tests.DummyData
 {
     public class TestData
     {

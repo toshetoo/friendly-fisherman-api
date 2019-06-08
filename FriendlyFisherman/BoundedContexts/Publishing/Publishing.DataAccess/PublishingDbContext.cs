@@ -17,6 +17,11 @@ namespace Publishing.DataAccess
         {
         }
 
+        public PublishingDbContext()
+        {
+            
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

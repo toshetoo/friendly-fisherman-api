@@ -5,8 +5,8 @@ using System.Text;
 using AutoFixture;
 using Users.DataAccess.Repositories;
 using Users.Domain.Entities;
+using Users.Tests.DummyData;
 using Users.Tests.Fixtures;
-using Users.Tests.TestData;
 using Xunit;
 
 namespace Users.Tests.RepositoryTests
@@ -25,7 +25,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Repo_BuildsCorrectly()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             Assert.NotNull(new PersonalMessagesRepository(null));
             Assert.NotNull(GetRepo(data));
         }
@@ -33,7 +33,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAllMessagesBySenderId_ReturnsCollectionWithCorrectId()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var result = repo.GetAllMessagesBySenderId(Constants.AdminId);
@@ -44,7 +44,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAllMessagesBySenderId_ReturnsEmptyListWithWrongId()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var result = repo.GetAllMessagesBySenderId(Guid.NewGuid().ToString());
@@ -55,7 +55,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAllMessagesBySenderId_ReturnsEmptyListWithoutId()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var res = repo.GetAllMessagesBySenderId(null);
@@ -67,7 +67,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAllMessagesByReceiverId_ReturnsCollectionWithCorrectId()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var result = repo.GetAllMessagesByReceiverId(Constants.AdminId);
@@ -78,7 +78,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAllMessagesByReceiverId_ReturnsEmptyListWithWrongId()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var result = repo.GetAllMessagesByReceiverId(Guid.NewGuid().ToString());
@@ -89,7 +89,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAllMessagesByReceiverId_ReturnsEmptyListWithoutId()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
             var res = repo.GetAllMessagesByReceiverId(null);
 
@@ -100,7 +100,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetById_ReturnsCorrectMessage()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var result = repo.GetMessageById(data[0].Id);
@@ -112,7 +112,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetById_WithWrongId_ReturnsError()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var result = repo.GetMessageById(Guid.NewGuid().ToString());
@@ -123,7 +123,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetById_WithoutId_ReturnsException()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var result = repo.GetMessageById(null);
@@ -134,7 +134,7 @@ namespace Users.Tests.RepositoryTests
         [Fact(Skip = "Entry of EF not mocked yet")]
         public void SaveMessage_WithCorrectData_SavesMessage()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             var m = repo.GetMessageById(Constants.PersonalMessageID);
@@ -154,7 +154,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void SaveMessage_WithoutData_ThrowsException()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
 
             Assert.Throws<NullReferenceException>(() => repo.SaveMessage(null));
@@ -163,7 +163,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void SaveMessage_WithoutId_CreatesMessage()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
             var count = data.Count();
             var message = new Fixture().Build<PersonalMessage>().Without(m => m.Id).Create();
@@ -176,7 +176,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void DeleteMessage_WithCorrectId_DeletesMessage()
         {
-            var data = new TestData.TestData().GetPersonalMessagesData();
+            var data = new TestData().GetPersonalMessagesData();
             var repo = GetRepo(data);
             repo.DeleteMessage(Constants.PersonalMessageID);
 

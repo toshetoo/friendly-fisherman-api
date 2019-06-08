@@ -19,6 +19,11 @@ namespace Administration.DataAccess
         {
         }
 
+        public AdministrationDbContext()
+        {
+            
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

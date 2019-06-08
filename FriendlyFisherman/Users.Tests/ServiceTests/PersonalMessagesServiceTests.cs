@@ -10,9 +10,10 @@ using Users.Domain.Repositories;
 using Users.Services.Abstraction;
 using Users.Services.Implementation;
 using Users.Services.Request.PersonalMessage;
+using Users.Tests.DummyData;
 using Users.Tests.Fixtures;
 using Xunit;
-using Constants = Users.Tests.TestData.Constants;
+using Constants = Users.Tests.DummyData.Constants;
 
 namespace Users.Tests.ServiceTests
 {
@@ -28,8 +29,8 @@ namespace Users.Tests.ServiceTests
             _contextFixture = contextFixture;
             _dbSetFixture = dbSetFixture;
 
-            var data = new TestData.TestData().GetPersonalMessagesData();
-            var userData = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetPersonalMessagesData();
+            var userData = new TestData().GetUsersData();
             var mockSet = _dbSetFixture.CreateMockSet<PersonalMessage>(data);
             var mockContext = _contextFixture.CreateMockContext<PersonalMessage>(mockSet).Object;
             _repositoryMock = repositoryFixture.CreatePersonalMessagesRepository(mockContext);

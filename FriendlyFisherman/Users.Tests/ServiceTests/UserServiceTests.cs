@@ -13,8 +13,8 @@ using Users.Domain.Repositories;
 using Users.Services.Abstraction;
 using Users.Services.Implementation;
 using Users.Services.Request;
+using Users.Tests.DummyData;
 using Users.Tests.Fixtures;
-using Users.Tests.TestData;
 using Xunit;
 
 namespace Users.Tests.ServiceTests
@@ -38,7 +38,7 @@ namespace Users.Tests.ServiceTests
             _userRolesRepository = new Mock<IUserRolesRepository>();
             _rolesRepository = new Mock<IRolesRepository>();
 
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var mockSet = _dbSetFixture.CreateMockSet<User>(data);
             var mockContext = _contextFixture.CreateMockContext<User>(mockSet).Object;
             _repositoryMock = repositoryFixture.CreateUsersRepository(mockContext);

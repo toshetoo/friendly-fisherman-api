@@ -5,8 +5,8 @@ using System.Text;
 using FriendlyFisherman.SharedKernel.Repositories.Impl;
 using Users.DataAccess.Repositories;
 using Users.Domain.Entities;
+using Users.Tests.DummyData;
 using Users.Tests.Fixtures;
-using Users.Tests.TestData;
 using Xunit;
 
 namespace Users.Tests.RepositoryTests
@@ -25,7 +25,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Repo_BuildsCorrectly()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             Assert.NotNull(new UserRepository(null));
             Assert.NotNull(GetRepo(data));
         }
@@ -33,7 +33,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetAll_ReturnsCollection()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetAllUsers();
@@ -44,7 +44,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetUserByUsername_ReturnsCorrectUser()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetByUsername(data[0].UserName);
@@ -56,7 +56,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetUserByUsername_WithWrongUser_ReturnsError()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetByUsername(Guid.NewGuid().ToString());
@@ -67,7 +67,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetById_ReturnsCorrectUser()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetById(data[0].Id);
@@ -79,7 +79,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetById_WithWrongUser_ReturnsError()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetById(Guid.NewGuid().ToString());
@@ -90,7 +90,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetByEmail_ReturnsCorrectUser()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetByEmail(data[0].Email);
@@ -102,7 +102,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void GetByEmail_WithWrongUser_ReturnsError()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var result = repo.GetByEmail(Guid.NewGuid().ToString());
@@ -113,7 +113,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Save_WithNoId_AddsNewUser()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             var newUser = new User()
@@ -130,7 +130,7 @@ namespace Users.Tests.RepositoryTests
         [Fact]
         public void Save_WithNull_ThrowsException()
         {
-            var data = new TestData.TestData().GetUsersData();
+            var data = new TestData().GetUsersData();
             var repo = GetRepo(data);
 
             Assert.Throws<NullReferenceException>(() => repo.Save(null));
