@@ -29,10 +29,14 @@ namespace Users.Tests.ServiceTests
             _dbSetFixture = dbSetFixture;
 
             var data = new TestData.TestData().GetPersonalMessagesData();
+            var userData = new TestData.TestData().GetUsersData();
             var mockSet = _dbSetFixture.CreateMockSet<PersonalMessage>(data);
             var mockContext = _contextFixture.CreateMockContext<PersonalMessage>(mockSet).Object;
             _repositoryMock = repositoryFixture.CreatePersonalMessagesRepository(mockContext);
-            var _usersRepository = repositoryFixture.CreateUsersRepository(mockContext);
+
+            var userMockSet = _dbSetFixture.CreateMockSet<User>(userData);
+            var userMockContext = _contextFixture.CreateMockContext<User>(userMockSet).Object;
+            var _usersRepository = repositoryFixture.CreateUsersRepository(userMockContext);
 
             _service = new PersonalMessagesService(_repositoryMock, _usersRepository);
         }

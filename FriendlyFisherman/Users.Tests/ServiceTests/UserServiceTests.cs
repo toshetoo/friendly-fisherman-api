@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
 using FriendlyFisherman.SharedKernel.Services.Impl;
@@ -22,29 +23,32 @@ namespace Users.Tests.ServiceTests
     {
         private readonly IUserService _service;
         private readonly IUserRepository _repositoryMock;
-        private readonly IUserRolesRepository _userRolesRepository;
-        private readonly IRolesRepository _rolesRepository;
+        private readonly Mock<IUserRolesRepository> _userRolesRepository;
+        private readonly Mock<IRolesRepository> _rolesRepository;
         private readonly UserManager<User> _userManager;
         private readonly ContextFixture _contextFixture;
         private readonly DbSetFixture _dbSetFixture;
         private readonly AppSettingsFixture _settingsFixture;
 
-        public UserServiceTests(ContextFixture contextFixture, DbSetFixture dbSetFixture, RepositoryFixture repositoryFixture, AppSettingsFixture settingsFixture, IUserRolesRepository userRolesRepository, IRolesRepository rolesRepository)
+        public UserServiceTests(ContextFixture contextFixture, DbSetFixture dbSetFixture, RepositoryFixture repositoryFixture, AppSettingsFixture settingsFixture)
         {
             _contextFixture = contextFixture;
             _dbSetFixture = dbSetFixture;
             _settingsFixture = settingsFixture;
-            _userRolesRepository = userRolesRepository;
-            _rolesRepository = rolesRepository;
+            _userRolesRepository = new Mock<IUserRolesRepository>();
+            _rolesRepository = new Mock<IRolesRepository>();
 
             var data = new TestData.TestData().GetUsersData();
             var mockSet = _dbSetFixture.CreateMockSet<User>(data);
             var mockContext = _contextFixture.CreateMockContext<User>(mockSet).Object;
             _repositoryMock = repositoryFixture.CreateUsersRepository(mockContext);
+            var mockSettings = _settingsFixture.CreateMockSettings();
+
+
             var imageUploaderService = new Mock<IImageUploaderService>();
 
-            var mockSettings = _settingsFixture.CreateMockSettings();
-            _service = new UserService(_repositoryMock, mockSettings, _userRolesRepository, _rolesRepository, imageUploaderService.Object);
+            
+            _service = new UserService(_repositoryMock, mockSettings, _userRolesRepository.Object, _rolesRepository.Object, imageUploaderService.Object);
         }
 
         [Fact]
@@ -56,14 +60,34 @@ namespace Users.Tests.ServiceTests
         [Fact]
         public async Task GetUserAuthenticationAsync_WithWrongUsername_ReturnsNull()
         {
+            var roleID = Guid.NewGuid().ToString();
+            var firstUser = _repositoryMock.GetAllUsers().First();
+
+            _userRolesRepository.Setup(repo => repo.GetUserRole(It.IsAny<string>())).Returns(() => new UserRole() { RoleId = roleID, UserId = firstUser.Id });
+            _rolesRepository.Setup(repo => repo.Get(It.IsAny<Expression<Func<Role, bool>>>(), It.IsAny<Expression<Func<Role, object>>[]>()))
+                .Returns((Expression<Func<Role, bool>> filter, Expression<Func<Role, object>>[] collection) => new Role
+                {
+                    Id = roleID,
+                    Name = "SPAS"
+                });
             UserAuthenticationRequest req = new UserAuthenticationRequest(Guid.NewGuid().ToString());
-            Assert.Null(await _service.GetUserAuthenticationAsync(req));
+            Assert.Null((await _service.GetUserAuthenticationAsync(req)).AccessToken);
         }
 
         [Fact]
         public async Task GetUserAuthenticationAsync_WithCorrectData_ReturnsToken()
         {
-            UserAuthenticationRequest req = new UserAuthenticationRequest(_repositoryMock.GetAllUsers().First().UserName);
+            var roleID = Guid.NewGuid().ToString();
+            var firstUser = _repositoryMock.GetAllUsers().First();
+
+            _userRolesRepository.Setup(repo => repo.GetUserRole(It.IsAny<string>())).Returns(() => new UserRole() { RoleId = roleID, UserId = firstUser.Id});
+            _rolesRepository.Setup(repo => repo.Get(It.IsAny<Expression<Func<Role, bool>>>(), It.IsAny<Expression<Func<Role, object>>[]>()))
+                .Returns((Expression<Func<Role, bool>> filter, Expression<Func<Role, object>>[] collection) =>new Role
+                {
+                    Id = roleID,
+                    Name = "SPAS"
+                });
+            UserAuthenticationRequest req = new UserAuthenticationRequest(firstUser.UserName);
             var result = await _service.GetUserAuthenticationAsync(req);
             Assert.NotNull(result);
             Assert.NotNull(result.AccessToken);

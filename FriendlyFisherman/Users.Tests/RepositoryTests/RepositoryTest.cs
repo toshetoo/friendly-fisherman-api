@@ -109,10 +109,9 @@ namespace Users.Tests.RepositoryTests
             var data = new TestData.TestData().GetUsersData();
             var repo = GetRepo(data);
 
-            var exception = Assert.Throws<ArgumentNullException>(() => repo.Update(null));
+            var exception = Assert.Throws<NullReferenceException>(() => repo.Update(null));
 
             Assert.NotNull(exception);
-            Assert.Equal("newEntity", exception.ParamName);
         }
 
         [Fact]
