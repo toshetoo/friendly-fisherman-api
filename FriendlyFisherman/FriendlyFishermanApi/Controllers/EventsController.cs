@@ -30,6 +30,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetAll")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllEvents()
         {
             var response = await _service.GetAllAsync(new ServiceRequestBase<Event>());
@@ -45,6 +46,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetLatestEvents")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetLatestEvents()
         {
             var response = await _service.GetLatestEventsAsync(new ServiceRequestBase<EventViewModel>());
@@ -60,6 +62,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetById/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById(string id)
         {
             var response = await _service.GetByIdAsync(new ServiceRequestBase<Event>()
@@ -118,6 +121,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetCommentsForEvent/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCommentsForEvent(string id)
         {
             var response = await _service.GetCommentsByEventIdAsync(new ServiceRequestBase<EventCommentViewModel>()

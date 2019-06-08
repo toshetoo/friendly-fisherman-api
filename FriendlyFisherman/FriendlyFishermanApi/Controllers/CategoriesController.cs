@@ -57,6 +57,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("TrendingCategories")]
+        [AllowAnonymous]
         public async Task<IActionResult> TrendingCategories()
         {
             var response = await _service.GetTrendingCategoriesAsync(new ServiceRequestBase<ThreadCategoryViewModel>());

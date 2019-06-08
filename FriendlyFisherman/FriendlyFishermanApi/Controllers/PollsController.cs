@@ -59,6 +59,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetPollOfTheWeek")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetPollOfTheWeek()
         {
             var response = await _service.GetPollOfTheWeekAsync(new ServiceRequestBase<PollViewModel>());

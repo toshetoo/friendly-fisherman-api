@@ -8,5 +8,7 @@ namespace FriendlyFisherman.SharedKernel.ViewModels
         public string Id { get; set; }
         [Required]
         public string ImageSource { get; set; }
+
+        public string ImageName { get; set; }
     }
 }

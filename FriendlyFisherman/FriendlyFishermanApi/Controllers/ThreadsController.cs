@@ -34,6 +34,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetAll")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllThreads()
         {
             var response = await _service.GetAllAsync(new ServiceRequestBase<Thread>());
@@ -49,6 +50,7 @@ namespace FriendlyFishermanApi.Controllers
 
         [HttpGet]
         [Route("GetById/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById(string id, string userId)
         {
             var response = await _service.GetByIdAsync(new GetByIdRequest()

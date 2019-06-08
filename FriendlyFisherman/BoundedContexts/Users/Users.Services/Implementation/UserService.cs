@@ -14,6 +14,7 @@ using FriendlyFisherman.SharedKernel.Helpers;
 using FriendlyFisherman.SharedKernel.Requests.Images;
 using FriendlyFisherman.SharedKernel.Responses.Images;
 using FriendlyFisherman.SharedKernel.Services.Abstraction;
+using FriendlyFisherman.SharedKernel.ViewModels;
 using Users.Domain.EntityViewModels;
 using Users.Domain.EntityViewModels.User;
 using Users.Domain.Repositories;
@@ -148,8 +149,8 @@ namespace Users.Services.Implementation
 
                 if (!string.IsNullOrEmpty(user.ImagePath))
                 {
-                    string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
-                    user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
+                    //string imagePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, user.ImagePath);
+                    // user.ImagePath = FileHelper.GetImageAsBase64(imagePath);
                 }
 
                 response.Item = Mapper<UserViewModel, User>.Map(user);
@@ -327,9 +328,22 @@ namespace Users.Services.Implementation
                 if (ReferenceEquals(user, null))
                     throw new Exception($"There is no user with Id: {request.Id}");
 
-                var imageResp = _imageUploaderService.UploadImageAsync(request).Result;
-                user.ImagePath = $"{imageResp.Item.ImageSource}";
+                //var imageResp = _imageUploaderService.UploadImageAsync(request).Result;
+                //user.ImagePath = $"{imageResp.Item.ImageSource.Replace(imageResp.Item.ImageSource.Split('/').First(), string.Empty)}";
+                //_usersRepository.Save(user);
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.ImageName);
+                string filePath = FileHelper.BuildFilePath(_appSettings.FileUploadSettings.FilesUploadFolder, fileName);
+
+                FileHelper.CreateFile(request.ImageSource.Split(',').Last(), filePath);
+
+                user.ImagePath = filePath.Replace(filePath.Split('/').First(), string.Empty);
                 _usersRepository.Save(user);
+
+                response.Item = new ImageUploadViewModel()
+                {
+                    ImageSource = user.ImagePath
+                };
 
             }
             catch (Exception ex)
